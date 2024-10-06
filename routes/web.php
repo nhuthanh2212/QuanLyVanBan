@@ -7,6 +7,10 @@ use App\Http\Controllers\TruongController;
 use App\Http\Controllers\KhoaController;
 use App\Http\Controllers\TrungTamController;
 use App\Http\Controllers\hanhChinhController;
+use App\Http\Controllers\PhucVuController;
+use App\Http\Controllers\ToChucController;
+use App\Http\Controllers\ChucVuController;
+
 
 
 
@@ -22,18 +26,31 @@ use App\Http\Controllers\hanhChinhController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::resource('/quan-ly-van-ban', LoaiVanBanController::class);
 
-Route::resource('/loai-van-ban', LoaiVanBanController::class);
+// Route cho phần quản lý văn bản
+Route::prefix('manager')->group(function () {
+    Route::resource('/quan-ly-van-ban', LoaiVanBanController::class);
 
-Route::resource('/don-vi-cap-cao', DonViCapCaoController::class);
+    Route::resource('/loai-van-ban', LoaiVanBanController::class);
 
-Route::resource('/truong', TruongController::class);
+    Route::resource('/don-vi-cap-cao', DonViCapCaoController::class);
 
-Route::resource('/trung-tam', TrungtamController::class);
+    Route::resource('/truong', TruongController::class);
 
-Route::resource('/hanh-chinh', HanhChinhController::class);
+    Route::resource('/trung-tam', TrungtamController::class);
+
+    Route::resource('/hanh-chinh', HanhChinhController::class);
+
+    Route::resource('/phuc-vu', PhucVuController::class);
+
+    Route::resource('/to-chuc', ToChucController::class);
+
+    Route::resource('/chuc-vu', ChucVuController::class);
+
+    Route::resource('/khoa', KhoaController::class);
+    // Các route khác ở đây
+});
 
 
-Route::resource('/khoa', KhoaController::class);
+
 

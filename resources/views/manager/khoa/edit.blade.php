@@ -39,7 +39,7 @@
               	@csrf
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Tên Loại Văn Bản: </label>
+                    <label for="exampleInputEmail1">Tên Khoa: </label>
                     <input type="text" class="form-control" value="{{$khoa->TenKhoa}}" name="TenKhoa" id="exampleInputEmail1" placeholder="...">
                   </div>
                   <div class="form-group">
@@ -73,7 +73,7 @@
 
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">Lưu</button>
-                  <button type="button" class="btn btn-light"><a href="{{route('khoa.index')}}">Quay Lại </a></button>
+                  <a href="{{route('khoa.index')}}"><button type="button" class="btn btn-light">Quay Lại </button></a>
                 </div>
               </form>
 </div>

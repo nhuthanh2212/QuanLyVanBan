@@ -38,7 +38,7 @@
               	@csrf
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Tên Trường: </label>
+                    <label for="exampleInputEmail1">Tên Phòng: </label>
                     <input type="text" class="form-control" name="TenP" id="exampleInputEmail1" placeholder="...">
                   </div>
                   <div class="form-group">
@@ -53,7 +53,7 @@
 
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">Thêm</button>
-                  <button type="button" class="btn btn-light"><a href="{{route('hanh-chinh.index')}}">Quay Lại </a></button>
+                  <a href="{{route('hanh-chinh.index')}}"><button type="button" class="btn btn-light">Quay Lại</button> </a>
                 </div>
               </form>
 </div>

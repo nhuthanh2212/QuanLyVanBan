@@ -63,7 +63,7 @@
 
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">Lưu</button>
-                  <button type="button" class="btn btn-light"><a href="{{route('hanh-chinh.index')}}">Quay Lại </a></button>
+                  <a href="{{route('hanh-chinh.index')}}"> <button type="button" class="btn btn-light">Quay Lại</button></a>
                 </div>
               </form>
 </div>

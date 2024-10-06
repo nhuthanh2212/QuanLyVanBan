@@ -62,7 +62,7 @@
 
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">Thêm</button>
-                  <button type="button" class="btn btn-light"><a href="{{route('khoa.index')}}">Quay Lại </a></button>
+                  <a href="{{route('khoa.index')}}"><button type="button" class="btn btn-light">Quay Lại</button> </a>
                 </div>
               </form>
 </div>
