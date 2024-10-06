@@ -10,7 +10,8 @@ use App\Http\Controllers\hanhChinhController;
 use App\Http\Controllers\PhucVuController;
 use App\Http\Controllers\ToChucController;
 use App\Http\Controllers\ChucVuController;
-
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 
 
 
@@ -27,9 +28,22 @@ use App\Http\Controllers\ChucVuController;
 |
 */
 
+Route::get('/login-manager', [AdminController::class, 'login'])->name('login');
+
+
+
+Route::get('/register-auth',[AdminController::class, 'register_auth']); 
+
+
+Route::get('/logout-auth',[AdminController::class, 'logout_auth']); 
+
+Route::post('/register',[AdminController::class, 'register']); 
+
+Route::post('/home',[AdminController::class, 'dangnhap']); 
+
 // Route cho phần quản lý văn bản
 Route::prefix('manager')->group(function () {
-    Route::resource('/quan-ly-van-ban', LoaiVanBanController::class);
+    
 
     Route::resource('/loai-van-ban', LoaiVanBanController::class);
 
@@ -51,6 +65,8 @@ Route::prefix('manager')->group(function () {
     // Các route khác ở đây
 });
 
+
+Route::resource('/user', UserController::class);
 
 
 
