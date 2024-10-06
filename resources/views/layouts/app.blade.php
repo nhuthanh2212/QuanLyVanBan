@@ -43,11 +43,18 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Home</a>
+        <a href="{{URL::to('/home')}}" class="nav-link">Home</a>
       </li>
+      <?php
+          use Illuminate\Support\Facades\Session;
+            $id = Session::get('id');
+            
+          ?>
+      @if($id)
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
+        <a href="{{URL::to('/logout')}}" class="nav-link"><button type="button" class="btn btn-ligh btn-sm">Đăng Xuất</button></a>
       </li>
+      @endif
     </ul>
 
     <!-- Right navbar links -->

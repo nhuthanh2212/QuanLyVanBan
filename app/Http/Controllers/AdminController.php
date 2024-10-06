@@ -39,24 +39,30 @@ class AdminController extends Controller
         $dangnhap = TaiKhoan::where('TenDN', $data['TenDN'])->first();
 
         if($dangnhap && md5($data['password']) === $dangnhap->password) {
+            Session::put('name',$dangnhap->HoTen);
+            Session::put('id',$dangnhap->id_TK);
             // Nếu đúng mật khẩu MD5
             toastr()->success('Đăng Nhập Thành Công');
-            return view('home');
+            return redirect::to('/home');
         }
         else
         {
-            return view('login-manager');
+            Session::put('message','Tên Đăng Nhập Hoặc Mặt Khẩu Bị Sai Vui Lòng Nhập Lại! ');
+            toastr()->error('Đăng Nhập Thất Bại');
+            return redirect::to('/login-manager');
         }
         
     }
-    public function logout_auth(){
-        Auth::logout();
-        return redirect('login-manager')->with('message','Đăng Xuất Thành Công');
+    public function logout(){
+        Session::put('name',null);
+        Session::put('id',null);
+        toastr()->success('Đăng Xuất Thành Công');
+        return redirect('login-manager');
     }
     public function index()
     {
         
-        return view('home');
+       
     }
 
     /**

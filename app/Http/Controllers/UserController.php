@@ -72,4 +72,10 @@ class UserController extends Controller
     {
         //
     }
+
+    public function profile()
+    {
+        return view('manager.user.profile');
+    }
+    
 }

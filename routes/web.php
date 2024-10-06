@@ -12,7 +12,7 @@ use App\Http\Controllers\ToChucController;
 use App\Http\Controllers\ChucVuController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\HomeController;
 
 
 
@@ -39,7 +39,11 @@ Route::get('/logout-auth',[AdminController::class, 'logout_auth']);
 
 Route::post('/register',[AdminController::class, 'register']); 
 
-Route::post('/home',[AdminController::class, 'dangnhap']); 
+Route::POST('/dang-nhap',[AdminController::class, 'dangnhap']); 
+
+Route::get('/logout',[AdminController::class, 'logout']); 
+
+Route::get('/home',[HomeController::class, 'index']); 
 
 // Route cho phần quản lý văn bản
 Route::prefix('manager')->group(function () {
@@ -68,5 +72,5 @@ Route::prefix('manager')->group(function () {
 
 Route::resource('/user', UserController::class);
 
-
+Route::get('/profile/{name}',[UserController::class, 'profile']); 
 
