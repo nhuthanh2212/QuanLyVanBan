@@ -19,7 +19,7 @@ class AdminController extends Controller
      */
     public function login()
     {
-        return view('login_manager');
+        return view('login.login');
     }
 
     public function dangnhap(Request $request){
@@ -58,6 +58,77 @@ class AdminController extends Controller
         Session::put('id',null);
         toastr()->success('Đăng Xuất Thành Công');
         return redirect('login-manager');
+    }
+
+    public function forgot_password(){
+        return view('login.forgot_password');
+    }
+
+    public function forgot(Request $request){
+        $data = $request->validate([
+            'TenDN' => 'required',
+            'DienThoai' => 'required',
+           
+        ],
+        [
+            
+            'TenDN.required' => 'Tên Đăng Nhập Phải Có',
+            'DienThoai.required' => 'Số Điện Thoại Phải Có',
+           
+            
+        ]);
+        
+        $forgot = TaiKhoan::where('TenDN',$data['TenDN'])->where('DienThoai',$data['DienThoai'])->first();
+        
+        if($forgot){
+            Session::put('id',$forgot->id_TK);
+            toastr()->warning('Vui Lòng Nhập Mật Khẩu Mới','Tài Khoản Hợp Lệ');
+            return redirect('/new-password');
+        }
+        else{
+            toastr()->error('Vui Lòng Nhập Lại Tên Đăng Nhập Hoặc Số Điện Thoại','Tài Khoản Không Hợp Lệ');
+            return redirect('/forgot-password');
+        }
+
+    }
+    public function new_password(){
+        return view('login.new_password');
+    }
+
+    public function password(Request $request){
+        $data = $request->validate([
+            'password' => 'required',
+            'comfirm' => 'required',
+           
+        ],
+        [
+            
+            'password.required' => 'Mật Khẩu Mới Phải Có',
+            'comfirm.required' => 'Xác Nhận Mật Khẩu Phải Có',
+           
+            
+        ]);
+       
+        if($data['password'] === $data['comfirm']){
+            $id = $request->id;
+            $taikhoan = TaiKhoan::find($id);
+            if ($taikhoan) {
+                // Nếu tìm thấy tài khoản, cập nhật mật khẩu
+                $taikhoan->password = md5($data['password']);
+                $taikhoan->save();
+        
+                toastr()->success('Tạo Mật Khẩu Mới Thành Công');
+                return redirect('/login-manager');
+            }
+            else{
+                toastr()->error('Tài Khoản Không Tồn Tại');
+                return redirect('/login-manager');
+            }
+        }
+        else{
+            toastr()->error('Mật Khẩu Mới Và Xác Nhận Không Đúng Vui Lòng Nhập Lại');
+            return redirect('/login-manager');
+        }
     }
     public function index()
     {

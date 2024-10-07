@@ -11,7 +11,7 @@ class VanBanDenController extends Controller
      */
     public function index()
     {
-        //
+        return view('vanban.vanbanden.list');
     }
 
     /**

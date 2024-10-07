@@ -34,12 +34,13 @@ Route::get('/login-manager', [AdminController::class, 'login'])->name('login');
 
 
 
-Route::get('/register-auth',[AdminController::class, 'register_auth']); 
+Route::get('/forgot-password',[AdminController::class, 'forgot_password']); 
 
+Route::post('/forgot',[AdminController::class, 'forgot']); 
 
-Route::get('/logout-auth',[AdminController::class, 'logout_auth']); 
+Route::get('/new-password',[AdminController::class, 'new_password']); 
 
-Route::post('/register',[AdminController::class, 'register']); 
+Route::post('/password',[AdminController::class, 'password']); 
 
 Route::POST('/dang-nhap',[AdminController::class, 'dangnhap']); 
 

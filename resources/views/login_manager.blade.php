@@ -3,7 +3,7 @@
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
   <link type="image/x-icon" href="https://duytan.edu.vn/images/icon/DTU.ICO?v=1" rel="Shortcut Icon">
-  <title>Quản Lý Văn Bản Trường Đại Học Duy Tân </title>
+  <title>Login-Quản Lý Văn Bản Trường Đại Học Duy Tân </title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="Visitors Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
@@ -26,37 +26,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <body>
 <div class="log-w3">
 <div class="w3layouts-main">
-	<h2>Đăng Nhập</h2>
-	@if ($errors->any())
-				    <div class="alert alert-dark">
-				        <ul style="list-style-type: none;">
-				            @foreach ($errors->all() as $error)
-				                <li><span class="text-alert">{{ $error }}</span></li>
-				            @endforeach
-				        </ul>
-				    </div>
-				@endif
-	<?php
-	use Illuminate\Support\Facades\Session;
-		$message = Session::get('message');
-		if($message){
-			echo '<span class="text-alert">'.$message.'</span>' ;
-			Session::put('message',null);
-		}
-	?>
-		<form action="{{URL::to('/dang-nhap')}}" method="post">
-			{{ csrf_field() }}
-			
-			<input type="text" class="ggg" placeholder="Tên Đăng Nhập"  name="TenDN">
-			<input type="password" class="ggg" name="password" placeholder="Mật Khẩu" >
-			<span><input type="checkbox" />Remember Me</span>
-			<h6><a href="{{url::to('/forgot-password')}}">Forgot Password?</a></h6>
-			<div class="clearfix"></div>
-			<input type="submit" value="Sign In" >
-
-			
-			
-		</form>
+	@yield('content');
 		<!-- <p>Don't Have an Account ?<a href="registration.html">Create an account</a></p> -->
 		
 </div>

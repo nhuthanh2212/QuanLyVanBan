@@ -4,13 +4,13 @@
    <div class="container-fluid">
       <div class="row mb-2">
          <div class="col-sm-6">
-            <h1 class="m-0">Danh Sách Văn Bản Đi</h1>
+            <h1 class="m-0">Danh Sách Văn Bản Đến</h1>
          </div>
          <!-- /.col -->
          <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
                <li class="breadcrumb-item"><a href="{{URL::to('/home')}}">Home</a></li>
-               <li class="breadcrumb-item active">Danh Sách Văn Bản Đi</li>
+               <li class="breadcrumb-item active">Danh Sách Văn Bản Đến</li>
             </ol>
          </div>
          <!-- /.col -->
@@ -37,7 +37,7 @@
                   
                 </div>
                 <!-- /.btn-group -->
-                  <a href="{{route('van-ban-di.index')}}">
+                  <a href="{{route('van-ban-den.index')}}">
                      <button type="button" class="btn btn-default btn-sm">
                         <i class="fas fa-sync-alt"></i>
                      </button>
