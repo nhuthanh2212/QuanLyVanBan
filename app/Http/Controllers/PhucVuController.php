@@ -3,15 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+
 use App\Models\PhucVu;
 
 class PhucVuController extends Controller
 {
+    public function session_login(){
+        $id = Session::get('id');
+        if($id){
+            return redirect::to('/home');
+        }
+        else{
+            return redirect::to('/login-manager')->send();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->session_login();
         $phucvu = PhucVu::orderBy('id','ASC')->get();
         return view('manager.phucvu.list',compact('phucvu'));
     }
@@ -21,6 +34,7 @@ class PhucVuController extends Controller
      */
     public function create()
     {
+        $this->session_login();
         return view('manager.phucvu.create');
     }
 
@@ -63,6 +77,7 @@ class PhucVuController extends Controller
      */
     public function edit(string $id)
     {
+        $this->session_login();
         $phucvu = PhucVu::find($id);
         return view('manager.phucvu.edit', compact('phucvu'));
     }

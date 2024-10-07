@@ -15,18 +15,20 @@
         
         <div class="info">
         <?php
-          use Illuminate\Support\Facades\Session;
+
+        use App\Models\TaiKhoan;
+        use Illuminate\Support\Facades\Session;
             $name = Session::get('name');
+            $id = Session::get('id');
+            $slug = TaiKhoan::where('id_TK',$id)->first();
             if($name){
             ?>
-          <a href="{{URL::to('/profile',$name)}}" class="d-block">
-         <?php
-            
-              echo $name ;
-             ?>
-            
-          
-          </a>
+              <a href="{{URL::to('/profile',$slug->slug)}}" class="d-block">
+                <?php
+                
+                  echo $name ;
+                ?>
+              </a>
           <?php }
           ?>
         </div>
@@ -50,9 +52,31 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
+            <li class="nav-item ">
+              <a href="{{route('van-ban-den.index')}}" class="nav-link ">
+                  <i class="nav-icon fa-solid fa-folder-plus"></i>
+                  <p>
+                    Văn Bản Đến
+                  
+                  </p>
+              </a>
+            
+          </li>
+          <li class="nav-item ">
+              <a href="{{route('van-ban-di.index')}}" class="nav-link ">
+             
+                  <i class="nav-icon fa-solid fa-folder-minus"></i>
+                  <p>
+                    Văn Bản Đi
+                  
+                  </p>
+              </a>
+            
+          </li>
           <li class="nav-item {{Request::segment(1) == 'manager' ? 'menu-is-opening menu-open' : ''}}">
             <a href="#" class="nav-link ">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="nav-icon fa-solid fa-bars-progress"></i>
+              
               <p>
                 Managers
                 <i class="right fas fa-angle-left"></i>

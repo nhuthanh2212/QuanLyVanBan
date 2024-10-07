@@ -3,15 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+
 use App\Models\Truong;
 
 class TruongController extends Controller
 {
+    public function session_login(){
+        $id = Session::get('id');
+        if($id){
+            return redirect::to('/home');
+        }
+        else{
+            return redirect::to('/login-manager')->send();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->session_login();
         $truong = Truong::orderBy('id','ASC')->get();
         return view('manager.truong.list', compact('truong'));
     }
@@ -21,6 +34,7 @@ class TruongController extends Controller
      */
     public function create()
     {
+        $this->session_login();
         return view('manager.truong.create');
     }
 
@@ -63,6 +77,7 @@ class TruongController extends Controller
      */
     public function edit(string $id)
     {
+        $this->session_login();
         $truong = Truong::find($id);
         return view('manager.truong.edit', compact('truong'));
     }

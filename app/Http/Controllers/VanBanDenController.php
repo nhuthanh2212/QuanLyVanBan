@@ -3,28 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Redirect;
 
-class HomeController extends Controller
+class VanBanDenController extends Controller
 {
-
-    public function session_login(){
-        $id = Session::get('id');
-        if($id){
-            return redirect::to('/home');
-        }
-        else{
-            return redirect::to('/login-manager')->send();
-        }
-    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $this->session_login();
-        return view('home');
+        //
     }
 
     /**

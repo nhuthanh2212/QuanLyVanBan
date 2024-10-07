@@ -3,15 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+
+
 use App\Models\DonViCapCao;
 
 class DonViCapCaoController extends Controller
 {
+    public function session_login(){
+        $id = Session::get('id');
+        if($id){
+            return redirect::to('/home');
+        }
+        else{
+            return redirect::to('/login-manager')->send();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->session_login();
         $donvi = DonViCapCao::orderBy('id_DV','ASC')->get();
         return view('manager.donvicapcao.list' , compact('donvi'));
     }
@@ -21,6 +35,7 @@ class DonViCapCaoController extends Controller
      */
     public function create()
     {
+        $this->session_login();
         return view('manager.donvicapcao.create');
     }
 
@@ -63,6 +78,7 @@ class DonViCapCaoController extends Controller
      */
     public function edit(string $id)
     {
+        $this->session_login();
         $donvi = DonViCapCao::find($id);
         return view('manager.donvicapcao.edit',compact('donvi'));
     }

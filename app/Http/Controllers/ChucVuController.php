@@ -3,15 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 use App\Models\ChucVu;
 
 class ChucVuController extends Controller
 {
+    public function session_login(){
+        $id = Session::get('id');
+        if($id){
+            return redirect::to('/home');
+        }
+        else{
+            return redirect::to('/login-manager')->send();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->session_login();
         $chucvu = ChucVu::orderBy('id','ASC')->get();
         return view('manager.chucvu.list', compact('chucvu'));
     }
@@ -21,6 +33,7 @@ class ChucVuController extends Controller
      */
     public function create()
     {
+        $this->session_login();
         return view('manager.chucvu.create');
     }
 
@@ -29,6 +42,7 @@ class ChucVuController extends Controller
      */
     public function store(Request $request)
     {
+
         $data = $request->validate([
             'TenCV' => 'required|unique:chucvu',
             'MoTaCV' => 'required',
@@ -63,6 +77,7 @@ class ChucVuController extends Controller
      */
     public function edit(string $id)
     {
+        $this->session_login();
         $chucvu = ChucVu::find($id);
         return view('manager.chucvu.edit', compact('chucvu'));
     }
@@ -72,6 +87,7 @@ class ChucVuController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        
         $data = $request->validate([
             'TenCV' => 'required',
             'MoTaCV' => 'required',
@@ -98,6 +114,7 @@ class ChucVuController extends Controller
      */
     public function destroy(string $id)
     {
+        
         $chucvu = ChucVu::find($id);
         $chucvu->delete();
         toastr()->success('Xóa Chức Vụ Thành Công');

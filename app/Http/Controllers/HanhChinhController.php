@@ -3,15 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+
+
 use App\Models\HanhChinh;
 
 class HanhChinhController extends Controller
 {
+    public function session_login(){
+        $id = Session::get('id');
+        if($id){
+            return redirect::to('/home');
+        }
+        else{
+            return redirect::to('/login-manager')->send();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->session_login();
         $hanhchinh = HanhChinh::orderBy('id','ASC')->get();
         return view('manager.hanhchinh.list', compact('hanhchinh'));
     }
@@ -21,6 +35,7 @@ class HanhChinhController extends Controller
      */
     public function create()
     {
+        $this->session_login();
         return view('manager.hanhchinh.create');
     }
 
@@ -63,6 +78,7 @@ class HanhChinhController extends Controller
      */
     public function edit(string $id)
     {
+        $this->session_login();
         $hanhchinh = HanhChinh::find($id);
         return view('manager.hanhchinh.edit', compact('hanhchinh'));
     }
