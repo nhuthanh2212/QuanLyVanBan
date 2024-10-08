@@ -79,12 +79,13 @@
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Gửi Đến: </label>
-                    <div id="recipientDisplay" class="selected-recipients" aria-expanded="false" style="cursor: pointer;">Chọn Nơi Gửi Đến</div>
+                    <div id="recipientDisplay" class="selected-recipients" aria-expanded="false" >Chọn Nơi Gửi Đến</div>
                   </div>
                   <!-- Collapsible section -->
                   <div id="recipientList" class="collapse">
                         <table class="table">
                             <thead>
+                                <tr><th scope="col"><input type="checkbox" id="checkAll" class="check-all"> Chọn Tất Cả</th></tr>
                                 <tr>
                                     <th scope="col"><input type="checkbox" id="checkAllDonViCap" class="check-all"> Đơn Vị Cấp Cao</th>
                                     <th scope="col"><input type="checkbox" id="checkAllTruong" class="check-all"> Trường Thành Viên</th>
