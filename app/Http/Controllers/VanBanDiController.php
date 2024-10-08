@@ -19,7 +19,7 @@ class VanBanDiController extends Controller
      */
     public function create()
     {
-        //
+        return view('vanban.vanbandi.create');
     }
 
     /**

@@ -26,7 +26,7 @@
       <div class="row">
          <div class="col-12">
          <div class="card-body p-0">
-              <div class="mailbox-controls">
+              <div class="mailbox-controls ">
                 <!-- Check all button -->
                 <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i>
                 </button>
@@ -42,6 +42,29 @@
                         <i class="fas fa-sync-alt"></i>
                      </button>
                   </a>
+                  <a href="{{route('van-ban-di.create')}}">
+                     <button type="button" class="btn btn-sm btn-success">
+                        <i class="fa-solid fa-pen"></i>
+                        Soạn Văn Bản
+                     </button>
+                  </a>
+                  <div  class=" " >
+                  <form method="post" action="{{route('loc-phim')}}" enctype="multipart/form-data">
+                  @csrf
+                     <select class="form-select form-select-sm" aria-label="Small select example">
+                        <option selected>Open this select menu</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                     </select>
+                     <select class="form-select form-select-sm" aria-label="Small select example">
+                        <option selected>Open this select menu</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                     </select>
+                  </form>
+                  </div>
                 <!-- /.float-right -->
               </div>
               <div class=" mailbox-messages table table-reponsive">
@@ -51,11 +74,11 @@
                         <th scope="col">
                           
                         </th>
-                        <th scope="col"></th>
-                        <th scope="col">Tên </th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                        <th scope="col">Quản Lý</th>
+                        
+                        <th scope="col">Người Gửi </th>
+                        <th scope="col">Nội Dung</th>
+                        <th scope="col">Nơi Đến</th>
+                        
 
                      </tr>
                   </thead>
@@ -72,8 +95,8 @@
                     <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
                     <td class="mailbox-subject"><b>AdminLTE 3.0 Issue</b> - Trying to find a solution to this problem...
                     </td>
-                    <td class="mailbox-attachment"></td>
-                    <td class="mailbox-date">5 mins ago</td>
+                    
+                    
                   </tr>
                   
                   </tbody>
