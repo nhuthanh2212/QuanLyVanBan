@@ -26,6 +26,7 @@
       <div class="row">
          <div class="col-12">
          <div class="card-body p-0">
+            <div class="row">
               <div class="mailbox-controls ">
                 <!-- Check all button -->
                 <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i>
@@ -48,25 +49,26 @@
                         Soạn Văn Bản
                      </button>
                   </a>
-                  <div  class=" " >
-                  <form method="post" action="{{route('loc-phim')}}" enctype="multipart/form-data">
-                  @csrf
-                     <select class="form-select form-select-sm" aria-label="Small select example">
-                        <option selected>Open this select menu</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                     </select>
-                     <select class="form-select form-select-sm" aria-label="Small select example">
-                        <option selected>Open this select menu</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                     </select>
-                  </form>
-                  </div>
+                  
                 <!-- /.float-right -->
               </div>
+              <div  class=" form-group " style="margin: 5px 0px 0px 50px;">
+                  <form method="get" action="{{URL::to('loc')}}" enctype="multipart/form-data">
+                  
+                     <label for="exampleInputEmail1">Lọc Theo Loại Văn Bản: </label>
+                     
+                     <select name="loaivanban" class="form-select form-select-sm" aria-label="Small select example" style="margin:3px 30px 10px 5px">
+                        <option value="" selected>-----------Chọn-----------</option>
+                        @foreach ($theloai as $tl )
+                           <option value="{{$tl->id_LVB}}" >{{$tl->TenLVB}}</option>
+                        @endforeach
+                     </select>
+                     <label for="exampleInputEmail1">Lọc Theo Ngày: </label>
+                     <input  name="ngay" type="text" id="departure_date"  style="margin:3px 30px 10px 5px" placeholder=" ">
+                     <input type="submit" value="Lọc" class="btn btn-success btn-sm">
+                  </form>
+                  </div>
+               </div>
               <div class=" mailbox-messages table table-reponsive">
                 <table class="table table-hover table-striped" id="myTable">
                   <thead>
@@ -83,21 +85,42 @@
                      </tr>
                   </thead>
                   <tbody>
-                     
-                  <tr>
-                    <td>
-                      <div class="icheck-primary">
-                        <input type="checkbox" value="" id="check1">
-                        <label for="check1"></label>
-                      </div>
-                    </td>
-                    <td class="mailbox-star"><a href="#"><i class="fas fa-star text-warning"></i></a></td>
-                    <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
-                    <td class="mailbox-subject"><b>AdminLTE 3.0 Issue</b> - Trying to find a solution to this problem...
-                    </td>
-                    
-                    
-                  </tr>
+                     @if($vanbandi->isEmpty())
+                        <tr>
+                           <td>
+                              <div class="icheck-primary">
+                                 <input type="checkbox" value="" id="check1">
+                                 <label for="check1"></label>
+                              </div>
+                           </td>
+                           <td class="mailbox-star"><a href="#"><i class="fas fa-star text-warning"></i></a></td>
+                           <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
+                           <td class="mailbox-subject"><b>AdminLTE 3.0 Issue</b> - Trying to find a solution to this problem...
+                           </td>
+                           
+                           
+                        </tr><!-- This will be displayed if the collection is empty -->
+                     @else
+                        <ul>
+                           @foreach($vanbandi as $vb)
+                           <tr>
+                              <td>
+                                 <div class="icheck-primary">
+                                    <input type="checkbox" value="" id="check1">
+                                    <label for="check1"></label>
+                                 </div>
+                              </td>
+                              <td class="mailbox-star"><a href="#"><i class="fas fa-star text-warning"></i></a></td>
+                              <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
+                              <td class="mailbox-subject"><b>AdminLTE 3.0 Issue</b> - Trying to find a solution to this problem...
+                              </td>
+                              
+                              
+                           </tr>
+                           @endforeach
+                        </ul>
+                     @endif
+                  
                   
                   </tbody>
                 </table>

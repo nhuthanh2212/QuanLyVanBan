@@ -80,4 +80,6 @@ Route::get('/profile/{slug}',[UserController::class, 'profile']);
 //quản lý van ban
 Route::resource('/van-ban-di', VanBanDiController::class);
 
+Route::get('/loc',[VanBanDiController::class, 'loc']); 
+
 Route::resource('/van-ban-den', VanBanDenController::class);

@@ -262,6 +262,8 @@
         licenseKey: 'your license key'
     } );
 </script>
+
+
 <script>
   $( function() {
     $( "#departure_date" ).datepicker();
@@ -323,6 +325,117 @@
       }
     })
   })
+</script>
+<script>
+         $(function() {
+             $( "#start_date" ).datepicker({
+                 //defaultDate: "+1w",
+                 minDate: '0',
+                 dateFormat: "dd-mm-yy",
+                 changeMonth: true,
+                 numberOfMonths: 1,
+                 onClose: function( selectedDate ) {
+                     $( "#end_date" ).datepicker( "option", "minDate", selectedDate );
+                 }
+             });
+             $( "#end_date" ).datepicker({
+                 //defaultDate: "+1w",
+                 dateFormat: "dd-mm-yy",
+                 changeMonth: true,
+                 numberOfMonths: 1,
+                 onClose: function( selectedDate ) {
+                     $( "#start_date" ).datepicker( "option", "maxDate", selectedDate );
+                 }
+             });
+         });
+      </script>
+
+<!-- collapse nguoi nhan ở van ban di -->
+<script>
+$(document).ready(function() {
+    // Check/uncheck all checkboxes in a column
+    $('.check-all').on('change', function() {
+        var isChecked = $(this).is(':checked');
+        var className = $(this).attr('id').replace('checkAll', 'check-'); // get the corresponding checkbox class
+        $('.' + className).prop('checked', isChecked);
+    });
+
+    // Show or hide the recipient list when clicking on recipientDisplay
+    $('#recipientDisplay').on('click', function() {
+        $('#recipientList').collapse('toggle');
+    });
+
+    // Collect selected recipients when checkboxes change
+    $('.check-don-vi, .check-truong, .check-khoa, .check-trung-tam, .check-hanh-chinh, .check-phuc-vu, .check-to-chuc').on('change', function() {
+        var selectedIds = []; // Array to store selected ids
+
+        // Collect checked values
+        $('.check-don-vi:checked, .check-truong:checked, .check-khoa:checked, .check-trung-tam:checked, .check-hanh-chinh:checked, .check-phuc-vu:checked, .check-to-chuc:checked').each(function() {
+            selectedIds.push($(this).val()); // Get the value of the checked checkbox
+        });
+
+        // Display the selected recipients
+        $('#recipientDisplay').html(selectedIds.join(', ')); // Join selected ids with a comma
+    });
+});
+
+$(document).ready(function() {
+    // Check/uncheck all checkboxes in the column
+    $('#checkAllDonViCap').on('change', function() {
+        $('.check-don-vi').prop('checked', this.checked);
+    });
+    $('#checkAllTruong').on('change', function() {
+        $('.check-truong').prop('checked', this.checked);
+    });
+    $('#checkAllKhoa').on('change', function() {
+        $('.check-khoa').prop('checked', this.checked);
+    });
+    $('#checkAllTrungTam').on('change', function() {
+        $('.check-trung-tam').prop('checked', this.checked);
+    });
+    $('#checkAllHanhChinh').on('change', function() {
+        $('.check-hanh-chinh').prop('checked', this.checked);
+    });
+    $('#checkAllPhucVu').on('change', function() {
+        $('.check-phuc-vu').prop('checked', this.checked);
+    });
+    $('#checkAllToChuc').on('change', function() {
+        $('.check-to-chuc').prop('checked', this.checked);
+    });
+    
+    // Optional: Collect all selected IDs when needed
+    $('#yourSubmitButtonId').on('click', function() {
+        let selectedIds = [];
+
+        // Collect IDs from all selected checkboxes
+        $('.check-don-vi:checked').each(function() {
+            selectedIds.push($(this).val());
+        });
+        $('.check-truong:checked').each(function() {
+            selectedIds.push($(this).val());
+        });
+        $('.check-khoa:checked').each(function() {
+            selectedIds.push($(this).val());
+        });
+        $('.check-trung-tam:checked').each(function() {
+            selectedIds.push($(this).val());
+        });
+        $('.check-hanh-chinh:checked').each(function() {
+            selectedIds.push($(this).val());
+        });
+        $('.check-phuc-vu:checked').each(function() {
+            selectedIds.push($(this).val());
+        });
+        $('.check-to-chuc:checked').each(function() {
+            selectedIds.push($(this).val());
+        });
+
+        // Now you have an array of selected IDs
+        console.log(selectedIds);
+        
+        // You can send these IDs to your server or process them as needed
+    });
+});
 </script>
 </body>
 </html>
