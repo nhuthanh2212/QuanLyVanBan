@@ -66,7 +66,7 @@
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Loại Văn Bản: </label>
-                    <select name="loaivanban" class="form-control " aria-label="Small select example" >
+                    <select name="id_LVB" class="form-control " aria-label="Small select example" >
                         <option value="" selected>-----------Chọn-----------</option>
                         @foreach ($loaivanban as $lvb )
                            <option value="{{$lvb->id_LVB}}" >{{$lvb->TenLVB}}</option>
@@ -100,43 +100,43 @@
                                 <tr>
                                     <td>
                                         @foreach ($donvicapcao as $dv)
-                                            <input type="checkbox" class="check-don-vi" value="{{ $dv->id_DV }}" id="checkDonVi{{ $dv->id_DV }}">
+                                            <input type="checkbox" class="check-don-vi" value="{{ $dv->id_DV }}" name="id_DV[]" id="checkDonVi{{ $dv->id_DV }}">
                                             <span>{{ $dv->TenDV }}</span><br>
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($truong as $truong)
-                                            <input type="checkbox" class="check-truong" value="{{ $truong->id }}" id="checkTruong{{ $truong->id }}">
+                                            <input type="checkbox" class="check-truong" value="{{ $truong->id }}" name="id_T[]"  id="checkTruong{{ $truong->id }}">
                                             <span>{{ $truong->TenTruong }}</span><br>
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($khoa as $khoa)
-                                            <input type="checkbox" class="check-khoa" value="{{ $khoa->id }}" id="checkKhoa{{ $khoa->id }}">
+                                            <input type="checkbox" class="check-khoa" value="{{ $khoa->id }}" name="id_Khoa[]"  id="checkKhoa{{ $khoa->id }}">
                                             <span>{{ $khoa->TenKhoa }}</span><br>
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($trungtam as $tt)
-                                            <input type="checkbox" class="check-trung-tam" value="{{ $tt->id }}" id="checkTrungTam{{ $tt->id }}">
+                                            <input type="checkbox" class="check-trung-tam" value="{{ $tt->id }}" name="id_TT[]"  id="checkTrungTam{{ $tt->id }}">
                                             <span>{{ $tt->TenTT }}</span><br>
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($hanhchinh as $hc)
-                                            <input type="checkbox" class="check-hanh-chinh" value="{{ $hc->id }}" id="checkHanhChinh{{ $hc->id }}">
+                                            <input type="checkbox" class="check-hanh-chinh" value="{{ $hc->id }}" name="id_HC[]"  id="checkHanhChinh{{ $hc->id }}">
                                             <span>{{ $hc->TenP }}</span><br>
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($phucvu as $pv)
-                                            <input type="checkbox" class="check-phuc-vu" value="{{ $pv->id }}" id="checkPhucVu{{ $pv->id }}">
+                                            <input type="checkbox" class="check-phuc-vu" value="{{ $pv->id }}" name="id_PV[]"  id="checkPhucVu{{ $pv->id }}">
                                             <span>{{ $pv->TenPPV }}</span><br>
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($tochuc as $tc)
-                                            <input type="checkbox" class="check-to-chuc" value="{{ $tc->id }}" id="checkToChuc{{ $tc->id }}">
+                                            <input type="checkbox" class="check-to-chuc" value="{{ $tc->id }}" name="id_TC[]"  id="checkToChuc{{ $tc->id }}">
                                             <span>{{ $tc->TenTC }}</span><br>
                                         @endforeach
                                     </td>

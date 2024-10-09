@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
 use App\Models\LoaiVanBan;
 use App\Models\VanBanDi;
@@ -78,7 +81,49 @@ class VanBanDiController extends Controller
     }
     public function store(Request $request)
     {
-        //
+        $id_TK = Session::get('id');
+        $data = $request->validate([
+            'TenVB' => 'required|unique:vanbandi',
+            'SoHieu' => 'required',
+            'id_LVB' => 'required',
+            'file' => 'required',
+            'id_DV' => 'required|array', // Kiểm tra id_DV là một mảng
+        ],
+        [
+            'TenVB.unique' => 'Tên văn bản này đã có, vui lòng điền tên khác',
+            'TenVB.required' => 'Tên Văn Bản Phải Có',
+            'SoHieu.required' => 'Số Hiệu Văn Bản Phải Có',
+            'id_LVB.required' => 'Loai Văn Bản Phải Có',
+            'file.required' => 'File Phải Có',
+        ]);
+        $vanbandi = new VanBanDi();
+        $vanbandi->TenVB = $data['TenVB'];
+        $vanbandi->slug = Str::slug($data['TenVB']);
+        $vanbandi->SoHieu = $data['SoHieu'];
+        $vanbandi->id_LVB = $data['id_LVB'];
+        $vanbandi->id_TK = $id_TK;
+        $vanbandi->NgayGui = Carbon::now('Asia/Ho_Chi_Minh');
+
+        if($data['file']){
+            $get_file = $data['file'];
+            $path = 'uploads/vanbandi';
+            $get_name_file = $get_file->getClientOriginalName();
+            $name_file = current(explode('.',$get_name_file));
+            $new_file = $name_file.rand(0,99).'.'.$get_file->getClientOriginalExtension();
+            $get_file->move($path,$new_file);
+            $vanbandi->file = $new_file;
+        }
+        $vanbandi->save();
+       // Gán nơi đến (nhiều checkbox đã chọn)
+        if ($request->has('id_DV')) {
+            // Gán id_DV từ request vào cột id_Den của bảng pivot
+            foreach($request->id_DV as $id_DV) {
+                $vanbandi->noiden()->attach($id_DV); // Cột đúng là id_Den trong bảng noiden
+            }
+        }
+        toastr()->success('Gửi Văn Bản Thành Công');
+        return redirect()->route('van-ban-di.index');
+
     }
 
     /**
