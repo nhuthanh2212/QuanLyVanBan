@@ -80,6 +80,11 @@ Route::get('/profile/{slug}',[UserController::class, 'profile']);
 //quản lý van ban
 Route::resource('/van-ban-di', VanBanDiController::class);
 
+Route::get('/chi-tiet/{slug}',[VanBanDiController::class, 'chitiet']); 
+
+// Route tải file
+Route::get('/download-file', [VanBanDiController::class, 'downloadFile'])->name('file.download');
+
 Route::get('/loc',[VanBanDiController::class, 'loc']); 
 
 Route::resource('/van-ban-den', VanBanDenController::class);

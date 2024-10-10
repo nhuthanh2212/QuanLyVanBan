@@ -18,6 +18,7 @@ use App\Models\PhucVu;
 use App\Models\ToChuc;
 use App\Models\Khoa;
 use App\Models\TaiKhoan;
+use App\Models\NoiDen;
 
 class VanBanDiController extends Controller
 {
@@ -27,7 +28,11 @@ class VanBanDiController extends Controller
     public function index()
     {
         $theloai = LoaiVanBan::orderBy('id_LVB','ASC')->get();
-        $vanbandi = VanBanDi::orderBy('id','DESC')->get();
+        $vanbandi = VanBanDi::with('taikhoan')->orderBy('id','DESC')->get();
+        foreach ($vanbandi as $vb) {
+            // Kiểm tra nếu ngày gửi trong vòng 3 ngày
+            $vb->isNew = Carbon::parse($vb->NgayGui)->greaterThanOrEqualTo(Carbon::now()->subDays(3));
+        }
         return view('vanban.vanbandi.list',compact('theloai','vanbandi'));
     }
 
@@ -52,6 +57,14 @@ class VanBanDiController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    public function chitiet(string $slug){
+        
+        $vanbandi_chitiet = VanBanDi::where('slug',$slug)->first();
+        $noiden = NoiDen::where('id_VB', $vanbandi_chitiet->id)->orderBy('id','DESC')->get();
+        
+        $theloai = LoaiVanBan::where('id_LVB',$vanbandi_chitiet->id_LVB)->first();
+        return view('vanban.vanbandi.chitiet', compact('vanbandi_chitiet','theloai','noiden'));
+    }
     public function loc()
     {
         $loaivanban = $_GET['loaivanban'];
@@ -105,13 +118,17 @@ class VanBanDiController extends Controller
         $vanbandi->NgayGui = Carbon::now('Asia/Ho_Chi_Minh');
 
         if($data['file']){
-            $get_file = $data['file'];
-            $path = 'uploads/vanbandi';
-            $get_name_file = $get_file->getClientOriginalName();
-            $name_file = current(explode('.',$get_name_file));
-            $new_file = $name_file.rand(0,99).'.'.$get_file->getClientOriginalExtension();
-            $get_file->move($path,$new_file);
-            $vanbandi->file = $new_file;
+            $get_file = $data['file'];  // Lấy đối tượng file
+            $path = 'uploads/vanbandi'; // Đường dẫn lưu file
+
+            // Lấy tên gốc của file
+            $file_name = time() . '_' . $get_file->getClientOriginalName(); // Đảm bảo tên file duy nhất
+
+            // Di chuyển file đến thư mục đích và lưu với tên gốc (hoặc bạn có thể tạo tên mới)
+            $get_file->move($path, $file_name);
+
+            // Lưu tên file vào cột `file` trong cơ sở dữ liệu
+            $vanbandi->file = $file_name;
         }
         $vanbandi->save();
        // Gán nơi đến (nhiều checkbox đã chọn)
@@ -156,5 +173,16 @@ class VanBanDiController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function downloadFile(Request $request){
+        // Lấy tên file từ request
+        $fileName = $request->input('file');
+
+        // Kiểm tra xem file có tồn tại không
+        if (file_exists(public_path('uploads/vanbandi/' . $fileName))) {
+            return response()->download(public_path('uploads/vanbandi/' . $fileName));
+        }
+
+        return response()->json(['error' => 'File không tồn tại.'], 404);
     }
 }

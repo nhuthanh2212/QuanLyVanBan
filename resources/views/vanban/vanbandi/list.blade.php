@@ -1,5 +1,7 @@
 @extends('layouts.app')
 @section('content')
+<div class="content">
+   <div class="container-fluid">
 <div class="content-header">
    <div class="container-fluid">
       <div class="row mb-2">
@@ -70,17 +72,17 @@
                   </div>
                </div>
               <div class=" mailbox-messages table table-reponsive">
-                <table class="table table-hover table-striped" id="myTable">
+                <table class="table table-hover table-striped" id="myTable" data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
                   <thead>
                      <tr>
-                        <th scope="col">
+                        <th scope="col" >
                           
                         </th>
                         
                         <th scope="col">Người Gửi </th>
                         <th scope="col">Nội Dung</th>
-                        <th scope="col">Nơi Đến</th>
-                        
+                        <th scope="col">Nơi Nhận</th>
+                        <th scope="col"></th>
 
                      </tr>
                   </thead>
@@ -102,22 +104,33 @@
                         </tr><!-- This will be displayed if the collection is empty -->
                      @else
                         <ul>
-                           @foreach($vanbandi as $vb)
-                           <tr>
+                        @foreach($vanbandi as $key => $vb)
+                           <tr id="scrollspyHeading{{$key}}">
                               <td>
-                                 <div class="icheck-primary">
-                                    <input type="checkbox" value="" id="check1">
-                                    <label for="check1"></label>
-                                 </div>
+                                    <div class="icheck-primary">
+                                       <input type="checkbox" value="" id="check{{$key}}">
+                                       <label for="check{{$key}}"></label>
+                                    </div>
                               </td>
-                              <td class="mailbox-star"><a href="#"><i class="fas fa-star text-warning"></i></a></td>
-                              <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
-                              <td class="mailbox-subject"><b>AdminLTE 3.0 Issue</b> - Trying to find a solution to this problem...
+                              <td>{{$vb->taikhoan->HoTen}}</td>
+                              <td>
+                                    <a href="{{URL::to('/chi-tiet', $vb->slug)}}" id="vb{{$key}}" style="color: black">
+                                       {{$vb->TenVB}} <span class="date" data-ngay-gui="{{$vb->NgayGui}}"> {{$vb->NgayGui}}</span>
+                                       
+                                    </a>
+                                    @if($vb->isNew)
+                                    <img src="{{'backend/dist/img/icon-news.gif'}}" alt="new" style=" width: 30px; margin-left: 5px;" id="new{{$key}}">
+                                    @endif
+                                   
                               </td>
-                              
-                              
+                              <td>
+                                    <!-- Bạn có thể thêm dữ liệu ở đây -->
+                              </td>
+                              <td>
+
+                              </td>
                            </tr>
-                           @endforeach
+                        @endforeach
                         </ul>
                      @endif
                   

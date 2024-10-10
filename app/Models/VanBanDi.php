@@ -16,4 +16,8 @@ class VanBanDi extends Model
     public function noiden(){
         return $this->belongsToMany(DonViCapCao::class, 'noiden', 'id_VB', 'id_Den');
     }
+    public function taiKhoan()
+    {
+        return $this->belongsTo(TaiKhoan::class, 'id_TK');
+    }
 }

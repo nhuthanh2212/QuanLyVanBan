@@ -471,5 +471,79 @@ $(document).ready(function() {
     updateCheckAllStatus();
 });
 </script>
+
+<!-- //format data ngay va gio -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Duyệt qua tất cả các thẻ span chứa ngày gửi
+        document.querySelectorAll('.date').forEach(function(element, index) {
+            // Lấy giá trị ngày gửi từ thuộc tính data
+            const ngayGui = new Date(element.getAttribute('data-ngay-gui'));
+
+            // Định dạng lại ngày (dd/mm/yyyy hh:mm:ss)
+            const formattedDate = 
+                ngayGui.getDate().toString().padStart(2, '0') + '/' +         // Ngày
+                (ngayGui.getMonth() + 1).toString().padStart(2, '0') + '/' +  // Tháng
+                ngayGui.getFullYear() + ' ' +                                 // Năm
+                ngayGui.getHours().toString().padStart(2, '0') + ':' +        // Giờ
+                ngayGui.getMinutes().toString().padStart(2, '0') + ':' +      // Phút
+                ngayGui.getSeconds().toString().padStart(2, '0');             // Giây
+
+            // Cập nhật nội dung đã định dạng vào thẻ span
+            element.textContent = formattedDate;
+        });
+    });
+</script>
+
+<!-- mở fiel -->
+<!-- <script>
+    document.getElementById('file-link').addEventListener('click', function() {
+        // Lấy tên file từ nội dung của thẻ span
+        var fileName = this.innerText;
+
+        // Đường dẫn file (giả sử file được lưu ở 'uploads/vanbandi/')
+        var fileUrl = "{{ asset('uploads/vanbandi') }}/" + fileName;
+
+        // Mở file trong một tab mới
+        window.open(fileUrl, '_blank');
+    });
+</script> -->
+
+<!-- tai van ban -->
+<script>
+  
+    $(document).ready(function() {
+        $('.download-file').on('click', function(e) {
+            e.preventDefault(); // Ngăn chặn hành vi mặc định của liên kết
+
+            const fileName = $(this).data('filename');
+
+            // Gửi yêu cầu AJAX để tải file
+            $.ajax({
+                url: '{{ route("file.download") }}',
+                type: 'GET',
+                data: { file: fileName },
+                xhrFields: {
+                    responseType: 'blob' // Đặt loại phản hồi là blob để tải file
+                },
+                success: function(blob, status, xhr) {
+                    // Tạo một đối tượng URL từ blob
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileName; // Đặt tên file cho file tải về
+                    document.body.appendChild(a);
+                    a.click(); // Tự động nhấp vào liên kết để tải file
+                    a.remove(); // Xóa liên kết sau khi tải xong
+                    window.URL.revokeObjectURL(url); // Giải phóng URL
+                },
+                error: function(xhr) {
+                    alert('Có lỗi xảy ra trong quá trình tải file: ' + xhr.responseJSON.error);
+                }
+            });
+        });
+    });
+
+</script>
 </body>
 </html>
