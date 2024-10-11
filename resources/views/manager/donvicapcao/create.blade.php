@@ -11,6 +11,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{URL::to('/home')}}">Home</a></li>
+              <li class="breadcrumb-item"><a href="{{Route( 'don-vi-cap-cao.index')}}">Danh Sách Đơn Vị Cấp Cao</a></li>
               <li class="breadcrumb-item active">Thêm Dơn Vị Cấp Cao</li>
             </ol>
           </div><!-- /.col -->

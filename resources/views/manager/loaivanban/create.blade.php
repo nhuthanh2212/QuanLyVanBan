@@ -11,6 +11,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{URL::to('/home')}}">Home</a></li>
+              <li class="breadcrumb-item"><a href="{{Route( 'loai-van-ban.index')}}">Danh Sách Loại Văn bản</a></li>
               <li class="breadcrumb-item active">Thêm Loại Văn Bản</li>
             </ol>
           </div><!-- /.col -->

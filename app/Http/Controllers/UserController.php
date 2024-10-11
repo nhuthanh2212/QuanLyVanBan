@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\TaiKhoan;
+use App\Models\ChucVu;
+
+
 use Auth;
 
 class UserController extends Controller
@@ -17,12 +20,12 @@ class UserController extends Controller
         // $role = Role::create(['name' => 'user']); them vai tro
         // $permission = Permission::create(['name' => '']); //them su cho phep
 
-        $role = Role::find(2);
-        $permission = Permission::find(4);
-        // $role->givePermissionTo($permission); quyen co vai tro gi
-        $permission->assignRole($role);
-
-        return view('manager.user.list');
+        // $role = Role::find(2);
+        // $permission = Permission::find(4);
+        // // $role->givePermissionTo($permission); quyen co vai tro gi
+        // $permission->assignRole($role);
+        $taikhoan = TaiKhoan::orderBy('id_TK','desc')->get();
+        return view('manager.user.list',compact('taikhoan'));
     }
 
     /**
@@ -30,7 +33,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $chucvu = ChucVu::orderBy('id','ASC')->get();
+        return view('manager.user.create',compact('chucvu'));
     }
 
     /**
@@ -54,7 +58,9 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $tk = TaiKhoan::find($id);
+        $chucvu = ChucVu::orderBy('id','ASC')->get();
+        return view('manager.user.edit',compact('tk','chucvu'));
     }
 
     /**

@@ -11,6 +11,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{URL::to('/home')}}">Home</a></li>
+              <li class="breadcrumb-item"><a href="{{Route( 'chuc-vu.index')}}">Danh Sách Chức Vụ</a></li>
               <li class="breadcrumb-item active">Cập Nhật Chức Vụ</li>
             </ol>
           </div><!-- /.col -->

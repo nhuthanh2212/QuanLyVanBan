@@ -69,11 +69,13 @@ Route::prefix('manager')->group(function () {
     Route::resource('/chuc-vu', ChucVuController::class);
 
     Route::resource('/khoa', KhoaController::class);
+
+    Route::resource('/user', UserController::class);
     // Các route khác ở đây
 });
 
 
-Route::resource('/user', UserController::class);
+
 
 Route::get('/profile/{slug}',[UserController::class, 'profile']); 
 
