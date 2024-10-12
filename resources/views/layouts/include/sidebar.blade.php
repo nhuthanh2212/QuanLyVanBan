@@ -91,6 +91,18 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{route('phong-ban.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Phòng Ban</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('bo-phan.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Bộ Phận</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{route('don-vi-cap-cao.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Đơn Vị Cấp Cao</p>
