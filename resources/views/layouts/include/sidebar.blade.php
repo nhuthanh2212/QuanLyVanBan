@@ -97,12 +97,30 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{route('ban.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Ban Ngành</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{route('bo-phan.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Bộ Phận</p>
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{route('nganh.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Ngành</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('chuyen-nganh.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Chuyên Ngành</p>
+                </a>
+              </li>
+              <!-- <li class="nav-item">
                 <a href="{{route('don-vi-cap-cao.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Đơn Vị Cấp Cao</p>
@@ -155,7 +173,7 @@
                   <i class="far fa-circle nav-icon"></i>
                   <p>Tài Khoản</p>
                 </a>
-              </li>
+              </li> -->
             </ul>
           </li>
 

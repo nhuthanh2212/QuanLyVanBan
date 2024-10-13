@@ -85,7 +85,7 @@
                     <a  href="{{ route('phong-ban.edit',[$pb->id]) }}" class="btn btn-success" ui-toggle-class="">
                     Sữa
                     </a>
-                    <form onsubmit="return confirm('Bạn Có Muốn Xóa Phòng Này Không?')" action="{{route('phong-ban.destroy',[$pb->id])}}" method="post" enctype="multipart/form-data">
+                    <form onsubmit="return confirm('Bạn Có Muốn Xóa Phòng Ban Này Không?')" action="{{route('phong-ban.destroy',[$pb->id])}}" method="post" enctype="multipart/form-data">
                       @csrf
                       @method('DELETE')
                       <input type="submit" class="btn  btn-danger" value="Xóa" >

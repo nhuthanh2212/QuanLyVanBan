@@ -6,13 +6,13 @@
          <div class="container-fluid">
             <div class="row mb-2">
                <div class="col-sm-6">
-                  <h1 class="m-0">Liệt Kê Bộ Phận</h1>
+                  <h1 class="m-0">Liệt Kê Chuyên Ngành</h1>
                </div>
                <!-- /.col -->
                <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
                      <li class="breadcrumb-item"><a href="{{URL::to('/home')}}">Home</a></li>
-                     <li class="breadcrumb-item active">Liệt Kê Bộ Phận</li>
+                     <li class="breadcrumb-item active">Liệt Kê Chuyên Ngành</li>
                   </ol>
                </div>
                <!-- /.col -->
@@ -41,40 +41,40 @@
             <thead>
                <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Tên Bộ Phận</th>
+                    <th scope="col">Tên Chuyên Ngành</th>
                     <th scope="col">Mô Tả</th>
-                    <th scope="col">Thuộc Ban Ngành</th>
+                    <th scope="col">Thuộc Ngành</th>
                     <th scope="col">Trạng Thái</th>
                     <th scope="col">Quản Lý</th>
 
                </tr>
             </thead>
             <tbody class="order_position">
-              @foreach($bophan as $key => $bp)
-               <tr id="{{$bp->id}}">
+              @foreach($chuyennganh as $key => $cn)
+               <tr id="{{$cn->id}}">
                   <th scope="row">{{$key}}</th>
-                  <td>{{$bp->TenBP}}</td>
+                  <td>{{$cn->TenCN}}</td>
                   
                   
                   <td>
                         <span class="text-ellipsis">
-                      @if($bp->MoTaBP != NULL)
-                        @if(strlen($bp->MoTaBP)>150)
+                      @if($cn->MoTaCN != NULL)
+                        @if(strlen($cn->MoTaCN)>150)
                           @php
-                            $cate_desc = substr($bp->MoTaBP,0,100);
+                            $cate_desc = substr($cn->MoTaCN,0,100);
                             echo $cate_desc.'......'
                           @endphp
                          @else
-                         {!!$bp->MoTaBP!!}
+                         {!!$cn->MoTaCN!!}
                         @endif
                       @else
                         Chưa có Mô Tả
                       @endif
                         </span>
                   </td>
-                  <td>{{$bp->bannganh->TenB}}</td>
+                  <td>{{$cn->nganh->TenN}}</td>
                   <td>
-                    @if($bp->TrangThai == 1)
+                    @if($cn->TrangThai == 1)
                      <span class="text text-success">Hiển Thị </span>
                     @else
                     <span class="text text-success">Ẩn </span>
@@ -82,10 +82,10 @@
                   </td>
                   
                   <td>
-                    <a  href="{{ route('bo-phan.edit',[$bp->id]) }}" class="btn btn-success" ui-toggle-class="">
+                    <a  href="{{ route('chuyen-nganh.edit',[$cn->id]) }}" class="btn btn-success" ui-toggle-class="">
                     Sữa
                     </a>
-                    <form onsubmit="return confirm('Bạn Có Muốn Xóa Bộ Phận Này Không?')" action="{{route('bo-phan.destroy',[$bp->id])}}" method="post" enctype="multipart/form-data">
+                    <form onsubmit="return confirm('Bạn Có Muốn Xóa Chuyên Ngành Này Không?')" action="{{route('chuyen-nganh.destroy',[$cn->id])}}" method="post" enctype="multipart/form-data">
                       @csrf
                       @method('DELETE')
                       <input type="submit" class="btn  btn-danger" value="Xóa" >
@@ -97,7 +97,7 @@
          </table>
       </div>
       </div>
-      <a href="{{route('bo-phan.create')}}"><button type="button" class="btn btn-primary">Thêm</button></a>
+      <a href="{{route('chuyen-nganh.create')}}"><button type="button" class="btn btn-primary">Thêm</button></a>
    </div>
 </div>
 

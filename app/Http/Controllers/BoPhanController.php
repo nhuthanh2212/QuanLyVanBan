@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 
 use App\Models\BoPhan;
-use App\Models\PhongBan;
+use App\Models\Ban;
 
 class BoPhanController extends Controller
 {
@@ -16,7 +16,7 @@ class BoPhanController extends Controller
      */
     public function index()
     {
-        $bophan = BoPhan::with('phongban')->orderBy('id','ASC')->get();
+        $bophan = BoPhan::with('bannganh')->orderBy('id','ASC')->get();
         return view('manager.bophan.list',compact('bophan'));
     }
 
@@ -25,8 +25,8 @@ class BoPhanController extends Controller
      */
     public function create()
     {
-        $phongban = PhongBan::orderBy('id','ASC')->get();
-        return view('manager.bophan.create', compact('phongban'));
+        $ban = Ban::orderBy('id','ASC')->get();
+        return view('manager.bophan.create', compact('ban'));
     }
 
     /**
@@ -38,20 +38,20 @@ class BoPhanController extends Controller
         $data = $request->validate([
             'TenBP' => 'required|unique:bophan',
             'MoTaBP' => 'required',
-            'id_PB' => 'required',
+            'id_B' => 'required',
         ],
         [
             'TenBP.unique' => 'Tên bộ phận này đã có, vui lòng điền tên khác',
             'TenBP.required' => 'Tên Bộ Phận Phải Có',
             'MoTaBP.required' => 'Mô Tả Bộ Phận Phải Có',
-           'id_PB.required' => ' Bộ Phận Này Thuộc Phòng Ban Nào Phải Có',
+           'id_B.required' => ' Bộ Phận Này Thuộc Ban Ngành Nào Phải Có',
             
         ]);
         $bophan = new BoPhan();
         $bophan->TenBP = $data['TenBP'];
         $bophan->slug = str::slug($data['TenBP']);
         $bophan->MoTaBP = $data['MoTaBP'];
-        $bophan->id_PB = $data['id_PB'];
+        $bophan->id_B = $data['id_B'];
         $bophan->TrangThai = 1;
         $bophan->save();
         toastr()->success('Thêm Bộ Phận Thành Công');
@@ -72,8 +72,8 @@ class BoPhanController extends Controller
     public function edit(string $id)
     {
         $bophan = BoPhan::find($id);
-        $phongban = PhongBan::orderBy('id','ASC')->get();
-        return view('manager.bophan.edit', compact('phongban', 'bophan'));
+        $ban = Ban::orderBy('id','ASC')->get();
+        return view('manager.bophan.edit', compact('ban', 'bophan'));
     }
 
     /**
@@ -82,22 +82,22 @@ class BoPhanController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->validate([
-            'TenBP' => 'required|unique:bophan',
+            'TenBP' => 'required:bophan',
             'MoTaBP' => 'required',
-            'id_PB' => 'required',
+            'id_B' => 'required',
         ],
         [
-            'TenBP.unique' => 'Tên bộ phận này đã có, vui lòng điền tên khác',
+           
             'TenBP.required' => 'Tên Bộ Phận Phải Có',
             'MoTaBP.required' => 'Mô Tả Bộ Phận Phải Có',
-           'id_PB.required' => ' Bộ Phận Này Thuộc Phòng Ban Nào Phải Có',
+           'id_B.required' => ' Bộ Phận Này Thuộc Ban Ngành Nào Phải Có',
             
         ]);
         $bophan = BoPhan::find($id);
         $bophan->TenBP = $data['TenBP'];
         $bophan->slug = str::slug($data['TenBP']);
         $bophan->MoTaBP = $data['MoTaBP'];
-        $bophan->id_PB = $data['id_PB'];
+        $bophan->id_B = $data['id_B'];
         $bophan->TrangThai = $request->TrangThai;
         $bophan->save();
         toastr()->success('Cập Nhật Bộ Phận Thành Công');

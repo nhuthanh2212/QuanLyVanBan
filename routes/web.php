@@ -18,6 +18,9 @@ use App\Http\Controllers\VanBanDenController;
 
 use App\Http\Controllers\PhongBanController;
 use App\Http\Controllers\BoPhanController;
+use App\Http\Controllers\BanController;
+use App\Http\Controllers\NganhController;
+use App\Http\Controllers\ChuyenNganhController;
 
 
 /*
@@ -57,7 +60,13 @@ Route::prefix('manager')->group(function () {
 
     Route::resource('/phong-ban', PhongBanController::class);
 
+    Route::resource('/ban', BanController::class);
+
     Route::resource('/bo-phan', BoPhanController::class);
+
+    Route::resource('/nganh', NganhController::class);
+
+    Route::resource('/chuyen-nganh', ChuyenNganhController::class);
 
     Route::resource('/don-vi-cap-cao', DonViCapCaoController::class);
 

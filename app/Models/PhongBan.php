@@ -13,9 +13,9 @@ class PhongBan extends Model
     protected $primaryKey = 'id';
     protected $table = 'phongban';
 
-    public function bophan()
+    public function ban()
     {
-        return $this->hasMany(BoPhan::class, 'id_BP');
+        return $this->hasMany(Ban::class, 'id_PB');
     }
     
 }
