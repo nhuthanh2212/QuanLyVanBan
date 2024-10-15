@@ -15,6 +15,7 @@ use App\Http\Controllers\DonViController;
 use App\Http\Controllers\PhongBanController;
 use App\Http\Controllers\PhongController;
 use App\Http\Controllers\NganhController;
+use App\Http\Controllers\ChuyenNganhController;
 
 
 /*
@@ -62,13 +63,21 @@ Route::prefix('manager')->group(function () {
 
     Route::resource('/nganh', NganhController::class);
 
-    
+    Route::resource('/chuyen-nganh', ChuyenNganhController::class);
 
     Route::resource('/chuc-vu', ChucVuController::class);
 
     
 
     Route::resource('/user', UserController::class);
+
+    // group thanh vien
+    Route::get('/group', [UserController::class, 'add_group']);
+
+    Route::post('/select-group', [UserController::class, 'select_group']);
+    Route::post('/insert-group', [UserController::class, 'insert_group']);
+    Route::post('/list-group', [UserController::class, 'list_group']);
+
     // Các route khác ở đây
 });
 

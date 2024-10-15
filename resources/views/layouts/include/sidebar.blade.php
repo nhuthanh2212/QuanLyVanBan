@@ -91,6 +91,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{route('chuc-vu.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Chức Vụ</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{route('khoi.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Khối</p>
@@ -120,7 +126,24 @@
                   <p>Ngành</p>
                 </a>
               </li>
-               
+              <li class="nav-item">
+                <a href="{{route('chuyen-nganh.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Chuyên Ngành</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{URL::to('/manager/group')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Group</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('user.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Người Dùng</p>
+                </a>
+              </li>
             </ul>
           </li>
 

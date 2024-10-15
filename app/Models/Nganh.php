@@ -16,5 +16,9 @@ class Nganh extends Model
     {
         return $this->belongsTo(Phong::class, 'id_P');
     }
+    public function chuyennganh()
+    {
+        return $this->hasMany(ChuyenNganh::class, 'id_N');
+    }
    
 }

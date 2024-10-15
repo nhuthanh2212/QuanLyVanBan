@@ -33,9 +33,11 @@
 				        </ul>
 				    </div>
 				@endif
+       
+                    
               <!-- /.card-header -->
               <!-- form start -->
-              <form method="post" action="{{route('user.store')}}" enctype="multipart/form-data">
+              <!-- <form method="post" action="{{route('user.store')}}" enctype="multipart/form-data">
               	@csrf
                 <div class="card-body">
                     <div class="form-group">
@@ -43,16 +45,15 @@
                         <input type="text" class="form-control" name="HoTen" id="exampleInputEmail1" placeholder="...">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Giới Tính</label>
-                        <select name="GioiTinh" class="form-control input-sm m-bot15 ">
-                            <option >------Chọn------</option>
-                            <option value="1">Nam</option>
-                            <option value="0">Nữ</option>
-                                  
-                                    
-                        </select>
-                    </div>
+                    <label for="exampleInputEmail1">Hình Ảnh: </label>
+                    <input type="file" class="form-control" name="img" id="exampleInputEmail1" >
+                  </div>
                     <div class="form-group">
+                      <label for="exampleInputEmail1" style="margin-right: 10px;" >Giới Tính: </label>
+                        
+                        <label for="exampleInputEmail1" style="margin-right: 10px;"><input type="radio" name="GioiTinh" value="1" checked> Nam</label>
+                        
+                        <label for="exampleInputEmail1" style="margin-right: 20px;" ><input type="radio" name="GioiTinh" value="0" > Nữ</label><br>
                         <label for="exampleInputEmail1">Năm Sinh: </label>
                         <input  name="NamSinh" type="text" id="departure_date" placeholder=" ">
                     </div>
@@ -89,14 +90,16 @@
                         <input type="password" class="form-control" name="password" id="exampleInputEmail1" placeholder="...">
                     </div>
                 </div>
-                <!-- /.card-body -->
+                 /.card-body 
 
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">Thêm</button>
                   <a href="{{route('user.index')}}"><button type="button" class="btn btn-light">Quay Lại </button></a>
                 </div>
-              </form>
+              </form> -->
 </div>
 </div>
 </div>
+
+
 @endsection
