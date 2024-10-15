@@ -9,13 +9,15 @@ class PhongBan extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $fillable = ['TenPB', 'slug', 'MoTaPB','TrangThai'];
+    protected $fillable = ['TenPB', 'slug', 'MoTaPB','TrangThai','id_K'];
     protected $primaryKey = 'id';
     protected $table = 'phongban';
-
-    public function ban()
+    public function khoi()
     {
-        return $this->hasMany(Ban::class, 'id_PB');
+        return $this->belongsTo(Khoi::class, 'id_K');
     }
-    
+    public function donvi()
+    {
+        return $this->hasMany(DonVi::class, 'id_PB');
+    }
 }

@@ -6,13 +6,13 @@
          <div class="container-fluid">
             <div class="row mb-2">
                <div class="col-sm-6">
-                  <h1 class="m-0">Liệt Kê Phòng Ban</h1>
+                  <h1 class="m-0">Liệt Kê Khối</h1>
                </div>
                <!-- /.col -->
                <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
                      <li class="breadcrumb-item"><a href="{{URL::to('/home')}}">Home</a></li>
-                     <li class="breadcrumb-item active">Liệt Kê Phòng Ban</li>
+                     <li class="breadcrumb-item active">Liệt Kê Khối</li>
                   </ol>
                </div>
                <!-- /.col -->
@@ -41,40 +41,40 @@
             <thead>
                <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Tên Phòng Ban</th>
+                    <th scope="col">Tên Khối</th>
                     <th scope="col">Mô Tả</th>
-                    <th scope="col">Thuộc Khối</th>
                     <th scope="col">Trạng Thái</th>
+
                     <th scope="col">Quản Lý</th>
 
                </tr>
             </thead>
             <tbody class="order_position">
-              @foreach($phongban as $key => $pb)
-               <tr id="{{$pb->id}}">
+              @foreach($khoi as $key => $k)
+               <tr id="{{$k->id}}">
                   <th scope="row">{{$key}}</th>
-                  <td>{{$pb->TenPB}}</td>
+                  <td>{{$k->TenK}}</td>
                   
                   
                   <td>
                         <span class="text-ellipsis">
-                      @if($pb->MoTaPB != NULL)
-                        @if(strlen($pb->MoTaPB)>150)
+                      @if($k->MoTaK != NULL)
+                        @if(strlen($k->MoTaK)>150)
                           @php
-                            $cate_desc = substr($pb->MoTaPB,0,100);
+                            $cate_desc = substr($k->MoTaK,0,100);
                             echo $cate_desc.'......'
                           @endphp
                          @else
-                         {!!$pb->MoTaPB!!}
+                         {!!$k->MoTaK!!}
                         @endif
                       @else
                         Chưa có Mô Tả
                       @endif
                         </span>
                   </td>
-                  <td>{{$pb->khoi->TenK}}</td>
+                  
                   <td>
-                    @if($pb->TrangThai == 1)
+                    @if($k->TrangThai == 1)
                      <span class="text text-success">Hiển Thị </span>
                     @else
                     <span class="text text-success">Ẩn </span>
@@ -82,10 +82,10 @@
                   </td>
                   
                   <td>
-                    <a  href="{{ route('phong-ban.edit',[$pb->id]) }}" class="btn btn-success" ui-toggle-class="">
+                    <a  href="{{ route('khoi.edit',[$k->id]) }}" class="btn btn-success" ui-toggle-class="">
                     Sữa
                     </a>
-                    <form onsubmit="return confirm('Bạn Có Muốn Xóa Phòng Ban Này Không?')" action="{{route('phong-ban.destroy',[$pb->id])}}" method="post" enctype="multipart/form-data">
+                    <form onsubmit="return confirm('Bạn Có Muốn Xóa Khối Này Không?')" action="{{route('khoi.destroy',[$k->id])}}" method="post" enctype="multipart/form-data">
                       @csrf
                       @method('DELETE')
                       <input type="submit" class="btn  btn-danger" value="Xóa" >
@@ -97,7 +97,7 @@
          </table>
       </div>
       </div>
-      <a href="{{route('phong-ban.create')}}"><button type="button" class="btn btn-primary">Thêm</button></a>
+      <a href="{{route('khoi.create')}}"><button type="button" class="btn btn-primary">Thêm</button></a>
    </div>
 </div>
 

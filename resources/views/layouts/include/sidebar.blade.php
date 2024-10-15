@@ -91,21 +91,27 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{route('khoi.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Khối</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{route('phong-ban.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Phòng Ban</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('ban.index')}}" class="nav-link">
+                <a href="{{route('don-vi.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Ban Ngành</p>
+                  <p>Đơn Vị</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{route('bo-phan.index')}}" class="nav-link">
+                <a href="{{route('phong.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Bộ Phận</p>
+                  <p>Phòng</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -114,66 +120,7 @@
                   <p>Ngành</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{route('chuyen-nganh.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Chuyên Ngành</p>
-                </a>
-              </li>
-              <!-- <li class="nav-item">
-                <a href="{{route('don-vi-cap-cao.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Đơn Vị Cấp Cao</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('truong.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Trường Thành Viên</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('khoa.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Khoa</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('trung-tam.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Trung Tâm</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('hanh-chinh.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Khối Hành Chính</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('phuc-vu.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Khối Phục Vụ</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('to-chuc.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Tổ Chức Đoàn Thể</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('chuc-vu.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Chức Vụ</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('user.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Tài Khoản</p>
-                </a>
-              </li> -->
+               
             </ul>
           </li>
 

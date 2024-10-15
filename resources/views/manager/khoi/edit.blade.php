@@ -6,13 +6,13 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Thêm Phòng Ban</h1>
+            <h1 class="m-0">Cập Nhật Khối</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{URL::to('/home')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{Route( 'phong-ban.index')}}">Danh Sách Phòng Ban</a></li>
-              <li class="breadcrumb-item active">Thêm Phòng Ban</li>
+              <li class="breadcrumb-item"><a href="{{Route( 'khoi.index')}}">Danh Sách Khối</a></li>
+              <li class="breadcrumb-item active">Cập Nhật Khối</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -35,35 +35,36 @@
 				@endif
               <!-- /.card-header -->
               <!-- form start -->
-              <form method="post" action="{{route('phong-ban.store')}}" enctype="multipart/form-data">
+              <form method="post" action="{{route('khoi.update',[$khoi->id])}}" enctype="multipart/form-data">
+                @method('PUT')
               	@csrf
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Tên Phòng Ban: </label>
-                    <input type="text" class="form-control" name="TenPB" id="exampleInputEmail1" placeholder="...">
+                    <label for="exampleInputEmail1">Tên Khối: </label>
+                    <input type="text" class="form-control" value="{{$khoi->TenK}}" name="TenK" id="exampleInputEmail1" placeholder="...">
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">Mô Tả: </label>
-                    <textarea style="resize: none;" rows="8" class="form-control" name="MoTaPB" id="ckeditor" placeholder="..."></textarea>
+                    <textarea style="resize: none;" rows="8" class="form-control" name="MoTaK" id="ckeditor" placeholder="...">{!!$khoi->MoTaK!!}</textarea>
                     
                   </div>
                   <div class="form-group">
-                                <label for="exampleInputEmail1">Thuộc Khối</label>
-                                <select name="id_K" class="form-control input-sm m-bot15">
-                                    <option >------Chọn------</option>
-                                    @foreach($khoi as $key => $k)
-                                    <option value="{{$k->id}}">{{$k->TenK}}</option>
-                                    @endforeach
-                                    
-                                </select>
-                            </div>
-                  
+                  <label>
+                        <input name="TrangThai" type="radio" id="TrangThai" value="1"
+                        <?php if($khoi->TrangThai == 1){ echo 'checked=checked';} ?> />
+                        Hiển Thị</label>
+                        <br />
+                        <label>
+                        <input type="radio" name="TrangThai" value="0" id="TrangThai" <?php if($khoi->TrangThai == 0){ echo 'checked=checked';} ?> />
+                        Ẩn</label>
+                        <br />
+                  </div>
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Thêm</button>
-                  <a href="{{route('phong-ban.index')}}"><button type="button" class="btn btn-light">Quay Lại</button> </a>
+                  <button type="submit" class="btn btn-primary">Lưu</button>
+                  <a href="{{route('khoi.index')}}"><button type="button" class="btn btn-light">Quay Lại </button></a>
                 </div>
               </form>
 </div>

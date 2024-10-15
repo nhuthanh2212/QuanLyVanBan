@@ -5,16 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Nganh extends Model
+class Khoi extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $fillable = ['TenN', 'slug', 'MoTaN','TrangThai','id_P'];
+    protected $fillable = ['TenK', 'slug', 'MoTaK','TrangThai'];
     protected $primaryKey = 'id';
-    protected $table = 'nganh';
-    public function phong()
+    protected $table = 'khoi';
+
+    public function phongban()
     {
-        return $this->belongsTo(Phong::class, 'id_P');
+        return $this->hasMany(PhongBan::class, 'id_K');
     }
-   
+    
 }

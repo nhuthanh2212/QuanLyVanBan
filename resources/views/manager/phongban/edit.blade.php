@@ -49,6 +49,16 @@
                     
                   </div>
                   <div class="form-group">
+                                <label for="exampleInputEmail1">Thuộc Khối: </label>
+                                <select name="id_K" class="form-control input-sm m-bot15">
+                                    <option >------Chọn------</option>
+                                    @foreach($khoi as $key => $k)
+                                    <option value="{{$k->id}}" {{ $k->id == $phongban->id_K ? 'selected="selected"' : '' }}>{{$k->TenK}}</option>
+                                    @endforeach
+                                    
+                                </select>
+                            </div>
+                  <div class="form-group">
                   <label>
                         <input name="TrangThai" type="radio" id="TrangThai" value="1"
                         <?php if($phongban->TrangThai == 1){ echo 'checked=checked';} ?> />

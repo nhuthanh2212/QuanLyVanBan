@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 
 use App\Models\Nganh;
-use App\Models\BoPhan;
+use App\Models\Phong;
 
 class NganhController extends Controller
 {
@@ -16,7 +16,7 @@ class NganhController extends Controller
      */
     public function index()
     {
-        $nganh = Nganh::with('bophan')->orderBy('id','DESC')->get();
+        $nganh = Nganh::with('phong')->orderBy('id','DESC')->get();
         return view('manager.nganh.list', compact('nganh'));
     }
 
@@ -25,8 +25,8 @@ class NganhController extends Controller
      */
     public function create()
     {
-        $bophan = BoPhan::orderBy('id','ASC')->get();
-        return view('manager.nganh.create',compact('bophan'));
+        $phong = Phong::orderBy('id','ASC')->get();
+        return view('manager.nganh.create',compact('phong'));
     }
 
     /**
@@ -37,20 +37,20 @@ class NganhController extends Controller
         $data = $request->validate([
             'TenN' => 'required|unique:nganh',
             'MoTaN' => 'required',
-            'id_BP' => 'required',
+            'id_P' => 'required',
         ],
         [
-            'TenN.unique' => 'Tên Ngành này đã có, vui lòng điền tên khác',
+            'TenN.unique' => 'Tên ngành này đã có, vui lòng điền tên khác',
             'TenN.required' => 'Tên Ngành Phải Có',
             'MoTaN.required' => 'Mô Tả Ngành Phải Có',
-           'id_BP.required' => ' Ngành Này Thuộc Bộ Phận Nào Phải Có',
+           'id_P.required' => ' Ngành Này Thuộc Phòng Nào Phải Có',
             
         ]);
         $nganh = new Nganh();
         $nganh->TenN = $data['TenN'];
         $nganh->slug = str::slug($data['TenN']);
         $nganh->MoTaN = $data['MoTaN'];
-        $nganh->id_BP = $data['id_BP'];
+        $nganh->id_P = $data['id_P'];
         $nganh->TrangThai = 1;
         $nganh->save();
         toastr()->success('Thêm Ngành Thành Công');
@@ -70,9 +70,9 @@ class NganhController extends Controller
      */
     public function edit(string $id)
     {
+        $phong = Phong::orderBy('id','ASC')->get();
         $nganh = Nganh::find($id);
-        $bophan = BoPhan::orderBy('id','ASC')->get();
-        return view('manager.nganh.edit',compact('bophan','nganh'));
+        return view('manager.nganh.edit',compact('nganh','phong'));
     }
 
     /**
@@ -83,20 +83,20 @@ class NganhController extends Controller
         $data = $request->validate([
             'TenN' => 'required:nganh',
             'MoTaN' => 'required',
-            'id_BP' => 'required',
+            'id_P' => 'required',
         ],
         [
            
             'TenN.required' => 'Tên Ngành Phải Có',
             'MoTaN.required' => 'Mô Tả Ngành Phải Có',
-           'id_BP.required' => ' Ngành Này Thuộc Bộ Phận Nào Phải Có',
+           'id_P.required' => ' Ngành Này Thuộc Phòng Nào Phải Có',
             
         ]);
-        $nganh = Nganh::find($id);
+        $nganh =  Nganh::find($id);
         $nganh->TenN = $data['TenN'];
         $nganh->slug = str::slug($data['TenN']);
         $nganh->MoTaN = $data['MoTaN'];
-        $nganh->id_BP = $data['id_BP'];
+        $nganh->id_P = $data['id_P'];
         $nganh->TrangThai = $request->TrangThai;
         $nganh->save();
         toastr()->success('Cập Nhật Ngành Thành Công');

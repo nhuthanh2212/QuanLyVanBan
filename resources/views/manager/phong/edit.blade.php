@@ -6,13 +6,13 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Cập Nhật Ngành</h1>
+            <h1 class="m-0">Cập Nhật Phòng</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{URL::to('/home')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{Route( 'nganh.index')}}">Danh Sách Ngành</a></li>
-              <li class="breadcrumb-item active">Cập Nhật Ngành</li>
+              <li class="breadcrumb-item"><a href="{{Route( 'phong.index')}}">Danh Sách Phòng</a></li>
+              <li class="breadcrumb-item active">Cập Nhật Phòng</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -35,25 +35,25 @@
 				@endif
               <!-- /.card-header -->
               <!-- form start -->
-              <form method="post" action="{{route('nganh.update',[$nganh->id])}}" enctype="multipart/form-data">
+              <form method="post" action="{{route('phong.update',[$phong->id])}}" enctype="multipart/form-data">
                 @method('PUT')
               	@csrf
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Tên Ngành: </label>
-                    <input type="text" class="form-control" value="{{$nganh->TenN}}" name="TenN" id="exampleInputEmail1" placeholder="...">
+                    <label for="exampleInputEmail1">Tên Phòng: </label>
+                    <input type="text" class="form-control" value="{{$phong->TenP}}" name="TenP" id="exampleInputEmail1" placeholder="...">
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">Mô Tả: </label>
-                    <textarea style="resize: none;" rows="8" class="form-control" name="MoTaN" id="ckeditor" placeholder="...">{!!$nganh->MoTaN!!}</textarea>
+                    <textarea style="resize: none;" rows="8" class="form-control" name="MoTaP" id="ckeditor" placeholder="...">{!!$phong->MoTaP!!}</textarea>
                     
                   </div>
                   <div class="form-group">
-                                <label for="exampleInputEmail1">Thuộc Ngành</label>
-                                <select name="id_P" class="form-control input-sm m-bot15">
+                                <label for="exampleInputEmail1">Thuộc Đơn Vị:</label>
+                                <select name="id_DV" class="form-control input-sm m-bot15">
                                     <option >------Chọn------</option>
-                                    @foreach($phong as $key => $p)
-                                    <option value="{{$p->id}}" {{ $p->id == $nganh->id_P ? 'selected="selected"' : '' }}>{{$p->TenP}}</option>
+                                    @foreach($donvi as $key => $dv)
+                                    <option value="{{$dv->id}}" {{ $dv->id == $phong->id_DV ? 'selected="selected"' : '' }}>{{$dv->TenDV}}</option>
                                     @endforeach
                                     
                                 </select>
@@ -61,11 +61,11 @@
                   <div class="form-group">
                   <label>
                         <input name="TrangThai" type="radio" id="TrangThai" value="1"
-                        <?php if($nganh->TrangThai == 1){ echo 'checked=checked';} ?> />
+                        <?php if($phong->TrangThai == 1){ echo 'checked=checked';} ?> />
                         Hiển Thị</label>
                         <br />
                         <label>
-                        <input type="radio" name="TrangThai" value="0" id="TrangThai" <?php if($nganh->TrangThai == 0){ echo 'checked=checked';} ?> />
+                        <input type="radio" name="TrangThai" value="0" id="TrangThai" <?php if($phong->TrangThai == 0){ echo 'checked=checked';} ?> />
                         Ẩn</label>
                         <br />
                   </div>
@@ -74,7 +74,7 @@
 
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">Lưu</button>
-                  <a href="{{route('nganh.index')}}"><button type="button" class="btn btn-light">Quay Lại </button></a>
+                  <a href="{{route('phong.index')}}"><button type="button" class="btn btn-light">Quay Lại </button></a>
                 </div>
               </form>
 </div>

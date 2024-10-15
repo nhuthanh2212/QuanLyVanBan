@@ -43,7 +43,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Tên Ngành</th>
                     <th scope="col">Mô Tả</th>
-                    <th scope="col">Thuộc Bộ Phận</th>
+                    <th scope="col">Thuộc Phòng</th>
                     <th scope="col">Trạng Thái</th>
                     <th scope="col">Quản Lý</th>
 
@@ -72,7 +72,7 @@
                       @endif
                         </span>
                   </td>
-                  <td>{{$n->bophan->TenBP}}</td>
+                  <td>{{$n->phong->TenP}}</td>
                   <td>
                     @if($n->TrangThai == 1)
                      <span class="text text-success">Hiển Thị </span>
@@ -85,7 +85,7 @@
                     <a  href="{{ route('nganh.edit',[$n->id]) }}" class="btn btn-success" ui-toggle-class="">
                     Sữa
                     </a>
-                    <form onsubmit="return confirm('Bạn Có Muốn Xóa Ngành Này không?')" action="{{route('nganh.destroy',[$n->id])}}" method="post" enctype="multipart/form-data">
+                    <form onsubmit="return confirm('Bạn Có Muốn Xóa Ngành Này Không?')" action="{{route('nganh.destroy',[$n->id])}}" method="post" enctype="multipart/form-data">
                       @csrf
                       @method('DELETE')
                       <input type="submit" class="btn  btn-danger" value="Xóa" >

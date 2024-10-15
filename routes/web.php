@@ -2,13 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoaiVanBanController;
-use App\Http\Controllers\DonViCapCaoController;
-use App\Http\Controllers\TruongController;
-use App\Http\Controllers\KhoaController;
-use App\Http\Controllers\TrungTamController;
-use App\Http\Controllers\hanhChinhController;
-use App\Http\Controllers\PhucVuController;
-use App\Http\Controllers\ToChucController;
+
 use App\Http\Controllers\ChucVuController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
@@ -16,11 +10,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\VanBanDiController;
 use App\Http\Controllers\VanBanDenController;
 
+use App\Http\Controllers\KhoiController;
+use App\Http\Controllers\DonViController;
 use App\Http\Controllers\PhongBanController;
-use App\Http\Controllers\BoPhanController;
-use App\Http\Controllers\BanController;
+use App\Http\Controllers\PhongController;
 use App\Http\Controllers\NganhController;
-use App\Http\Controllers\ChuyenNganhController;
 
 
 /*
@@ -58,31 +52,21 @@ Route::prefix('manager')->group(function () {
 
     Route::resource('/loai-van-ban', LoaiVanBanController::class);
 
+    Route::resource('/khoi', KhoiController::class);
+
     Route::resource('/phong-ban', PhongBanController::class);
 
-    Route::resource('/ban', BanController::class);
+    Route::resource('/don-vi', DonViController::class);
 
-    Route::resource('/bo-phan', BoPhanController::class);
+    Route::resource('/phong', PhongController::class);
 
     Route::resource('/nganh', NganhController::class);
 
-    Route::resource('/chuyen-nganh', ChuyenNganhController::class);
-
-    Route::resource('/don-vi-cap-cao', DonViCapCaoController::class);
-
-    Route::resource('/truong', TruongController::class);
-
-    Route::resource('/trung-tam', TrungtamController::class);
-
-    Route::resource('/hanh-chinh', HanhChinhController::class);
-
-    Route::resource('/phuc-vu', PhucVuController::class);
-
-    Route::resource('/to-chuc', ToChucController::class);
+    
 
     Route::resource('/chuc-vu', ChucVuController::class);
 
-    Route::resource('/khoa', KhoaController::class);
+    
 
     Route::resource('/user', UserController::class);
     // Các route khác ở đây

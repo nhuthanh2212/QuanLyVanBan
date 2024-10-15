@@ -48,11 +48,11 @@
                     
                   </div>
                   <div class="form-group">
-                                <label for="exampleInputEmail1">Phòng Ban</label>
-                                <select name="id_BP" class="form-control input-sm m-bot15">
+                                <label for="exampleInputEmail1">Thuộc Ngành</label>
+                                <select name="id_P" class="form-control input-sm m-bot15">
                                     <option >------Chọn------</option>
-                                    @foreach($bophan as $key => $bp)
-                                    <option value="{{$bp->id}}">{{$bp->TenBP}}</option>
+                                    @foreach($phong as $key => $p)
+                                    <option value="{{$p->id}}">{{$p->TenP}}</option>
                                     @endforeach
                                     
                                 </select>
