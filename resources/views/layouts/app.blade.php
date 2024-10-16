@@ -26,7 +26,14 @@
   <!-- Toastr CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
-
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<!-- css date -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<!-- biểu đồ-->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+ <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <!--
 `body` tag options:
@@ -213,6 +220,7 @@
 </div>
 <!-- ./wrapper -->
 
+
 <!-- REQUIRED SCRIPTS -->
 
 
@@ -233,9 +241,11 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{asset('backend/dist/js/pages/dashboard3.js')}}"></script>
 
-<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
+
 
 <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+
+
 
 <!-- DataTables  & Plugins -->
 <script src="{{asset('backend/plugins/datatables/jquery.dataTables.min.js')}}"></script>
@@ -495,19 +505,6 @@ $(document).ready(function() {
     });
 </script>
 
-<!-- mở fiel -->
-<!-- <script>
-    document.getElementById('file-link').addEventListener('click', function() {
-        // Lấy tên file từ nội dung của thẻ span
-        var fileName = this.innerText;
-
-        // Đường dẫn file (giả sử file được lưu ở 'uploads/vanbandi/')
-        var fileUrl = "{{ asset('uploads/vanbandi') }}/" + fileName;
-
-        // Mở file trong một tab mới
-        window.open(fileUrl, '_blank');
-    });
-</script> -->
 
 <!-- tai van ban -->
 <script>
@@ -544,6 +541,64 @@ $(document).ready(function() {
         });
     });
 
+</script>
+
+<script>
+  $(document).ready(function() {
+    $('#example').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'excel', 'pdf', 'print'
+        ]
+    });
+});
+</script>
+<!-- nhom nguoi dung thuoc phòng ban nao -->
+<script>
+  jQuery(document).ready(function(){
+    fetch_group();
+    function fetch_group(){
+      var _token = $('input[name="_token"]').val();
+      $ajax({
+        url: '{{url("/manager/list-group")}}',
+        method: 'POST',
+        data: {_token: _token},
+        success:function(data){
+          $('#load_group').html(data);
+        }
+      });
+    }
+    $('.choose').on('change', function(){
+      var action = $(this).attr('id');
+      var id_K = $(this).val();
+      var _token = $('input[name="_token"]').val();
+      var $result = ' ';
+      if(action == 'khoi'){
+        $result = 'phongban';
+      }else if(action == 'phongban'){
+        $result = 'donvi';
+      }else if(action == 'donvi'){
+        $result = 'phong';
+      }else if(action == 'phong'){
+        $result = 'nganh';
+      }else if(action == 'nganh'){
+        $result = 'chuyennganh';
+      }
+      $.ajax({
+        url: '{{url("/manager/select-group")}}',
+        method: 'post',
+        data: { action: action, id_K: id_K, _token: _token },
+        success: function(data) {
+            console.log('Data received:', data); // Debug log
+            $('#'+$result).html(data); // Cập nhật thẻ select kế tiếp
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Error:', textStatus, errorThrown); // Debug log
+        }
+      });
+    });
+
+  });
 </script>
 </body>
 </html>
