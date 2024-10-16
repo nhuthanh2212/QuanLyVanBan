@@ -47,15 +47,15 @@
                         <input type="text" class="form-control" name="HoTen" id="exampleInputEmail1" placeholder="...">
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Hình Ảnh: </label>
-                        <input type="file" class="form-control" name="img" id="exampleInputEmail1" >
+                        <label for="exampleInputEmail1" >Hình Ảnh: </label>
+                        <input type="file" class="form-control form-control-sm" id="formFileSm" name="img"  >
                      </div>
                      <div class="form-group">
                         <label for="exampleInputEmail1" style="margin-right: 10px;" >Giới Tính: </label>
                         <label for="exampleInputEmail1" style="margin-right: 10px;"><input type="radio" name="GioiTinh" value="1" checked> Nam</label>
                         <label for="exampleInputEmail1" style="margin-right: 20px;" ><input type="radio" name="GioiTinh" value="0" > Nữ</label><br>
-                        <label for="exampleInputEmail1">Năm Sinh: </label>
-                        <input  name="NamSinh" type="text" id="departure_date" placeholder=" ">
+                        <label for="exampleInputEmail1" style="margin-right: 10px;">Năm Sinh: </label>
+                        <input  name="NamSinh" type="text" id="datepicker" placeholder=" ">
                      </div>
                      <div class="form-group">
                         <label for="exampleInputPassword1">Địa Chỉ: </label>
@@ -67,11 +67,11 @@
                      </div>
                      <div class="form-group">
                         <label for="exampleInputEmail1">Email: </label>
-                        <input type="text" class="form-control" name="Email" id="exampleInputEmail1" placeholder="...">
+                        <input type="text" class="form-control" name="Gmail" id="exampleInputEmail1" placeholder="...">
                      </div>
                      <div class="form-group">
                         <label for="exampleInputEmail1">Thuộc Phòng Ban</label>
-                        <select name="id_Truong" class="form-control input-sm m-bot15">
+                        <select name="id_Gr" class="form-control input-sm m-bot15">
                            <option >------Chọn------</option>
                            @foreach($nhom as $key => $nh)
                            <option value="{{$nh->id}}">{{$nh->TenGroup}}</option>
@@ -80,7 +80,7 @@
                      </div>
                      <div class="form-group">
                         <label for="exampleInputEmail1">Chức Vụ</label>
-                        <select name="id_Truong" class="form-control input-sm m-bot15">
+                        <select name="id_CV" class="form-control input-sm m-bot15">
                            <option >------Chọn------</option>
                            @foreach($chucvu as $key => $cv)
                            <option value="{{$cv->id}}">{{$cv->TenCV}}</option>

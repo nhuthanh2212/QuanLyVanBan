@@ -12,4 +12,9 @@ class ChucVu extends Model
     protected $fillable = ['TenCV', 'MoTaCV', 'TrangThai'];
     protected $primaryKey = 'id';
     protected $table = 'chucvu';
+
+    public function taikhoan()
+    {
+        return $this->hasMany(TaiKhoan::class, 'id_CV');
+    }
 }

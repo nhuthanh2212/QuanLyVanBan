@@ -30,6 +30,8 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 <!-- css date -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css">
 <!-- biểu đồ-->
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
  <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
@@ -241,7 +243,7 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{asset('backend/dist/js/pages/dashboard3.js')}}"></script>
 
-
+<script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
 
 <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 
@@ -276,9 +278,7 @@
 
 <script>
   $( function() {
-    $( "#departure_date" ).datepicker();
-    $( "#return_date" ).datepicker();
-    
+      $( "#datepicker" ).datepicker();
   } );
   </script>
 

@@ -31,4 +31,9 @@ class Nhom extends Model
     public function chuyennganh(){
         return $this->belongsTo(ChuyenNganh::class, 'id_CN');
     }
+
+    public function taikhoan()
+    {
+        return $this->hasMany(TaiKhoan::class, 'id_Gr');
+    }
 }

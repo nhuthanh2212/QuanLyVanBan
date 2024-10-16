@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\TaiKhoan;
 use App\Models\ChucVu;
@@ -32,8 +34,22 @@ class UserController extends Controller
         // // $role->givePermissionTo($permission); quyen co vai tro gi
         // $permission->assignRole($role);
 
-        $taikhoan = TaiKhoan::orderBy('id_TK','desc')->get();
-        return view('manager.user.list',compact('taikhoan'));
+        $taikhoan = TaiKhoan::with('chucvu')->orderBy('id_TK','desc')->get();
+        $nhom = Nhom::orderBy('id','desc')->get();
+        $ten = '';
+        foreach($taikhoan as $tk){
+            foreach($nhom as $nh){
+                if($tk->id_Gr == $nh->id){
+                    $ten = $nh->TenGroup;
+                }
+            }
+            
+        }
+        // Tìm vị trí của dấu '-' cuối cùng
+        $tim = strrpos($ten, '-');
+        // Lấy chuỗi sau dấu '-' cuối cùng
+        $tengroup = substr($ten, $tim + 1);
+        return view('manager.user.list',compact('taikhoan','tengroup'));
     }
 
     /**
@@ -52,7 +68,61 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'HoTen' => 'required|unique:taikhoan',
+            'img' => 'required|mimes:jpeg,png,jpg,gif|dimensions:min_width=100,min_height=100', // kiểm tra định dạng ảnh và kích thước tối thiểu
+            'NamSinh' => 'required',
+            'DiaChi' => 'required',
+            'DienThoai' => ['required', 'regex:/^([0-9\s\-\+\(\)]*)$/'], // kiểm tra định dạng số điện thoại
+            'Gmail' => 'required|email', // kiểm tra định dạng email
+            'id_Gr' => 'required',
+            'id_CV' => 'required',
+            'TenDN' => 'required|unique:taikhoan',
+            'password' => 'required',
+        ], [
+            'HoTen.unique' => 'Họ Tên Người Dùng này đã có, vui lòng điền tên khác',
+            'HoTen.required' => 'Họ Tên Người Dùng phải có',
+            'img.required' => 'Hình Ảnh Người Dùng phải có',
+            'img.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg hoặc gif',
+            'img.dimensions' => 'Hình ảnh phải có kích thước tối thiểu 100x100 pixels',
+            'NamSinh.required' => 'Ngày Tháng Năm Sinh Người Dùng phải có',
+            'DiaChi.required' => 'Địa Chỉ Của Người Dùng phải có',
+            'DienThoai.required' => 'Số Điện Thoại Người Dùng phải có',
+            'DienThoai.regex' => 'Số điện thoại không hợp lệ',
+            'Gmail.required' => 'Gmail Người Dùng phải có',
+            'Gmail.email' => 'Gmail không đúng định dạng',
+            'id_Gr.required' => 'Người Dùng Thuộc Phòng Ban Nào phải có',
+            'id_CV.required' => 'Chức Vụ Của Người Dùng phải có',
+            'TenDN.unique' => 'Tên Đăng Nhập Người Dùng này đã có, vui lòng điền tên khác',
+            'TenDN.required' => 'Tên Đăng Nhập phải có',
+            'password.required' => 'Password phải có',
+        ]);
+
+        $taikhoan = new TaiKhoan();
+        $taikhoan->HoTen = $data['HoTen'];
+        $taikhoan->slug = str::slug($data['HoTen']);
+        $taikhoan->NamSinh = $data['NamSinh'];
+        $taikhoan->DiaChi = $data['DiaChi'];
+        $taikhoan->DienThoai = $data['DienThoai'];
+        $taikhoan->Gmail = $data['Gmail'];
+        $taikhoan->id_Gr = $data['id_Gr'];
+        $taikhoan->id_CV = $data['id_CV'];
+        $taikhoan->TenDN = $data['TenDN'];
+        $taikhoan->password = md5($data['password']);
+        $taikhoan->GioiTinh = $request->GioiTinh;
+
+        $get_image = $request->image;
+        if($get_image){
+            $path = 'uploads/img';
+            $get_name_image = $get_image->getClientOriginalName();
+            $name_image = current(explode('.',$get_name_image));
+            $new_image = $name_image.rand(0,99).'.'.$get_image->getClientOriginalExtension();
+            $get_image->move($path,$new_image);
+            $taikhoan->image = $new_image;
+        }
+        $taikhoan->save();
+        toastr()->success('Thêm Người Dùng Thành Công');
+        return redirect()->route('user.index');
     }
 
     /**
@@ -60,7 +130,8 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $taikhoan = TaiKhoan::with('chucvu')->with('nhom')->where('id_TK',$id)->first();
+        return view('manager.user.chitiet',compact('taikhoan'));
     }
 
     /**
@@ -79,7 +150,62 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validate([
+            'HoTen' => 'required|unique:taikhoan',
+            'img' => 'required|mimes:jpeg,png,jpg,gif|dimensions:min_width=100,min_height=100', // kiểm tra định dạng ảnh và kích thước tối thiểu
+            'NamSinh' => 'required',
+            'DiaChi' => 'required',
+            'DienThoai' => ['required', 'regex:/^([0-9\s\-\+\(\)]*)$/'], // kiểm tra định dạng số điện thoại
+            'Gmail' => 'required|email', // kiểm tra định dạng email
+            'id_Gr' => 'required',
+            'id_CV' => 'required',
+            'TenDN' => 'required|unique:taikhoan',
+            'password' => 'required',
+        ], [
+            'HoTen.unique' => 'Họ Tên Người Dùng này đã có, vui lòng điền tên khác',
+            'HoTen.required' => 'Họ Tên Người Dùng phải có',
+            'img.required' => 'Hình Ảnh Người Dùng phải có',
+            'img.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg hoặc gif',
+            'img.dimensions' => 'Hình ảnh phải có kích thước tối thiểu 100x100 pixels',
+            'NamSinh.required' => 'Ngày Tháng Năm Sinh Người Dùng phải có',
+            'DiaChi.required' => 'Địa Chỉ Của Người Dùng phải có',
+            'DienThoai.required' => 'Số Điện Thoại Người Dùng phải có',
+            'DienThoai.regex' => 'Số điện thoại không hợp lệ',
+            'Gmail.required' => 'Gmail Người Dùng phải có',
+            'Gmail.email' => 'Gmail không đúng định dạng',
+            'id_Gr.required' => 'Người Dùng Thuộc Phòng Ban Nào phải có',
+            'id_CV.required' => 'Chức Vụ Của Người Dùng phải có',
+            'TenDN.unique' => 'Tên Đăng Nhập Người Dùng này đã có, vui lòng điền tên khác',
+            'TenDN.required' => 'Tên Đăng Nhập phải có',
+            'password.required' => 'Password phải có',
+        ]);
+        
+        $taikhoan = TaiKhoan::find($id);
+        $taikhoan->HoTen = $data['HoTen'];
+        $taikhoan->slug = str::slug($data['HoTen']);
+        $taikhoan->NamSinh = $data['NamSinh'];
+        $taikhoan->DiaChi = $data['DiaChi'];
+        $taikhoan->DienThoai = $data['DienThoai'];
+        $taikhoan->Gmail = $data['Gmail'];
+        $taikhoan->id_Gr = $data['id_Gr'];
+        $taikhoan->id_CV = $data['id_CV'];
+        $taikhoan->TenDN = $data['TenDN'];
+        $taikhoan->password = md5($data['password']);
+        $taikhoan->GioiTinh = $request->GioiTinh;
+
+        
+        if($request->image){
+            $get_image = $request->image;
+            $path = 'uploads/img';
+            $get_name_image = $get_image->getClientOriginalName();
+            $name_image = current(explode('.',$get_name_image));
+            $new_image = $name_image.rand(0,99).'.'.$get_image->getClientOriginalExtension();
+            $get_image->move($path,$new_image);
+            $taikhoan->image = $new_image;
+        }
+        $taikhoan->save();
+        toastr()->success('Cập Nhật Người Dùng Thành Công');
+        return redirect()->route('user.index');
     }
 
     /**
@@ -87,7 +213,10 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $taikhoan = TaiKhoan::find($id);
+        $taikhoan->delete();
+        toastr()->success('Xóa Người Dùng Thành Công');
+        return redirect()->route('user.index');
     }
 
     public function profile()
