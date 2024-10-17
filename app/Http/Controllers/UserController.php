@@ -128,9 +128,9 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $slug)
     {
-        $taikhoan = TaiKhoan::with('chucvu')->with('nhom')->where('id_TK',$id)->first();
+        $taikhoan = TaiKhoan::with('chucvu')->with('nhom')->where('slug',$slug)->first();
         return view('manager.user.chitiet',compact('taikhoan'));
     }
 
@@ -139,10 +139,12 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        $tk = TaiKhoan::find($id);
-        $khoi = Khoi::orderBy('id','ASC')->get();
+        $nhom = Nhom::orderBy('id','ASC')->get();
         $chucvu = ChucVu::orderBy('id','ASC')->get();
-        return view('manager.user.edit',compact('tk','chucvu','khoi'));
+        $khoi = Khoi::orderBy('id','ASC')->get();
+        $tk = TaiKhoan::find($id);
+       
+        return view('manager.user.edit',compact('tk','chucvu','khoi','nhom'));
     }
 
     /**
@@ -152,19 +154,19 @@ class UserController extends Controller
     {
         $data = $request->validate([
             'HoTen' => 'required|unique:taikhoan',
-            'img' => 'required|mimes:jpeg,png,jpg,gif|dimensions:min_width=100,min_height=100', // kiểm tra định dạng ảnh và kích thước tối thiểu
+            'img' => 'mimes:jpeg,png,jpg,gif|dimensions:min_width=100,min_height=100', // kiểm tra định dạng ảnh và kích thước tối thiểu
             'NamSinh' => 'required',
             'DiaChi' => 'required',
             'DienThoai' => ['required', 'regex:/^([0-9\s\-\+\(\)]*)$/'], // kiểm tra định dạng số điện thoại
             'Gmail' => 'required|email', // kiểm tra định dạng email
             'id_Gr' => 'required',
             'id_CV' => 'required',
-            'TenDN' => 'required|unique:taikhoan',
+            'TenDN' => 'required',
             'password' => 'required',
         ], [
             'HoTen.unique' => 'Họ Tên Người Dùng này đã có, vui lòng điền tên khác',
             'HoTen.required' => 'Họ Tên Người Dùng phải có',
-            'img.required' => 'Hình Ảnh Người Dùng phải có',
+         
             'img.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg hoặc gif',
             'img.dimensions' => 'Hình ảnh phải có kích thước tối thiểu 100x100 pixels',
             'NamSinh.required' => 'Ngày Tháng Năm Sinh Người Dùng phải có',
@@ -175,7 +177,7 @@ class UserController extends Controller
             'Gmail.email' => 'Gmail không đúng định dạng',
             'id_Gr.required' => 'Người Dùng Thuộc Phòng Ban Nào phải có',
             'id_CV.required' => 'Chức Vụ Của Người Dùng phải có',
-            'TenDN.unique' => 'Tên Đăng Nhập Người Dùng này đã có, vui lòng điền tên khác',
+           
             'TenDN.required' => 'Tên Đăng Nhập phải có',
             'password.required' => 'Password phải có',
         ]);
@@ -287,6 +289,7 @@ class UserController extends Controller
                                 <th>Tên Ngành</th>
                                 <th>Tên Chuyên Ngành</th>
                                 <th>Tên Group</th>
+                               
                             </tr>
                         </thead>
                         <tbody>';
@@ -301,7 +304,7 @@ class UserController extends Controller
                         <td>'.(optional($gr->nganh)->TenN ?? 'Không có').'</td>
                         <td>'.(optional($gr->chuyennganh)->TenCN ?? 'Không có').'</td>
                         <td>'.$gr->TenGroup.'</td>
-                        <td  data-gr_id="'.$gr->id.'" class="edit"></td>
+                        
                     </tr>
                     ';
         }

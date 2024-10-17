@@ -83,7 +83,7 @@
                   
                   <td>
                      <div class="row">
-                     <a  href="{{ route('user.show',[$tk->id_TK]) }}" style="margin-right: 3px;">
+                     <a  href="{{ route('user.show',[$tk->slug]) }}" style="margin-right: 3px;">
                      <button class="btn btn-primary btn-sm">  <i class="fa-solid fa-eye"></i></button>
                     
                     </a>

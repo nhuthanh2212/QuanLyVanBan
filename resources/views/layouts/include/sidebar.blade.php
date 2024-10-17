@@ -91,6 +91,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{URL::to('/manager/noi-nhan-loai-van-ban')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Nhận Theo Loại Văn Bản</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{route('chuc-vu.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Chức Vụ</p>

@@ -53,6 +53,12 @@ Route::prefix('manager')->group(function () {
 
     Route::resource('/loai-van-ban', LoaiVanBanController::class);
 
+    Route::get('/noi-nhan-loai-van-ban', [LoaiVanBanController::class, 'nhan_theo_loaiVB']);
+
+    Route::get('/createe', [LoaiVanBanController::class, 'createe']);
+
+    Route::post('/insert', [LoaiVanBanController::class, 'insert']);
+
     Route::resource('/khoi', KhoiController::class);
 
     Route::resource('/phong-ban', PhongBanController::class);

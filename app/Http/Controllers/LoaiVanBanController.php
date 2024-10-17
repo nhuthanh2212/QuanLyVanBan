@@ -7,7 +7,13 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 
 use App\Models\LoaiVanBan;
-
+use App\Models\NhanTheoLVB;
+use App\Models\Nhom;
+use App\Models\PhongBan;
+use App\Models\DonVi;
+use App\Models\Phong;
+use App\Models\Nganh;
+use App\Models\ChuyenNganh;
 
 class LoaiVanBanController extends Controller
 {
@@ -73,7 +79,56 @@ class LoaiVanBanController extends Controller
     {
         //
     }
+    //noi nhan theo loai van ban
+    public function nhan_theo_loaiVB(){
+        $loaivanban = LoaiVanBan::orderBy('id_LVB','DESC')->get();
+        $nhom = Nhom::orderBy('id','DESC')->get();
+        return view('manager.noinhantheoLVB.list' ,compact('loaivanban','nhom'));
+    }
 
+    public function createe(){
+        $loaivanban = LoaiVanBan::orderBy('id_LVB','DESC')->get();
+        $nhom = Nhom::orderBy('id','DESC')->get();
+        $phongban = PhongBan::orderBy('id','ASC')->get();
+        $donvi = DonVi::orderBy('id','ASC')->get();
+        $phong = Phong::orderBy('id','ASC')->get();
+        $nganh = Nganh::orderBy('id','ASC')->get();
+        $chuyennganh = ChuyenNganh::orderBy('id','ASC')->get();
+       
+        return view('manager.noinhantheoLVB.create' ,compact('loaivanban','nhom','phongban','donvi','phong','nganh','chuyennganh'));
+    }
+    public function insert(Request $request)
+    {
+        
+        $data = $request->validate([
+           
+            'id_LVB' => 'required',
+            'id_Gr' => 'required',
+            'id_D' => 'required|array', // Kiểm tra id_DV là một mảng
+        ],
+        [
+            'id_Gr.required' => 'Đơn Vị Ban Hành Phải Có',
+            'id_LVB.required' => 'Loai Văn Bản Phải Có',
+            
+        ]);
+        $nhan = new NhanTheoLVB();
+        $nhan->id_LVB = $data['id_LVB'];
+        $nhan->id_Gr = $data['id_Gr'];
+      
+
+        
+        $nhan->save();
+       // Gán nơi đến (nhiều checkbox đã chọn)
+        if ($request->has('id_D')) {
+            // Gán id_DV từ request vào cột id_Den của bảng pivot
+            foreach($request->id_D as $id_D) {
+                $nhan->noiden()->attach($id_D); // Cột đúng là id_Den trong bảng noiden
+            }
+        }
+        toastr()->success('Tạo Nơi Nhận Của Loại Văn Bản Thành Công');
+        return redirect()->back();
+
+    }
     /**
      * Show the form for editing the specified resource.
      */

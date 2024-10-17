@@ -38,46 +38,48 @@
                <div class="position-center">
                   <form>
                      @csrf
-                     <div class="form-group">
-                        <label for="exampleInputPassword1">Chọn Khối</label>
-                        <select name="khoi" id="khoi" class="form-control input-sm m-bot15 choose khoi">
-                           <option value="0">-----Chọn Khối-----</option>
-                           @foreach($khoi as $key => $k)
-                           <option value="{{$k->id}}">{{$k->TenK}}</option>
-                           @endforeach
-                        </select>
+                     <div class="card-body">
+                        <div class="form-group">
+                           <label for="exampleInputPassword1">Chọn Khối</label>
+                           <select name="khoi" id="khoi" class="form-control input-sm m-bot15 choose khoi">
+                              <option value="0">-----Chọn Khối-----</option>
+                              @foreach($khoi as $key => $k)
+                              <option value="{{$k->id}}">{{$k->TenK}}</option>
+                              @endforeach
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <label for="exampleInputPassword1">Chọn Phòng Ban</label>
+                           <select name="phongban" id="phongban" class="form-control input-sm m-bot15 phongban choose ">
+                              <option value="0">-----Chọn Phòng Ban------</option>
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <label for="exampleInputPassword1">Chọn Đơn Vị</label>
+                           <select name="donvi" id="donvi" class="form-control input-sm m-bot15 donvi choose ">
+                              <option value="0">-----Chọn Đơn Vị-----</option>
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <label for="exampleInputPassword1">Chọn Phòng</label>
+                           <select name="phong" id="phong" class="form-control input-sm m-bot15 phong choose ">
+                              <option value="0">-----Chọn Phòng-----</option>
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <label for="exampleInputPassword1">Chọn Ngành</label>
+                           <select name="nganh" id="nganh" class="form-control input-sm m-bot15 nganh choose ">
+                              <option value="0">-----Chọn Ngành-----</option>
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <label for="exampleInputPassword1">Chọn Chuyên Ngành</label>
+                           <select name="chuyennganh" id="chuyennganh" class="form-control input-sm m-bot15 chuyennganh">
+                              <option value="0">-----Chọn Đơn Vị-----</option>
+                           </select>
+                        </div>
+                        <button type="button" name="add_group" class="btn btn-info add_group">Tạo</button>
                      </div>
-                     <div class="form-group">
-                        <label for="exampleInputPassword1">Chọn Phòng Ban</label>
-                        <select name="phongban" id="phongban" class="form-control input-sm m-bot15 phongban choose ">
-                           <option value="0">-----Chọn Phòng Ban------</option>
-                        </select>
-                     </div>
-                     <div class="form-group">
-                        <label for="exampleInputPassword1">Chọn Đơn Vị</label>
-                        <select name="donvi" id="donvi" class="form-control input-sm m-bot15 donvi choose ">
-                           <option value="0">-----Chọn Đơn Vị-----</option>
-                        </select>
-                     </div>
-                     <div class="form-group">
-                        <label for="exampleInputPassword1">Chọn Phòng</label>
-                        <select name="phong" id="phong" class="form-control input-sm m-bot15 phong choose ">
-                           <option value="0">-----Chọn Phòng-----</option>
-                        </select>
-                     </div>
-                     <div class="form-group">
-                        <label for="exampleInputPassword1">Chọn Ngành</label>
-                        <select name="nganh" id="nganh" class="form-control input-sm m-bot15 nganh choose ">
-                           <option value="0">-----Chọn Ngành-----</option>
-                        </select>
-                     </div>
-                     <div class="form-group">
-                        <label for="exampleInputPassword1">Chọn Chuyên Ngành</label>
-                        <select name="chuyennganh" id="chuyennganh" class="form-control input-sm m-bot15 chuyennganh">
-                           <option value="0">-----Chọn Đơn Vị-----</option>
-                        </select>
-                     </div>
-                     <button type="button" name="add_group" class="btn btn-info add_group">Tạo</button>
                   </form>
                </div>
                <br>
