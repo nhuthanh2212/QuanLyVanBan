@@ -5,7 +5,8 @@
       <div class="row mb-2">
          <div class="col-sm-6 row">
             <h1 class="m-0">Liệt Kê Nơi Nhận</h1>
-            <a style="margin-left: 20px;" href="{{URL::to('/manager/createe')}}"><button type="button" class="btn btn-primary">Thêm</button></a>
+            <a style="margin-left: 20px;" href="{{URL::to('/manager/noi-nhan-loai-van-ban/createe')}}"><button type="button" class="btn btn-primary">Thêm</button></a>
+            <a style="margin-left: 20px;" href="{{URL::to('/manager/noi-nhan-loai-van-ban/edite',$nhan)}}"><button type="button" class="btn btn-primary">Cập Nhật</button></a>
          </div>
          <!-- /.col -->
          <div class="col-sm-6">

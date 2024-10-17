@@ -379,7 +379,7 @@ $(document).ready(function() {
     });
 
     // Collect selected recipients when checkboxes change
-    $('.check-don-vi, .check-truong, .check-khoa, .check-trung-tam, .check-hanh-chinh, .check-phuc-vu, .check-to-chuc').on('change', function() {
+    $(' .check-phong-ban, .check-don-vi, .check-phong, .check-nganh, .check-chuyen-nganh').on('change', function() {
         updateSelectedRecipients();
         updateCheckAllStatus();
     });
@@ -389,27 +389,22 @@ $(document).ready(function() {
         var selectedNames = []; // Array to store selected names
         
         // Collect checked checkboxes and their corresponding names
-        $('.check-don-vi:checked').each(function() {
+        $('.check-phong-ban:checked').each(function() {
             selectedNames.push($(this).next('span').text()); // Get the text of the next sibling span
         });
-        $('.check-truong:checked').each(function() {
+        $('.check-don-vi:checked').each(function() {
             selectedNames.push($(this).next('span').text());
         });
-        $('.check-khoa:checked').each(function() {
+        $('.check-phong:checked').each(function() {
             selectedNames.push($(this).next('span').text());
         });
-        $('.check-trung-tam:checked').each(function() {
+        $('.check-nganh:checked').each(function() {
             selectedNames.push($(this).next('span').text());
         });
-        $('.check-hanh-chinh:checked').each(function() {
+        $('.check-chuyennganh:checked').each(function() {
             selectedNames.push($(this).next('span').text());
         });
-        $('.check-phuc-vu:checked').each(function() {
-            selectedNames.push($(this).next('span').text());
-        });
-        $('.check-to-chuc:checked').each(function() {
-            selectedNames.push($(this).next('span').text());
-        });
+        
 
         // Display the selected names in Bootstrap badges
         var badgeHtml = selectedNames.map(function(name) {
@@ -421,59 +416,49 @@ $(document).ready(function() {
     }
     function updateCheckAllStatus() {
         // Check for each group, if all checkboxes are selected, check the "check-all", otherwise uncheck it
-        $('#checkAllDonViCap').prop('checked', $('.check-don-vi:checked').length === $('.check-don-vi').length);
-        $('#checkAllTruong').prop('checked', $('.check-truong:checked').length === $('.check-truong').length);
-        $('#checkAllKhoa').prop('checked', $('.check-khoa:checked').length === $('.check-khoa').length);
-        $('#checkAllTrungTam').prop('checked', $('.check-trung-tam:checked').length === $('.check-trung-tam').length);
-        $('#checkAllHanhChinh').prop('checked', $('.check-hanh-chinh:checked').length === $('.check-hanh-chinh').length);
-        $('#checkAllPhucVu').prop('checked', $('.check-phuc-vu:checked').length === $('.check-phuc-vu').length);
-        $('#checkAllToChuc').prop('checked', $('.check-to-chuc:checked').length === $('.check-to-chuc').length);
+        $('#checkAllPhongBan').prop('checked', $('.check-phong-ban:checked').length === $('.check-phong-ban').length);
+        $('#checkAllDonVi').prop('checked', $('.check-don-vi:checked').length === $('.check-don-vi').length);
+        $('#checkAllPhong').prop('checked', $('.check-phong:checked').length === $('.check-phong').length);
+        $('#checkAllNganh').prop('checked', $('.check-nganh:checked').length === $('.check-nganh').length);
+        $('#checkAllChuyenNganh').prop('checked', $('.check-chuyen-nganh:checked').length === $('.check-chuyen-nganh').length);
+       
         
     }
     // Apply change handler to check-all for each group to ensure update on check/uncheck
-    $('#checkAllDonViCap').on('change', function() {
-        $('.check-don-vi').prop('checked', this.checked);
+    $('#checkAllPhongBan').on('change', function() {
+        $('.check-phong-ban').prop('checked', this.checked);
         updateSelectedRecipients(); // Ensure to update recipients list after check/uncheck
     });
 
-    $('#checkAllTruong').on('change', function() {
-        $('.check-truong').prop('checked', this.checked);
+    $('#checkAllDonVi').on('change', function() {
+        $('.check-don-vi').prop('checked', this.checked);
         updateSelectedRecipients();
     });
 
-    $('#checkAllKhoa').on('change', function() {
-        $('.check-khoa').prop('checked', this.checked);
+    $('#checkAllPhong').on('change', function() {
+        $('.check-phong').prop('checked', this.checked);
         updateSelectedRecipients();
     });
 
-    $('#checkAllTrungTam').on('change', function() {
-        $('.check-trung-tam').prop('checked', this.checked);
+    $('#checkAllNganh').on('change', function() {
+        $('.check-nganh').prop('checked', this.checked);
         updateSelectedRecipients();
     });
 
-    $('#checkAllHanhChinh').on('change', function() {
-        $('.check-hanh-chinh').prop('checked', this.checked);
+    $('#checkAllChuyenNganh').on('change', function() {
+        $('.check-chuyen-nganh').prop('checked', this.checked);
         updateSelectedRecipients();
     });
 
-    $('#checkAllPhucVu').on('change', function() {
-        $('.check-phuc-vu').prop('checked', this.checked);
-        updateSelectedRecipients();
-    });
-
-    $('#checkAllToChuc').on('change', function() {
-        $('.check-to-chuc').prop('checked', this.checked);
-        updateSelectedRecipients();
-    });
+   
     $('#checkAll').on('change', function() {
+      $('.check-phong-ban').prop('checked', this.checked);
       $('.check-don-vi').prop('checked', this.checked);
-      $('.check-truong').prop('checked', this.checked);
-      $('.check-khoa').prop('checked', this.checked);
-      $('.check-trung-tam').prop('checked', this.checked);
-      $('.check-hanh-chinh').prop('checked', this.checked);
-      $('.check-phuc-vu').prop('checked', this.checked);
-        $('.check-to-chuc').prop('checked', this.checked);
-        updateSelectedRecipients();
+      $('.check-phong').prop('checked', this.checked);
+      $('.check-nganh').prop('checked', this.checked);
+      $('.check-chuyen-nganh').prop('checked', this.checked);
+      
+      updateSelectedRecipients();
     });
     
     // Initial call to update selected recipients when the page loads (if needed)

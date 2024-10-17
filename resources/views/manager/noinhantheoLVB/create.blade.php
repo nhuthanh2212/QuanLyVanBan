@@ -5,12 +5,13 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Nơi Nhận Theo Loại Văn Bản</h1>
+            <h1 class="m-0">Nơi Nhận Theo Loại Văn Bản Của Đơn Vị Ban Hành</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{URL::to('/home')}}">Home</a></li>
-              <li class="breadcrumb-item active">Nơi Nhận Theo Loại Văn Bản</li>
+              <li class="breadcrumb-item"><a href="{{URL::to('/manager/noi-nhan-loai-van-ban')}}">Danh Sach</a></li>
+              <li class="breadcrumb-item active">Nơi Nhận Theo Loại Văn Bản Của Đơn Vị Ban Hành</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -56,7 +57,7 @@
 				@endif
               <!-- /.card-header -->
               <!-- form start -->
-              <form method="post" action="{{URL::to('/manager/inser')}}" enctype="multipart/form-data">
+              <form method="post" action="{{URL::to('/manager/insert')}}" enctype="multipart/form-data">
               	@csrf
                 <div class="card-body">
                     
@@ -73,8 +74,8 @@
                     <label for="exampleInputEmail1">Nơi Ban Hành: </label>
                     <select name="id_Gr" class="form-control " aria-label="Small select example" >
                         <option value="0" selected>-----------Chọn-----------</option>
-                        @foreach ($loaivanban as $lvb )
-                           <option value="{{$lvb->id_LVB}}" >{{$lvb->TenLVB}}</option>
+                        @foreach ($nhom as $nh )
+                           <option value="{{$nh->id}}" >{{$nh->TenGroup}}</option>
                         @endforeach
                      </select>
                   </div>
@@ -101,31 +102,31 @@
                                 <tr>
                                     <td>
                                         @foreach ($phongban as $pb)
-                                            <input type="checkbox" class="check-phong-ban" value="{{ $pb->id }}" name="id_pb[]" id="checkPhongBan{{ $pb->id }}">
+                                            <input type="checkbox" class="check-phong-ban" value="{{ $pb->slug }}" name="slug_pb[]" id="checkPhongBan{{ $pb->id }}">
                                             <span>{{ $pb->TenPB }}</span><br>
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($donvi as $dv)
-                                            <input type="checkbox" class="check-don-vi" value="{{ $dv->id }}" name="id_dv[]"  id="checkDonVi{{ $dv->id }}">
+                                            <input type="checkbox" class="check-don-vi" value="{{ $dv->slug }}" name="slug_dv[]"  id="checkDonVi{{ $dv->id }}">
                                             <span>{{ $dv->TenDV }}</span><br>
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($phong as $p)
-                                            <input type="checkbox" class="check-phong" value="{{ $p->id }}" name="id_p[]"  id="checkPhong{{ $p->id }}">
+                                            <input type="checkbox" class="check-phong" value="{{ $p->slug }}" name="slug_p[]"  id="checkPhong{{ $p->id }}">
                                             <span>{{ $p->TenP }}</span><br>
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($nganh as $n)
-                                            <input type="checkbox" class="check-nganh" value="{{ $n->id }}" name="id_n[]"  id="checkNganh{{ $n->id }}">
+                                            <input type="checkbox" class="check-nganh" value="{{ $n->slug }}" name="slug_n[]"  id="checkNganh{{ $n->id }}">
                                             <span>{{ $n->TenN }}</span><br>
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($chuyennganh as $cn)
-                                            <input type="checkbox" class="check-chuyen-nganh" value="{{ $cn->id }}" name="id_cn[]"  id="checkChuyenNganh{{ $cn->id }}">
+                                            <input type="checkbox" class="check-chuyen-nganh" value="{{ $cn->slug }}" name="slug_cn[]"  id="checkChuyenNganh{{ $cn->id }}">
                                             <span>{{ $cn->TenCN }}</span><br>
                                         @endforeach
                                     </td>
@@ -139,7 +140,7 @@
 
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">Gửi</button>
-                  <a href="{{route('van-ban-di.index')}}"><button type="button" class="btn btn-light">Quay Lại </button></a>
+                  <a href="{{URL::to('manager/noi-nhan-loai-van-ban')}}"><button type="button" class="btn btn-light">Quay Lại </button></a>
                 </div>
               </form>
 </div>

@@ -14,6 +14,7 @@ use App\Models\DonVi;
 use App\Models\Phong;
 use App\Models\Nganh;
 use App\Models\ChuyenNganh;
+use App\Models\LVBTheoDVHB;
 
 class LoaiVanBanController extends Controller
 {
@@ -83,7 +84,8 @@ class LoaiVanBanController extends Controller
     public function nhan_theo_loaiVB(){
         $loaivanban = LoaiVanBan::orderBy('id_LVB','DESC')->get();
         $nhom = Nhom::orderBy('id','DESC')->get();
-        return view('manager.noinhantheoLVB.list' ,compact('loaivanban','nhom'));
+        $nhan = LVBTheoDVHB::find(4);
+        return view('manager.noinhantheoLVB.list' ,compact('loaivanban','nhom','nhan'));
     }
 
     public function createe(){
@@ -104,14 +106,14 @@ class LoaiVanBanController extends Controller
            
             'id_LVB' => 'required',
             'id_Gr' => 'required',
-            'id_D' => 'required|array', // Kiểm tra id_DV là một mảng
+            
         ],
         [
             'id_Gr.required' => 'Đơn Vị Ban Hành Phải Có',
             'id_LVB.required' => 'Loai Văn Bản Phải Có',
             
         ]);
-        $nhan = new NhanTheoLVB();
+        $nhan = new LVBTheoDVHB();
         $nhan->id_LVB = $data['id_LVB'];
         $nhan->id_Gr = $data['id_Gr'];
       
@@ -119,19 +121,65 @@ class LoaiVanBanController extends Controller
         
         $nhan->save();
        // Gán nơi đến (nhiều checkbox đã chọn)
-        if ($request->has('id_D')) {
-            // Gán id_DV từ request vào cột id_Den của bảng pivot
-            foreach($request->id_D as $id_D) {
-                $nhan->noiden()->attach($id_D); // Cột đúng là id_Den trong bảng noiden
+       if ($request->has('slug_pb')) {
+        // Gán id_DV từ request vào cột id_Den của bảng pivot
+            foreach($request->slug_pb as $slug_pb) {
+                $nhan->nhantheolvb()->attach($slug_pb); // Cột đúng là id_Den trong bảng noiden
             }
         }
-        toastr()->success('Tạo Nơi Nhận Của Loại Văn Bản Thành Công');
-        return redirect()->back();
+        // Attach 'id_dv' to nhantheolvb table
+        if ($request->has('slug_dv')) {
+            foreach($request->slug_dv as $slug_dv) {
+                $nhan->nhandonvitheolvb()->attach($slug_dv); // Cột đúng là id_Den trong bảng noiden
+            }
+        }
+        
+        if ($request->has('slug_p')) {
+            foreach($request->slug_p as $slug_p) {
+                $nhan->nhanphongtheolvb()->attach($slug_p); // Cột đúng là id_Den trong bảng noiden
+            }
+        }
+        
+        if ($request->has('slug_n')) {
+            foreach($request->slug_n as $slug_n) {
+                $nhan->nhannganhtheolvb()->attach($slug_n); // Cột đúng là id_Den trong bảng noiden
+            }
+        }
+        
+        if ($request->has('slug_cn')) {
+            foreach($request->slug_cn as $slug_cn) {
+                $nhan->nhanchuyennganhtheolvb()->attach($slug_cn); // Cột đúng là id_Den trong bảng noiden
+            }
+        }
+        toastr()->success('Tạo Nơi Nhận Của Loại Văn Bản Theo Nơi Ban Hành Thành Công');
+        return redirect()->to('manager/noi-nhan-loai-van-ban');
 
     }
     /**
      * Show the form for editing the specified resource.
      */
+
+     public function edite(String $id){
+        $loaivanban = LoaiVanBan::orderBy('id_LVB','DESC')->get();
+        $nhom = Nhom::orderBy('id','DESC')->get();
+        $phongban = PhongBan::orderBy('id','ASC')->get();
+        $donvi = DonVi::orderBy('id','ASC')->get();
+        $phong = Phong::orderBy('id','ASC')->get();
+        $nganh = Nganh::orderBy('id','ASC')->get();
+        $chuyennganh = ChuyenNganh::orderBy('id','ASC')->get();
+        $nhan = LVBTheoDVHB::find($id);
+        // Retrieve the checked values for each category
+        $checkedSlugPB = $nhan->nhantheolvb()->pluck('slug')->toArray(); // Replace 'id_pb' with the actual column name in your pivot table
+$checkedSlugDV = $nhan->nhandonvitheolvb()->pluck('slug')->toArray(); // Replace 'id_dv' with the actual column name
+$checkedSlugP = $nhan->nhanphongtheolvb()->pluck('slug')->toArray(); // Replace 'id_p' with the actual column name
+$checkedSlugN = $nhan->nhannganhtheolvb()->pluck('slug')->toArray(); // Replace 'id_n' with the actual column name
+$checkedSlugCN = $nhan->nhanchuyennganhtheolvb()->pluck('slug')->toArray(); // Replace 'id_cn' with the actual column name
+
+        return view('manager.noinhantheoLVB.edit' ,compact('loaivanban','nhom','phongban','donvi','phong','nganh','chuyennganh','nhan','checkedSlugPB','checkedSlugDV','checkedSlugP','checkedSlugN','checkedSlugCN'));
+    }
+
+
+
     public function edit(string $id)
     {
         $this->session_login();
