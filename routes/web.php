@@ -61,6 +61,8 @@ Route::prefix('manager')->group(function () {
 
     Route::get('/noi-nhan-loai-van-ban/edite/{id}', [LoaiVanBanController::class, 'edite']);
 
+    Route::POST('/updatee/{id}', [LoaiVanBanController::class, 'updatee']);
+
     Route::resource('/khoi', KhoiController::class);
 
     Route::resource('/phong-ban', PhongBanController::class);

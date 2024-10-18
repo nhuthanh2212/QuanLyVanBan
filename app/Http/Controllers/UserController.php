@@ -111,14 +111,14 @@ class UserController extends Controller
         $taikhoan->password = md5($data['password']);
         $taikhoan->GioiTinh = $request->GioiTinh;
 
-        $get_image = $request->image;
+        $get_image = $request->img;
         if($get_image){
             $path = 'uploads/img';
             $get_name_image = $get_image->getClientOriginalName();
             $name_image = current(explode('.',$get_name_image));
             $new_image = $name_image.rand(0,99).'.'.$get_image->getClientOriginalExtension();
             $get_image->move($path,$new_image);
-            $taikhoan->image = $new_image;
+            $taikhoan->img = $new_image;
         }
         $taikhoan->save();
         toastr()->success('Thêm Người Dùng Thành Công');
@@ -196,14 +196,14 @@ class UserController extends Controller
         $taikhoan->GioiTinh = $request->GioiTinh;
 
         
-        if($request->image){
-            $get_image = $request->image;
+        if($request->img){
+            $get_image = $request->img;
             $path = 'uploads/img';
             $get_name_image = $get_image->getClientOriginalName();
             $name_image = current(explode('.',$get_name_image));
             $new_image = $name_image.rand(0,99).'.'.$get_image->getClientOriginalExtension();
             $get_image->move($path,$new_image);
-            $taikhoan->image = $new_image;
+            $taikhoan->img = $new_image;
         }
         $taikhoan->save();
         toastr()->success('Cập Nhật Người Dùng Thành Công');

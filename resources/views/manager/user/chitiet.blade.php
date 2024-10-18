@@ -66,7 +66,7 @@
                      </div>
                      <div class="form-group row">
                         <label  style="margin-right: 5px;">Địa Chỉ: </label>
-                        <h5>{{$taikhoan->DiaChi}}</h5>
+                        <h5>{!!$taikhoan->DiaChi!!}</h5>
                      </div>
                      
                      <div class="form-group row">

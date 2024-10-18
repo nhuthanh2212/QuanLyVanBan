@@ -58,12 +58,13 @@
               <!-- /.card-header -->
               <!-- form start -->
               <form method="post" action="{{URL::to('/manager/updatee',$nhan->id)}}" enctype="multipart/form-data">
-              @method('PUT')
+             
               	@csrf
+                
                 <div class="card-body">
                     
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Loại Văn Bản: </label>
+                    <label >Loại Văn Bản: </label>
                     <select name="id_LVB" class="form-control " aria-label="Small select example" >
                         <option value="0" selected>-----------Chọn-----------</option>
                         @foreach ($loaivanban as $lvb )
@@ -72,7 +73,7 @@
                      </select>
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Nơi Ban Hành: </label>
+                    <label >Nơi Ban Hành: </label>
                     <select name="id_Gr" class="form-control " aria-label="Small select example" >
                         <option value="0" selected>-----------Chọn-----------</option>
                         @foreach ($nhom as $nh )
@@ -82,7 +83,7 @@
                   </div>
                   
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Nơi Nhận Theo Loại Văn Bản: </label>
+                    <label>Nơi Nhận Theo Loại Văn Bản: </label>
                     <div id="recipientDisplay" class="selected-recipients" aria-expanded="false" >Chọn Nơi Nhận Loại Văn Bản</div>
                   </div>
                   <!-- Collapsible section -->
@@ -107,7 +108,7 @@
                                     <td>
                                         @foreach ($phongban as $pb)
                                         <label style=" font-weight: normal;">
-                                            <input type="checkbox" class="check-phong-ban" value="{{ $pb->slug }}" name="slug_pb[]" id="checkPhongBan{{ $pb->id }}"  {{ in_array($pb->slug, $checkedSlugPB) ? 'checked' : '' }}>
+                                            <input type="checkbox" class="check-phong-ban" value="{{ $pb->slug }}" name="slug_pb[]" id="checkPhongBan{{ $pb->id }}"   {{ in_array($pb->slug, $noinhan) ? 'checked' : '' }}>
                                             <span>{{ $pb->TenPB }}</span>
                                             </label><br>
                                         @endforeach
@@ -115,7 +116,7 @@
                                     <td>
                                         @foreach ($donvi as $dv)
                                         <label style=" font-weight: normal;">
-                                            <input type="checkbox" class="check-don-vi" value="{{ $dv->slug }}" name="slug_dv[]"  id="checkDonVi{{ $dv->id }}">
+                                            <input type="checkbox" class="check-don-vi" value="{{ $dv->slug }}" name="slug_dv[]"  id="checkDonVi{{ $dv->id }}" {{ in_array($dv->slug, $noinhan) ? 'checked' : '' }}>
                                             <span>{{ $dv->TenDV }}</span>
                                             </label><br>
                                         @endforeach
@@ -123,7 +124,7 @@
                                     <td>
                                         @foreach ($phong as $p)
                                         <label style=" font-weight: normal;">
-                                            <input type="checkbox" class="check-phong" value="{{ $p->slug }}" name="slug_p[]"  id="checkPhong{{ $p->id }}">
+                                            <input type="checkbox" class="check-phong" value="{{ $p->slug }}" name="slug_p[]"  id="checkPhong{{ $p->id }}" {{ in_array($p->slug, $noinhan) ? 'checked' : '' }}>
                                             <span>{{ $p->TenP }}</span>
                                             </label><br>
                                         @endforeach
@@ -131,7 +132,7 @@
                                     <td>
                                         @foreach ($nganh as $n)
                                         <label style=" font-weight: normal;">
-                                            <input type="checkbox" class="check-nganh" value="{{ $n->slug }}" name="slug_n[]"  id="checkNganh{{ $n->id }}">
+                                            <input type="checkbox" class="check-nganh" value="{{ $n->slug }}" name="slug_n[]"  id="checkNganh{{ $n->id }}" {{ in_array($n->slug, $noinhan) ? 'checked' : '' }}>
                                             <span>{{ $n->TenN }}</span>
                                             </label><br>
                                         @endforeach
@@ -139,7 +140,7 @@
                                     <td>
                                         @foreach ($chuyennganh as $cn)
                                         <label style=" font-weight: normal;">
-                                            <input type="checkbox" class="check-chuyen-nganh" value="{{ $cn->slug }}" name="slug_cn[]"  id="checkChuyenNganh{{ $cn->id }}">
+                                            <input type="checkbox" class="check-chuyen-nganh" value="{{ $cn->slug }}" name="slug_cn[]"  id="checkChuyenNganh{{ $cn->id }}" {{ in_array($cn->slug, $noinhan) ? 'checked' : '' }}>
                                             <span>{{ $cn->TenCN }}</span>
                                             </label><br>
                                         @endforeach

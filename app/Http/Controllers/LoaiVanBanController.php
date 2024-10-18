@@ -84,7 +84,7 @@ class LoaiVanBanController extends Controller
     public function nhan_theo_loaiVB(){
         $loaivanban = LoaiVanBan::orderBy('id_LVB','DESC')->get();
         $nhom = Nhom::orderBy('id','DESC')->get();
-        $nhan = LVBTheoDVHB::find(4);
+        $nhan = LVBTheoDVHB::find(8);
         return view('manager.noinhantheoLVB.list' ,compact('loaivanban','nhom','nhan'));
     }
 
@@ -160,26 +160,70 @@ class LoaiVanBanController extends Controller
      */
 
      public function edite(String $id){
-        $loaivanban = LoaiVanBan::orderBy('id_LVB','DESC')->get();
-        $nhom = Nhom::orderBy('id','DESC')->get();
-        $phongban = PhongBan::orderBy('id','ASC')->get();
-        $donvi = DonVi::orderBy('id','ASC')->get();
-        $phong = Phong::orderBy('id','ASC')->get();
-        $nganh = Nganh::orderBy('id','ASC')->get();
-        $chuyennganh = ChuyenNganh::orderBy('id','ASC')->get();
+        // Retrieve associated records
+        $loaivanban = LoaiVanBan::orderBy('id_LVB', 'DESC')->get();
+        $nhom = Nhom::orderBy('id', 'DESC')->get();
+        $phongban = PhongBan::orderBy('id', 'ASC')->get();
+        $donvi = DonVi::orderBy('id', 'ASC')->get();
+        $phong = Phong::orderBy('id', 'ASC')->get();
+        $nganh = Nganh::orderBy('id', 'ASC')->get();
+        $chuyennganh = ChuyenNganh::orderBy('id', 'ASC')->get();
+        
+        // Find the specific LVBTheoDVHB record
         $nhan = LVBTheoDVHB::find($id);
-        // Retrieve the checked values for each category
-        $checkedSlugPB = $nhan->nhantheolvb()->pluck('slug')->toArray(); // Replace 'id_pb' with the actual column name in your pivot table
-$checkedSlugDV = $nhan->nhandonvitheolvb()->pluck('slug')->toArray(); // Replace 'id_dv' with the actual column name
-$checkedSlugP = $nhan->nhanphongtheolvb()->pluck('slug')->toArray(); // Replace 'id_p' with the actual column name
-$checkedSlugN = $nhan->nhannganhtheolvb()->pluck('slug')->toArray(); // Replace 'id_n' with the actual column name
-$checkedSlugCN = $nhan->nhanchuyennganhtheolvb()->pluck('slug')->toArray(); // Replace 'id_cn' with the actual column name
+        $noinhan = NhanTheoLVB::where('id_BH_LVB',$nhan->id)->pluck('noi_nhan')->toArray();
+        // dd($noinhan);
+     
 
-        return view('manager.noinhantheoLVB.edit' ,compact('loaivanban','nhom','phongban','donvi','phong','nganh','chuyennganh','nhan','checkedSlugPB','checkedSlugDV','checkedSlugP','checkedSlugN','checkedSlugCN'));
+        return view('manager.noinhantheoLVB.edit', compact(
+            'loaivanban', 'nhom', 'phongban', 'donvi', 'phong', 'nganh', 'chuyennganh', 
+            'nhan', 'noinhan'
+        ));
+    }
+    public function updatee(Request $request, string $id){
+        $data = $request->validate([
+           
+            'id_LVB' => 'required',
+            'id_Gr' => 'required',
+            
+        ],
+        [
+            'id_Gr.required' => 'Đơn Vị Ban Hành Phải Có',
+            'id_LVB.required' => 'Loai Văn Bản Phải Có',
+            
+        ]);
+        $nhan = LVBTheoDVHB::find($id);
+        $nhan->id_LVB = $data['id_LVB'];
+        $nhan->id_Gr = $data['id_Gr'];
+      
+
+        
+        $nhan->save();
+        $data = $request->all();
+        $noinhan = NhanTheoLVB::where('id_BH_LVB', $nhan->id)->get();
+        foreach ($noinhan as $noi) {
+            $found = false; // Cờ để kiểm tra xem có bản ghi nào khớp không
+        
+            
+                foreach ($data as $slug_pb) {
+                    if ($slug_pb == $noi->noi_nhan) {
+                        $found = true; // Tìm thấy bản ghi khớp, ngừng kiểm tra
+                        break;
+                    }
+                }
+        
+                // Nếu không tìm thấy bản ghi khớp, xóa bản ghi này
+                if (!$found) {
+                    NhanTheoLVB::where('id', $noi->id)->delete(); // Xóa bản ghi cụ thể theo id
+                }
+            
+        }
+
+        toastr()->success('Cập Nhật Nơi Nhận Của Loại Văn Bản Theo Nơi Ban Hành Thành Công');
+        return redirect()->to('manager/noi-nhan-loai-van-ban');
     }
 
-
-
+   
     public function edit(string $id)
     {
         $this->session_login();
