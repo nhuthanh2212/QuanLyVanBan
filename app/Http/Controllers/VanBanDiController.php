@@ -10,15 +10,20 @@ use Carbon\Carbon;
 
 use App\Models\LoaiVanBan;
 use App\Models\VanBanDi;
-use App\Models\DonViCapCao;
-use App\Models\Truong;
-use App\Models\TrungTam;
-use App\Models\HanhChinh;
-use App\Models\PhucVu;
-use App\Models\ToChuc;
-use App\Models\Khoa;
+use App\Models\Nhom;
+use App\Models\PhongBan;
+use App\Models\DonVi;
+use App\Models\Phong;
+use App\Models\Nganh;
+use App\Models\ChuyenNganh;
+use App\Models\LVBTheoDVHB;
 use App\Models\TaiKhoan;
 use App\Models\NoiDen;
+use App\Models\BH_PB;
+use App\Models\BH_P;
+use App\Models\BH_DV;
+use App\Models\BH_N;
+use App\Models\BH_CN;
 
 class VanBanDiController extends Controller
 {
@@ -41,19 +46,60 @@ class VanBanDiController extends Controller
      */
     public function create()
     {
+        $id = Session::get('id');
+        $taikhoan = TaiKhoan::where('id_TK', $id)->first();
+        $nhom = Nhom::orderBy('id', 'DESC')->get();
+        $ten = '';
+        foreach($nhom as $nh){
+            if($taikhoan->id_Gr == $nh->id){
+                $ten = $nh->TenGroup;
+            }
+        }
+        // Tìm vị trí của dấu '-' cuối cùng
+        $tim = strrpos($ten, '-');
+        // Lấy chuỗi sau dấu '-' cuối cùng
+        $tengroup = substr($ten, $tim + 1);
 
         $loaivanban = LoaiVanBan::orderBy('id_LVB','ASC')->get();
-        $donvicapcao = DonViCapCao::orderBy('id_DV','ASC')->get();
-        $truong = Truong::orderBy('id','ASC')->get();
-        $trungtam = TrungTam::orderBy('id','ASC')->get();
-        $hanhchinh = HanhChinh::orderBy('id','ASC')->get();
-        $phucvu = PhucVu::orderBy('id','ASC')->get();
-        $tochuc = ToChuc::orderBy('id','ASC')->get();
-        $khoa = Khoa::orderBy('id','ASC')->get();
         
-        return view('vanban.vanbandi.create',compact('loaivanban','donvicapcao','truong','trungtam','hanhchinh','phucvu','tochuc','khoa'));
+        $phongban = PhongBan::orderBy('id', 'ASC')->get();
+        $donvi = DonVi::orderBy('id', 'ASC')->get();
+        $phong = Phong::orderBy('id', 'ASC')->get();
+        $nganh = Nganh::orderBy('id', 'ASC')->get();
+        $chuyennganh = ChuyenNganh::orderBy('id', 'ASC')->get();
+        
+        
+        
+        return view('vanban.vanbandi.create',compact('loaivanban', 'nhom', 'phongban', 'donvi', 'phong', 'nganh', 'chuyennganh','tengroup'));
     }
 
+    //check nhung noi duoc gui theo loai văn bản và đon vị ban hanh được tạo trước đó
+    public function check_noinhan(Request $request) {
+        // Kiểm tra nếu id_LVB hoặc id_Gr không hợp lệ
+        if (!$request->id_LVB || !$request->id_Gr) {
+            return response()->json(['html' => '']); // Trả về rỗng nếu không có dữ liệu
+        }
+    
+        // Tìm kiếm thông tin theo loại văn bản và đơn vị ban hành
+        $nhan = LVBTheoDVHB::where('id_LVB', $request->id_LVB)->where('id_Gr', $request->id_Gr)->first();
+    
+        // Nếu không tìm thấy, trả về không có dữ liệu
+        if (!$nhan) {
+            return response()->json(['html' => '']);
+        }
+    
+        // Lấy danh sách các phòng, đơn vị, ngành... tương ứng
+        $nhanpb = BH_PB::where('id_BH_LVB', $nhan->id)->pluck('id_PB')->toArray();
+        $nhandv = BH_DV::where('id_BH_LVB', $nhan->id)->pluck('id_DV')->toArray();
+        $nhanp = BH_P::where('id_BH_LVB', $nhan->id)->pluck('id_P')->toArray();
+        $nhannganh = BH_N::where('id_BH_LVB', $nhan->id)->pluck('id_N')->toArray();
+        $nhanchuyennganh = BH_CN::where('id_BH_LVB', $nhan->id)->pluck('id_CN')->toArray();
+    
+        // Trả về view kèm theo dữ liệu
+        return response()->json([
+            'html' => view('vanban.vanbandi.recipient_list', compact('nhanpb', 'nhandv', 'nhanp', 'nhannganh', 'nhanchuyennganh'))->render()
+        ]);
+    }
     /**
      * Store a newly created resource in storage.
      */

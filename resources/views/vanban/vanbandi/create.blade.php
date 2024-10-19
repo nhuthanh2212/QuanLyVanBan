@@ -57,89 +57,119 @@
               	@csrf
                 <div class="card-body">
                     <div class="form-group">
-                    <label for="exampleInputEmail1">Tên Văn bản: </label>
-                    <input type="text" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Số Hiệu: </label>
-                    <input type="text" class="form-control" name="SoHieu" id="exampleInputEmail1" placeholder="...">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Loại Văn Bản: </label>
-                    <select name="id_LVB" class="form-control " aria-label="Small select example" >
-                        <option value="" selected>-----------Chọn-----------</option>
-                        @foreach ($loaivanban as $lvb )
-                           <option value="{{$lvb->id_LVB}}" >{{$lvb->TenLVB}}</option>
-                        @endforeach
-                     </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">File Đính Kèm: </label>
-                    <input type="file" class="form-control" name="file" id="exampleInputEmail1" >
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Gửi Đến: </label>
-                    <div id="recipientDisplay" class="selected-recipients" aria-expanded="false" >Chọn Nơi Gửi Đến</div>
-                  </div>
+                        <label for="exampleInputEmail1">Loại Văn Bản: </label>
+                        <select id="loaivanban" name="id_LVB" class="form-control choose" aria-label="Small select example" >
+                            <option value="0" selected>-----------Chọn-----------</option>
+                            @foreach ($loaivanban as $lvb )
+                            <option value="{{$lvb->id_LVB}}" >{{$lvb->TenLVB}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Đơn Vị Ban Hành: </label>
+                        <input type="text" class="form-control" name="id_Gr"  id="donvibanhanh" value="{{$tengroup}}" id="exampleInputEmail1" placeholder="...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Văn Bản Số: </label>
+                        <input type="text" class="form-control" name="SoHieu" id="exampleInputEmail1" placeholder="...">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Trích Yếu Nội Dung: </label>
+                        <input type="text" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Ghi Chú: </label>
+                        <input type="text" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Ngày Ban Hành: </label>
+                        <input type="text" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Ngày Gửi: </label>
+                        <input type="text" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Người Gửi: </label>
+                        <input type="text" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Tình Trạng Văn Bản: </label>
+                        <div class="row">
+                            <input type="radio" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
+                            <input type="radio" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
+                        </div>
+                        
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">File Đính Kèm: </label>
+                        <input type="file" class="form-control" name="file" id="exampleInputEmail1" >
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Nơi Nhận: </label>
+                        <div id="recipientDisplay" class="selected-recipients" aria-expanded="false" >Chọn Nơi Gửi Đến</div>
+                    </div>
                   <!-- Collapsible section -->
-                  <div id="recipientList" class="collapse">
-                        <table class="table">
+                  <div id="recipientListt" style="display: none;">
+                        <table class="table" >
                             <thead>
                                 <tr><th scope="col"><input type="checkbox" id="checkAll" class="check-all"> Chọn Tất Cả</th></tr>
                                 <tr>
-                                    <th scope="col"><input type="checkbox" id="checkAllDonViCap" class="check-all"> Đơn Vị Cấp Cao</th>
-                                    <th scope="col"><input type="checkbox" id="checkAllTruong" class="check-all"> Trường Thành Viên</th>
-                                    <th scope="col"><input type="checkbox" id="checkAllKhoa" class="check-all"> Khoa</th>
-                                    <th scope="col"><input type="checkbox" id="checkAllTrungTam" class="check-all"> Trung Tâm</th>
-                                    <th scope="col"><input type="checkbox" id="checkAllHanhChinh" class="check-all"> Khối Hành Chính</th>
-                                    <th scope="col"><input type="checkbox" id="checkAllPhucVu" class="check-all"> Khối Phục Vụ</th>
-                                    <th scope="col"><input type="checkbox" id="checkAllToChuc" class="check-all"> Tổ Chức Đoàn Thể</th>
+                                    <th scope="col"><input type="checkbox" id="checkAllPhongBan" class="check-all"> Phòng Ban</th>
+                                    <th scope="col"><input type="checkbox" id="checkAllDonVi" class="check-all"> Đơn Vị</th>
+                                    <th scope="col"><input type="checkbox" id="checkAllPhong" class="check-all"> Phòng</th>
+                                    <th scope="col"><input type="checkbox" id="checkAllNganh" class="check-all"> Ngành</th>
+                                    <th scope="col"><input type="checkbox" id="checkAllChuyenNganh" class="check-all">Chuyên Ngành</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
+                                  
+                                        
+                                   
                                     <td>
-                                        @foreach ($donvicapcao as $dv)
-                                            <input type="checkbox" class="check-don-vi" value="{{ $dv->id_DV }}" name="id_DV[]" id="checkDonVi{{ $dv->id_DV }}">
-                                            <span>{{ $dv->TenDV }}</span><br>
+                                        @foreach ($phongban as $pb)
+                                        <label style=" font-weight: normal;">
+                                            <input type="checkbox" class="check-phong-ban" value="{{ $pb->id }}" name="id_pb[]" id="checkPhongBan{{ $pb->id }}"   {{ in_array($pb->id, $nhanpb) ? 'checked' : '' }}>
+                                            <span>{{ $pb->TenPB }}</span>
+                                            </label><br>
                                         @endforeach
                                     </td>
                                     <td>
-                                        @foreach ($truong as $truong)
-                                            <input type="checkbox" class="check-truong" value="{{ $truong->id }}" name="id_T[]"  id="checkTruong{{ $truong->id }}">
-                                            <span>{{ $truong->TenTruong }}</span><br>
+                                        @foreach ($donvi as $dv)
+                                        <label style=" font-weight: normal;">
+                                            <input type="checkbox" class="check-don-vi" value="{{ $dv->id }}" name="id_dv[]"  id="checkDonVi{{ $dv->id }}" {{ in_array($dv->id, $nhandv) ? 'checked' : '' }}>
+                                            <span>{{ $dv->TenDV }}</span>
+                                            </label><br>
                                         @endforeach
                                     </td>
                                     <td>
-                                        @foreach ($khoa as $khoa)
-                                            <input type="checkbox" class="check-khoa" value="{{ $khoa->id }}" name="id_Khoa[]"  id="checkKhoa{{ $khoa->id }}">
-                                            <span>{{ $khoa->TenKhoa }}</span><br>
+                                        @foreach ($phong as $p)
+                                        <label style=" font-weight: normal;">
+                                            <input type="checkbox" class="check-phong" value="{{ $p->id }}" name="id_p[]"  id="checkPhong{{ $p->id }}" {{ in_array($p->id, $nhanp) ? 'checked' : '' }}>
+                                            <span>{{ $p->TenP }}</span>
+                                            </label><br>
                                         @endforeach
                                     </td>
                                     <td>
-                                        @foreach ($trungtam as $tt)
-                                            <input type="checkbox" class="check-trung-tam" value="{{ $tt->id }}" name="id_TT[]"  id="checkTrungTam{{ $tt->id }}">
-                                            <span>{{ $tt->TenTT }}</span><br>
+                                        @foreach ($nganh as $n)
+                                        <label style=" font-weight: normal;">
+                                            <input type="checkbox" class="check-nganh" value="{{ $n->id }}" name="id_n[]"  id="checkNganh{{ $n->id }}" {{ in_array($n->id, $nhannganh) ? 'checked' : '' }}>
+                                            <span>{{ $n->TenN }}</span>
+                                            </label><br>
                                         @endforeach
                                     </td>
                                     <td>
-                                        @foreach ($hanhchinh as $hc)
-                                            <input type="checkbox" class="check-hanh-chinh" value="{{ $hc->id }}" name="id_HC[]"  id="checkHanhChinh{{ $hc->id }}">
-                                            <span>{{ $hc->TenP }}</span><br>
+                                        @foreach ($chuyennganh as $cn)
+                                        <label style=" font-weight: normal;">
+                                            <input type="checkbox" class="check-chuyen-nganh" value="{{ $cn->id }}" name="id_cn[]"  id="checkChuyenNganh{{ $cn->id }}" {{ in_array($cn->id, $nhanchuyennganh) ? 'checked' : '' }}>
+                                            <span>{{ $cn->TenCN }}</span>
+                                            </label><br>
                                         @endforeach
                                     </td>
-                                    <td>
-                                        @foreach ($phucvu as $pv)
-                                            <input type="checkbox" class="check-phuc-vu" value="{{ $pv->id }}" name="id_PV[]"  id="checkPhucVu{{ $pv->id }}">
-                                            <span>{{ $pv->TenPPV }}</span><br>
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        @foreach ($tochuc as $tc)
-                                            <input type="checkbox" class="check-to-chuc" value="{{ $tc->id }}" name="id_TC[]"  id="checkToChuc{{ $tc->id }}">
-                                            <span>{{ $tc->TenTC }}</span><br>
-                                        @endforeach
-                                    </td>
+                                   
                                 </tr>
                             </tbody>
                         </table>

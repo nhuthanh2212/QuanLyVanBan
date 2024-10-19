@@ -585,5 +585,33 @@ $(document).ready(function() {
 
   });
 </script>
+<script>
+  jQuery(document).ready(function() {
+    $('#recipientListt').hide(); // Ẩn danh sách khi trang tải
+
+    // Sự kiện thay đổi dropdown loại văn bản
+    $('.choose').on('change', function() {
+        var id_LVB = $('#loaivanban').val();  // Lấy giá trị từ dropdown Loại Văn Bản
+        var id_Gr = $('#donvibanhanh').val();  // Lấy giá trị từ input Đơn Vị Ban Hành
+        var _token = $('input[name="_token"]').val();  // CSRF token
+
+        // Kiểm tra nếu cả hai giá trị đã được chọn
+        if(id_LVB != '0' && id_Gr) {
+            $.ajax({
+                url: '{{ url("/van-ban/check-noi-nhan") }}', // Đường dẫn đến phương thức kiểm tra
+                method: 'POST',
+                data: { id_LVB: id_LVB, id_Gr: id_Gr, _token: _token },
+                success: function(response) {
+                    $('#recipientListt').html(response.html); // Cập nhật nội dung danh sách
+                    $('#recipientListt').show(); // Hiện danh sách
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('Error:', textStatus, errorThrown); // Debug lỗi
+                }
+            });
+        }
+    });
+});
+</script>
 </body>
 </html>

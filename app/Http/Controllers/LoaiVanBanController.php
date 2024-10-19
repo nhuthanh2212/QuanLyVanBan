@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 
 use App\Models\LoaiVanBan;
-use App\Models\NhanTheoLVB;
+
 use App\Models\Nhom;
 use App\Models\PhongBan;
 use App\Models\DonVi;
@@ -15,6 +15,12 @@ use App\Models\Phong;
 use App\Models\Nganh;
 use App\Models\ChuyenNganh;
 use App\Models\LVBTheoDVHB;
+
+use App\Models\BH_PB;
+use App\Models\BH_P;
+use App\Models\BH_DV;
+use App\Models\BH_N;
+use App\Models\BH_CN;
 
 class LoaiVanBanController extends Controller
 {
@@ -80,150 +86,7 @@ class LoaiVanBanController extends Controller
     {
         //
     }
-    //noi nhan theo loai van ban
-    public function nhan_theo_loaiVB(){
-        $loaivanban = LoaiVanBan::orderBy('id_LVB','DESC')->get();
-        $nhom = Nhom::orderBy('id','DESC')->get();
-        $nhan = LVBTheoDVHB::find(8);
-        return view('manager.noinhantheoLVB.list' ,compact('loaivanban','nhom','nhan'));
-    }
-
-    public function createe(){
-        $loaivanban = LoaiVanBan::orderBy('id_LVB','DESC')->get();
-        $nhom = Nhom::orderBy('id','DESC')->get();
-        $phongban = PhongBan::orderBy('id','ASC')->get();
-        $donvi = DonVi::orderBy('id','ASC')->get();
-        $phong = Phong::orderBy('id','ASC')->get();
-        $nganh = Nganh::orderBy('id','ASC')->get();
-        $chuyennganh = ChuyenNganh::orderBy('id','ASC')->get();
-       
-        return view('manager.noinhantheoLVB.create' ,compact('loaivanban','nhom','phongban','donvi','phong','nganh','chuyennganh'));
-    }
-    public function insert(Request $request)
-    {
-        
-        $data = $request->validate([
-           
-            'id_LVB' => 'required',
-            'id_Gr' => 'required',
-            
-        ],
-        [
-            'id_Gr.required' => 'Đơn Vị Ban Hành Phải Có',
-            'id_LVB.required' => 'Loai Văn Bản Phải Có',
-            
-        ]);
-        $nhan = new LVBTheoDVHB();
-        $nhan->id_LVB = $data['id_LVB'];
-        $nhan->id_Gr = $data['id_Gr'];
-      
-
-        
-        $nhan->save();
-       // Gán nơi đến (nhiều checkbox đã chọn)
-       if ($request->has('slug_pb')) {
-        // Gán id_DV từ request vào cột id_Den của bảng pivot
-            foreach($request->slug_pb as $slug_pb) {
-                $nhan->nhantheolvb()->attach($slug_pb); // Cột đúng là id_Den trong bảng noiden
-            }
-        }
-        // Attach 'id_dv' to nhantheolvb table
-        if ($request->has('slug_dv')) {
-            foreach($request->slug_dv as $slug_dv) {
-                $nhan->nhandonvitheolvb()->attach($slug_dv); // Cột đúng là id_Den trong bảng noiden
-            }
-        }
-        
-        if ($request->has('slug_p')) {
-            foreach($request->slug_p as $slug_p) {
-                $nhan->nhanphongtheolvb()->attach($slug_p); // Cột đúng là id_Den trong bảng noiden
-            }
-        }
-        
-        if ($request->has('slug_n')) {
-            foreach($request->slug_n as $slug_n) {
-                $nhan->nhannganhtheolvb()->attach($slug_n); // Cột đúng là id_Den trong bảng noiden
-            }
-        }
-        
-        if ($request->has('slug_cn')) {
-            foreach($request->slug_cn as $slug_cn) {
-                $nhan->nhanchuyennganhtheolvb()->attach($slug_cn); // Cột đúng là id_Den trong bảng noiden
-            }
-        }
-        toastr()->success('Tạo Nơi Nhận Của Loại Văn Bản Theo Nơi Ban Hành Thành Công');
-        return redirect()->to('manager/noi-nhan-loai-van-ban');
-
-    }
-    /**
-     * Show the form for editing the specified resource.
-     */
-
-     public function edite(String $id){
-        // Retrieve associated records
-        $loaivanban = LoaiVanBan::orderBy('id_LVB', 'DESC')->get();
-        $nhom = Nhom::orderBy('id', 'DESC')->get();
-        $phongban = PhongBan::orderBy('id', 'ASC')->get();
-        $donvi = DonVi::orderBy('id', 'ASC')->get();
-        $phong = Phong::orderBy('id', 'ASC')->get();
-        $nganh = Nganh::orderBy('id', 'ASC')->get();
-        $chuyennganh = ChuyenNganh::orderBy('id', 'ASC')->get();
-        
-        // Find the specific LVBTheoDVHB record
-        $nhan = LVBTheoDVHB::find($id);
-        $noinhan = NhanTheoLVB::where('id_BH_LVB',$nhan->id)->pluck('noi_nhan')->toArray();
-        // dd($noinhan);
-     
-
-        return view('manager.noinhantheoLVB.edit', compact(
-            'loaivanban', 'nhom', 'phongban', 'donvi', 'phong', 'nganh', 'chuyennganh', 
-            'nhan', 'noinhan'
-        ));
-    }
-    public function updatee(Request $request, string $id){
-        $data = $request->validate([
-           
-            'id_LVB' => 'required',
-            'id_Gr' => 'required',
-            
-        ],
-        [
-            'id_Gr.required' => 'Đơn Vị Ban Hành Phải Có',
-            'id_LVB.required' => 'Loai Văn Bản Phải Có',
-            
-        ]);
-        $nhan = LVBTheoDVHB::find($id);
-        $nhan->id_LVB = $data['id_LVB'];
-        $nhan->id_Gr = $data['id_Gr'];
-      
-
-        
-        $nhan->save();
-        $data = $request->all();
-        $noinhan = NhanTheoLVB::where('id_BH_LVB', $nhan->id)->get();
-        foreach ($noinhan as $noi) {
-            $found = false; // Cờ để kiểm tra xem có bản ghi nào khớp không
-        
-            
-                foreach ($data as $slug_pb) {
-                    if ($slug_pb == $noi->noi_nhan) {
-                        $found = true; // Tìm thấy bản ghi khớp, ngừng kiểm tra
-                        break;
-                    }
-                }
-        
-                // Nếu không tìm thấy bản ghi khớp, xóa bản ghi này
-                if (!$found) {
-                    NhanTheoLVB::where('id', $noi->id)->delete(); // Xóa bản ghi cụ thể theo id
-                }
-            
-        }
-
-        toastr()->success('Cập Nhật Nơi Nhận Của Loại Văn Bản Theo Nơi Ban Hành Thành Công');
-        return redirect()->to('manager/noi-nhan-loai-van-ban');
-    }
-
-   
+    
     public function edit(string $id)
     {
         $this->session_login();
@@ -266,5 +129,203 @@ class LoaiVanBanController extends Controller
         $loai->delete();
         toastr()->success('Xóa loại văn bản Thành Công');
         return redirect()->route('loai-van-ban.index');
+    }
+
+    //noi nhan theo loai van ban
+    public function nhan_theo_loaiVB(){
+        $loaivanban = LoaiVanBan::orderBy('id_LVB','DESC')->get();
+        $nhom = Nhom::orderBy('id','DESC')->get();
+        $nhan = LVBTheoDVHB::orderBy('id','DESC')->get();
+        
+        $bh_pb = BH_PB::orderBy('id','ASC')->get();
+        $bh_dv = BH_DV::orderBy('id','ASC')->get();
+        $bh_p = BH_p::orderBy('id','ASC')->get();
+        $bh_n = BH_N::orderBy('id','ASC')->get();
+        $bh_cn = BH_CN::orderBy('id','ASC')->get();
+        $phongban = PhongBan::orderBy('id','ASC')->get();
+        $donvi = DonVi::orderBy('id','ASC')->get();
+        $phong = Phong::orderBy('id','ASC')->get();
+        $nganh = Nganh::orderBy('id','ASC')->get();
+        $chuyennganh = ChuyenNganh::orderBy('id','ASC')->get();
+
+        $ten = '';
+        foreach($nhan as $n){
+            foreach($nhom as $nh){
+                if($n->id_Gr == $nh->id){
+                    $ten = $nh->TenGroup;
+                }
+            }
+            
+        }
+       
+        
+        // Tìm vị trí của dấu '-' cuối cùng
+        $tim = strrpos($ten, '-');
+        // Lấy chuỗi sau dấu '-' cuối cùng
+        $tengroup = substr($ten, $tim + 1);
+        return view('manager.noinhantheoLVB.list' ,compact('loaivanban','nhom','nhan','tengroup','bh_pb','bh_dv','bh_p','bh_n','bh_cn','phongban','donvi','phong','nganh','chuyennganh'));
+    }
+
+    public function createe(){
+        $loaivanban = LoaiVanBan::orderBy('id_LVB','DESC')->get();
+        $nhom = Nhom::orderBy('id','DESC')->get();
+        $phongban = PhongBan::orderBy('id','ASC')->get();
+        $donvi = DonVi::orderBy('id','ASC')->get();
+        $phong = Phong::orderBy('id','ASC')->get();
+        $nganh = Nganh::orderBy('id','ASC')->get();
+        $chuyennganh = ChuyenNganh::orderBy('id','ASC')->get();
+       
+        return view('manager.noinhantheoLVB.create' ,compact('loaivanban','nhom','phongban','donvi','phong','nganh','chuyennganh'));
+    }
+    public function insert(Request $request)
+    {
+        
+        $data = $request->validate([
+           
+            'id_LVB' => 'required',
+            'id_Gr' => 'required',
+            
+        ],
+        [
+            'id_Gr.required' => 'Đơn Vị Ban Hành Phải Có',
+            'id_LVB.required' => 'Loai Văn Bản Phải Có',
+            
+        ]);
+        $nhan = new LVBTheoDVHB();
+        $nhan->id_LVB = $data['id_LVB'];
+        $nhan->id_Gr = $data['id_Gr'];
+      
+
+        
+        $nhan->save();
+       // Gán nơi đến (nhiều checkbox đã chọn)
+       if ($request->has('id_pb')) {
+        // Gán id_DV từ request vào cột id_Den của bảng pivot
+            foreach($request->id_pb as $id_pb) {
+                $nhan->nhantheolvb()->attach($id_pb); // Cột đúng là id_Den trong bảng noiden
+            }
+        }
+        // Attach 'id_dv' to nhantheolvb table
+        if ($request->has('id_dv')) {
+            foreach($request->id_dv as $id_dv) {
+                $nhan->nhandonvitheolvb()->attach($id_dv); // Cột đúng là id_Den trong bảng noiden
+            }
+        }
+        
+        if ($request->has('id_p')) {
+            foreach($request->id_p as $id_p) {
+                $nhan->nhanphongtheolvb()->attach($id_p); // Cột đúng là id_Den trong bảng noiden
+            }
+        }
+        
+        if ($request->has('id_n')) {
+            foreach($request->id_n as $id_n) {
+                $nhan->nhannganhtheolvb()->attach($id_n); // Cột đúng là id_Den trong bảng noiden
+            }
+        }
+        
+        if ($request->has('id_cn')) {
+            foreach($request->id_cn as $id_cn) {
+                $nhan->nhanchuyennganhtheolvb()->attach($id_cn); // Cột đúng là id_Den trong bảng noiden
+            }
+        }
+        toastr()->success('Tạo Nơi Nhận Của Loại Văn Bản Theo Nơi Ban Hành Thành Công');
+        return redirect()->to('manager/noi-nhan-loai-van-ban');
+
+    }
+    /**
+     * Show the form for editing the specified resource.
+     */
+
+     public function edite(String $id){
+        // Retrieve associated records
+        $loaivanban = LoaiVanBan::orderBy('id_LVB', 'DESC')->get();
+        $nhom = Nhom::orderBy('id', 'DESC')->get();
+        $phongban = PhongBan::orderBy('id', 'ASC')->get();
+        $donvi = DonVi::orderBy('id', 'ASC')->get();
+        $phong = Phong::orderBy('id', 'ASC')->get();
+        $nganh = Nganh::orderBy('id', 'ASC')->get();
+        $chuyennganh = ChuyenNganh::orderBy('id', 'ASC')->get();
+        
+        // Find the specific LVBTheoDVHB record
+        $nhan = LVBTheoDVHB::find($id);
+        $nhanpb = BH_PB::where('id_BH_LVB',$nhan->id)->pluck('id_PB')->toArray();
+        $nhandv = BH_DV::where('id_BH_LVB',$nhan->id)->pluck('id_DV')->toArray();
+        $nhanp = BH_P::where('id_BH_LVB',$nhan->id)->pluck('id_P')->toArray();
+        $nhannganh = BH_N::where('id_BH_LVB',$nhan->id)->pluck('id_N')->toArray();
+        $nhanchuyennganh = BH_CN::where('id_BH_LVB',$nhan->id)->pluck('id_CN')->toArray();
+        // dd($noinhan);
+     
+
+        return view('manager.noinhantheoLVB.edit', compact(
+            'loaivanban', 'nhom', 'phongban', 'donvi', 'phong', 'nganh', 'chuyennganh', 
+            'nhan', 'nhanpb','nhandv','nhanp','nhannganh','nhanchuyennganh'
+        ));
+    }
+    public function updatee(Request $request, string $id){
+        $data = $request->validate([
+           
+            'id_LVB' => 'required',
+            'id_Gr' => 'required',
+            
+        ],
+        [
+            'id_Gr.required' => 'Đơn Vị Ban Hành Phải Có',
+            'id_LVB.required' => 'Loai Văn Bản Phải Có',
+            
+        ]);
+        $nhan = LVBTheoDVHB::find($id);
+        $nhan->id_LVB = $data['id_LVB'];
+        $nhan->id_Gr = $data['id_Gr'];
+      
+
+        
+        $nhan->save();
+        if ($request->has('id_pb')) {
+            $nhan->nhantheolvb()->sync($request->id_pb); // Sync the array of phongban slugs
+        } else {
+            // If no checkboxes are selected, detach all related phongban
+            $nhan->nhantheolvb()->sync([]); // Detach all relationships
+        }
+    
+        // Repeat for other relationships as needed (donvi, phong, nganh, chuyennganh)
+        if ($request->has('id_dv')) {
+            $nhan->nhandonvitheolvb()->sync($request->id_dv);
+        } else {
+            $nhan->nhandonvitheolvb()->sync([]);
+        }
+    
+        if ($request->has('id_p')) {
+            $nhan->nhanphongtheolvb()->sync($request->id_p);
+        } else {
+            $nhan->nhanphongtheolvb()->sync([]);
+        }
+    
+        if ($request->has('id_n')) {
+            $nhan->nhannganhtheolvb()->sync($request->id_n);
+        } else {
+            $nhan->nhannganhtheolvb()->sync([]);
+        }
+    
+        if ($request->has('id_cn')) {
+            $nhan->nhanchuyennganhtheolvb()->sync($request->id_cn);
+        } else {
+            $nhan->nhanchuyennganhtheolvb()->sync([]);
+        }
+
+        toastr()->success('Cập Nhật Nơi Nhận Của Loại Văn Bản Theo Nơi Ban Hành Thành Công');
+        return redirect()->to('manager/noi-nhan-loai-van-ban');
+    }
+
+    public function delete(string $id){
+        $noinhan = LVBTheoDVHB::find($id);
+        $noinhan->nhantheolvb()->detach();  // Bảng liên quan với Phongban
+        $noinhan->nhandonvitheolvb()->detach(); // Bảng liên quan với DonVi
+        $noinhan->nhanphongtheolvb()->detach(); // Bảng liên quan với Phong
+        $noinhan->nhannganhtheolvb()->detach(); // Bảng liên quan với Nganh
+        $noinhan->nhanchuyennganhtheolvb()->detach(); // Bảng liên quan với ChuyenNganh
+        $noinhan->delete();
+        toastr()->success('Xóa Nơi Nhận Của Loại Văn Bản Theo Nơi Ban Hành Thành Công');
+        return redirect()->to('manager/noi-nhan-loai-van-ban');
     }
 }

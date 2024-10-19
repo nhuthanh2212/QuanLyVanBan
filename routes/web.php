@@ -47,6 +47,13 @@ Route::get('/logout',[AdminController::class, 'logout']);
 
 Route::get('/home',[HomeController::class, 'index']); 
 
+
+Route::prefix('van-ban')->group(function () {
+    //quản lý van ban
+    Route::resource('/van-ban-di', VanBanDiController::class);
+    
+    Route::post('/check-noi-nhan', [VanBanDiController::class, 'check_noinhan']);
+});
 // Route cho phần quản lý 
 Route::prefix('manager')->group(function () {
     
@@ -60,6 +67,8 @@ Route::prefix('manager')->group(function () {
     Route::post('/insert', [LoaiVanBanController::class, 'insert']);
 
     Route::get('/noi-nhan-loai-van-ban/edite/{id}', [LoaiVanBanController::class, 'edite']);
+
+    Route::delete('/noi-nhan-loai-van-ban/delete/{id}', [LoaiVanBanController::class, 'delete']);
 
     Route::POST('/updatee/{id}', [LoaiVanBanController::class, 'updatee']);
 
@@ -96,8 +105,7 @@ Route::prefix('manager')->group(function () {
 
 Route::get('/profile/{slug}',[UserController::class, 'profile']); 
 
-//quản lý van ban
-Route::resource('/van-ban-di', VanBanDiController::class);
+
 
 Route::get('/chi-tiet/{slug}',[VanBanDiController::class, 'chitiet']); 
 
