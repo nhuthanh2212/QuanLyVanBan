@@ -57,7 +57,7 @@
               	@csrf
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Loại Văn Bản: </label>
+                        <label for="loaivanban">Loại Văn Bản: </label>
                         <select id="loaivanban" name="id_LVB" class="form-control choose" aria-label="Small select example" >
                             <option value="0" selected>-----------Chọn-----------</option>
                             @foreach ($loaivanban as $lvb )
@@ -67,7 +67,8 @@
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Đơn Vị Ban Hành: </label>
-                        <input type="text" class="form-control" name="id_Gr"  id="donvibanhanh" value="{{$tengroup}}" id="exampleInputEmail1" placeholder="...">
+                        <input type="text" class="form-control" name=" " value="{{$tengroup}}" >
+                        <input type="hidden" class="form-control" name="id_Gr"  id="donvibanhanh" value="{{$id}}" >
                     </div>
                     
                     <div class="form-group">
@@ -112,67 +113,7 @@
                     </div>
                   <!-- Collapsible section -->
                   <div id="recipientListt" style="display: none;">
-                        <table class="table" >
-                            <thead>
-                                <tr><th scope="col"><input type="checkbox" id="checkAll" class="check-all"> Chọn Tất Cả</th></tr>
-                                <tr>
-                                    <th scope="col"><input type="checkbox" id="checkAllPhongBan" class="check-all"> Phòng Ban</th>
-                                    <th scope="col"><input type="checkbox" id="checkAllDonVi" class="check-all"> Đơn Vị</th>
-                                    <th scope="col"><input type="checkbox" id="checkAllPhong" class="check-all"> Phòng</th>
-                                    <th scope="col"><input type="checkbox" id="checkAllNganh" class="check-all"> Ngành</th>
-                                    <th scope="col"><input type="checkbox" id="checkAllChuyenNganh" class="check-all">Chuyên Ngành</th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                  
-                                        
-                                   
-                                    <td>
-                                        @foreach ($phongban as $pb)
-                                        <label style=" font-weight: normal;">
-                                            <input type="checkbox" class="check-phong-ban" value="{{ $pb->id }}" name="id_pb[]" id="checkPhongBan{{ $pb->id }}"   {{ in_array($pb->id, $nhanpb) ? 'checked' : '' }}>
-                                            <span>{{ $pb->TenPB }}</span>
-                                            </label><br>
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        @foreach ($donvi as $dv)
-                                        <label style=" font-weight: normal;">
-                                            <input type="checkbox" class="check-don-vi" value="{{ $dv->id }}" name="id_dv[]"  id="checkDonVi{{ $dv->id }}" {{ in_array($dv->id, $nhandv) ? 'checked' : '' }}>
-                                            <span>{{ $dv->TenDV }}</span>
-                                            </label><br>
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        @foreach ($phong as $p)
-                                        <label style=" font-weight: normal;">
-                                            <input type="checkbox" class="check-phong" value="{{ $p->id }}" name="id_p[]"  id="checkPhong{{ $p->id }}" {{ in_array($p->id, $nhanp) ? 'checked' : '' }}>
-                                            <span>{{ $p->TenP }}</span>
-                                            </label><br>
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        @foreach ($nganh as $n)
-                                        <label style=" font-weight: normal;">
-                                            <input type="checkbox" class="check-nganh" value="{{ $n->id }}" name="id_n[]"  id="checkNganh{{ $n->id }}" {{ in_array($n->id, $nhannganh) ? 'checked' : '' }}>
-                                            <span>{{ $n->TenN }}</span>
-                                            </label><br>
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        @foreach ($chuyennganh as $cn)
-                                        <label style=" font-weight: normal;">
-                                            <input type="checkbox" class="check-chuyen-nganh" value="{{ $cn->id }}" name="id_cn[]"  id="checkChuyenNganh{{ $cn->id }}" {{ in_array($cn->id, $nhanchuyennganh) ? 'checked' : '' }}>
-                                            <span>{{ $cn->TenCN }}</span>
-                                            </label><br>
-                                        @endforeach
-                                    </td>
-                                   
-                                </tr>
-                            </tbody>
-                        </table>
+                       
                     </div>
                 </div>
                 <!-- /.card-body -->

@@ -50,9 +50,11 @@ class VanBanDiController extends Controller
         $taikhoan = TaiKhoan::where('id_TK', $id)->first();
         $nhom = Nhom::orderBy('id', 'DESC')->get();
         $ten = '';
+        $id = '';
         foreach($nhom as $nh){
             if($taikhoan->id_Gr == $nh->id){
                 $ten = $nh->TenGroup;
+                $id = $nh->id;
             }
         }
         // Tìm vị trí của dấu '-' cuối cùng
@@ -70,35 +72,103 @@ class VanBanDiController extends Controller
         
         
         
-        return view('vanban.vanbandi.create',compact('loaivanban', 'nhom', 'phongban', 'donvi', 'phong', 'nganh', 'chuyennganh','tengroup'));
+        return view('vanban.vanbandi.create',compact('loaivanban', 'id', 'phongban', 'donvi', 'phong', 'nganh', 'chuyennganh','tengroup'));
     }
 
     //check nhung noi duoc gui theo loai văn bản và đon vị ban hanh được tạo trước đó
     public function check_noinhan(Request $request) {
-        // Kiểm tra nếu id_LVB hoặc id_Gr không hợp lệ
-        if (!$request->id_LVB || !$request->id_Gr) {
-            return response()->json(['html' => '']); // Trả về rỗng nếu không có dữ liệu
-        }
-    
         // Tìm kiếm thông tin theo loại văn bản và đơn vị ban hành
-        $nhan = LVBTheoDVHB::where('id_LVB', $request->id_LVB)->where('id_Gr', $request->id_Gr)->first();
+        $phongban = PhongBan::orderBy('id', 'ASC')->get();
+        $donvi = DonVi::orderBy('id', 'ASC')->get();
+        $phong = Phong::orderBy('id', 'ASC')->get();
+        $nganh = Nganh::orderBy('id', 'ASC')->get();
+        $chuyennganh = ChuyenNganh::orderBy('id', 'ASC')->get();
+        
+        $nhan = LVBTheoDVHB::where('id_LVB', $request->id_LVB)
+                            ->where('id_Gr', $request->id_Gr)
+                            ->first();
+        
+        if ($nhan) {
+            $nhanpb = BH_PB::where('id_BH_LVB',$nhan->id)->pluck('id_PB')->toArray();
+            $nhandv = BH_DV::where('id_BH_LVB',$nhan->id)->pluck('id_DV')->toArray();
+            $nhanp = BH_P::where('id_BH_LVB',$nhan->id)->pluck('id_P')->toArray();
+            $nhannganh = BH_N::where('id_BH_LVB',$nhan->id)->pluck('id_N')->toArray();
+            $nhanchuyennganh = BH_CN::where('id_BH_LVB',$nhan->id)->pluck('id_CN')->toArray();
+            $output = '<table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col"><input type="checkbox" id="checkAll" class="check-all"> Chọn Tất Cả</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Phòng Ban</th>
+                                    <th scope="col">Đơn Vị</th>
+                                    <th scope="col">Phòng</th>
+                                    <th scope="col">Ngành</th>
+                                    <th scope="col">Chuyên Ngành</th>
+                                </tr>
+                            </thead>
+                            <tbody>';
+            
+            // Hiển thị danh sách Phòng Ban
+            $output .= '<tr><td>';
+            foreach ($phongban as $pb) {
+                $checked = in_array($pb->id, $nhanpb) ? 'checked' : '';
+                $output .= '<label style="font-weight: normal;">
+                                <input type="checkbox" class="check-phong-ban" value="' . $pb->id . '" name="id_pb[]" ' . $checked . '>
+                                ' . $pb->TenPB . '
+                            </label><br>';
+            }
+            $output .= '</td>';
     
-        // Nếu không tìm thấy, trả về không có dữ liệu
-        if (!$nhan) {
-            return response()->json(['html' => '']);
+            // Hiển thị danh sách Đơn Vị
+            $output .= '<td>';
+            foreach ($donvi as $dv) {
+                $checked = in_array($dv->id, $nhandv) ? 'checked' : '';
+                $output .= '<label style="font-weight: normal;">
+                                <input type="checkbox" class="check-don-vi" value="' . $dv->id . '" name="id_dv[]" ' . $checked . '>
+                                ' . $dv->TenDV . '
+                            </label><br>';
+            }
+            $output .= '</td>';
+
+            $output .= '<td>';
+            foreach ($phong as $p) {
+                $checked = in_array($p->id, $nhanp) ? 'checked' : '';
+                $output .= '<label style="font-weight: normal;">
+                                <input type="checkbox" class="check-don-vi" value="' . $p->id . '" name="id_p[]" ' . $checked . '>
+                                ' . $p->TenP . '
+                            </label><br>';
+            }
+            $output .= '</td>';
+
+            $output .= '<td>';
+            foreach ($nganh as $n) {
+                $checked = in_array($n->id, $nhannganh) ? 'checked' : '';
+                $output .= '<label style="font-weight: normal;">
+                                <input type="checkbox" class="check-don-vi" value="' . $n->id . '" name="id_n[]" ' . $checked . '>
+                                ' . $n->TenN . '
+                            </label><br>';
+            }
+            $output .= '</td>';
+
+            $output .= '<td>';
+            foreach ($chuyennganh as $cn) {
+                $checked = in_array($cn->id, $nhanchuyennganh) ? 'checked' : '';
+                $output .= '<label style="font-weight: normal;">
+                                <input type="checkbox" class="check-don-vi" value="' . $cn->id . '" name="id_cn[]" ' . $checked . '>
+                                ' . $cn->TenCN . '
+                            </label><br>';
+            }
+            $output .= '</td>';
+    
+            // Hiển thị danh sách Phòng, Ngành, Chuyên Ngành tương tự...
+            
+            $output .= '</tr></tbody></table>';
+    
+            return response()->json(['html' => $output]);
         }
     
-        // Lấy danh sách các phòng, đơn vị, ngành... tương ứng
-        $nhanpb = BH_PB::where('id_BH_LVB', $nhan->id)->pluck('id_PB')->toArray();
-        $nhandv = BH_DV::where('id_BH_LVB', $nhan->id)->pluck('id_DV')->toArray();
-        $nhanp = BH_P::where('id_BH_LVB', $nhan->id)->pluck('id_P')->toArray();
-        $nhannganh = BH_N::where('id_BH_LVB', $nhan->id)->pluck('id_N')->toArray();
-        $nhanchuyennganh = BH_CN::where('id_BH_LVB', $nhan->id)->pluck('id_CN')->toArray();
-    
-        // Trả về view kèm theo dữ liệu
-        return response()->json([
-            'html' => view('vanban.vanbandi.recipient_list', compact('nhanpb', 'nhandv', 'nhanp', 'nhannganh', 'nhanchuyennganh'))->render()
-        ]);
+        return response()->json(['html' => '<p>Không tìm thấy thông tin.</p>']);
     }
     /**
      * Store a newly created resource in storage.

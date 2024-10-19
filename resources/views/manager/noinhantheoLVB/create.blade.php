@@ -102,32 +102,42 @@
                                 <tr>
                                     <td>
                                         @foreach ($phongban as $pb)
+                                            <label style=" font-weight: normal;">
                                             <input type="checkbox" class="check-phong-ban" value="{{ $pb->id }}" name="id_pb[]" id="checkPhongBan{{ $pb->id }}">
-                                            <span>{{ $pb->TenPB }}</span><br>
+                                            <span>{{ $pb->TenPB }}</span>
+                                            </label><br>
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($donvi as $dv)
+                                        <label style=" font-weight: normal;">
                                             <input type="checkbox" class="check-don-vi" value="{{ $dv->id }}" name="id_dv[]"  id="checkDonVi{{ $dv->id }}">
-                                            <span>{{ $dv->TenDV }}</span><br>
+                                            <span>{{ $dv->TenDV }}</span>
+                                            </label><br>
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($phong as $p)
+                                        <label style=" font-weight: normal;">
                                             <input type="checkbox" class="check-phong" value="{{ $p->id }}" name="id_p[]"  id="checkPhong{{ $p->id }}">
-                                            <span>{{ $p->TenP }}</span><br>
+                                            <span>{{ $p->TenP }}</span>
+                                            </label><br>
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($nganh as $n)
+                                        <label style=" font-weight: normal;">
                                             <input type="checkbox" class="check-nganh" value="{{ $n->id }}" name="id_n[]"  id="checkNganh{{ $n->id }}">
-                                            <span>{{ $n->TenN }}</span><br>
+                                            <span>{{ $n->TenN }}</span>
+                                            </label><br>
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($chuyennganh as $cn)
+                                        <label style=" font-weight: normal;">
                                             <input type="checkbox" class="check-chuyen-nganh" value="{{ $cn->id }}" name="id_cn[]"  id="checkChuyenNganh{{ $cn->id }}">
-                                            <span>{{ $cn->TenCN }}</span><br>
+                                            <span>{{ $cn->TenCN }}</span>
+                                            </label><br>
                                         @endforeach
                                     </td>
                                    

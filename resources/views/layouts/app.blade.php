@@ -593,10 +593,10 @@ $(document).ready(function() {
     $('.choose').on('change', function() {
         var id_LVB = $('#loaivanban').val();  // Lấy giá trị từ dropdown Loại Văn Bản
         var id_Gr = $('#donvibanhanh').val();  // Lấy giá trị từ input Đơn Vị Ban Hành
-        var _token = $('input[name="_token"]').val();  // CSRF token
+        var _token = $('meta[name="csrf-token"]').attr('content');  // Lấy CSRF token từ meta tag
 
         // Kiểm tra nếu cả hai giá trị đã được chọn
-        if(id_LVB != '0' && id_Gr) {
+        if (id_LVB != '0' && id_Gr) {
             $.ajax({
                 url: '{{ url("/van-ban/check-noi-nhan") }}', // Đường dẫn đến phương thức kiểm tra
                 method: 'POST',
@@ -611,7 +611,7 @@ $(document).ready(function() {
             });
         }
     });
-});
+  });
 </script>
 </body>
 </html>
