@@ -264,7 +264,10 @@
 <script src="{{asset('backend/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
 
 <!-- xem trước trên web -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script> -->
+<script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+<script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+<script src="https://cdn.rawgit.com/andreasgal/rtf.js/master/rtf.js"></script>
 
 <script>
     CKEDITOR.replace( 'ckeditor', {
@@ -730,55 +733,60 @@ $(document).ready(function() {
 <!-- xem trước online  -->
 <script>
     document.querySelectorAll('.preview-file').forEach(link => {
-        link.addEventListener('click', function(event) {
-            event.preventDefault();
-            const fileUrl = this.getAttribute('data-file');
-            const fileExtension = fileUrl.split('.').pop().toLowerCase();
+    link.addEventListener('click', function(event) {
+        event.preventDefault();
+        const fileUrl = this.getAttribute('data-file');
+        const fileExtension = fileUrl.split('.').pop().toLowerCase();
+        
+        const modalBody = document.getElementById('output');
+        modalBody.innerHTML = '';  // Clear the previous content
 
-            if (fileExtension === 'docx') {
-                fetch(fileUrl)
-                    .then(response => response.arrayBuffer())
-                    .then(arrayBuffer => {
-                        mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
-                            .then(displayResult)
-                            .catch(handleError);
-                    });
-            } else if (fileExtension === 'pdf') {
-                displayPDF(fileUrl);
-            } else if (fileExtension === 'txt') {
-                fetch(fileUrl)
-                    .then(response => response.text())
-                    .then(displayText);
-            } else if (fileExtension === 'rtf') {
-                fetch(fileUrl)
-                    .then(response => response.text())
-                    .then(displayRTF);
-            } else {
-                alert("Định dạng file không hỗ trợ.");
-            }
-        });
+        if (fileExtension === 'docx') {
+            fetch(fileUrl)
+                .then(response => response.arrayBuffer())
+                .then(arrayBuffer => {
+                    mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
+                        .then(result => {
+                            document.getElementById('output').innerHTML = result.value; // Display DOCX content
+                        })
+                        .catch(handleError);
+                });
+        } else if (fileExtension === 'pdf') {
+            displayPDF(fileUrl); // Handle PDF
+        } else if (fileExtension === 'txt') {
+            fetch(fileUrl)
+                .then(response => response.text())
+                .then(text => {
+                    modalBody.innerHTML = '<pre>' + text + '</pre>'; // Display TXT content
+                });
+        } else if (fileExtension === 'rtf') {
+            fetch(fileUrl)
+                .then(response => response.text())
+                .then(rtf => {
+                    displayRTF(rtf); // Display RTF content
+                });
+        } else {
+            alert("Định dạng file không hỗ trợ.");
+        }
     });
+});
 
-    function displayResult(result) {
-        document.getElementById('output').innerHTML = result.value; // Hiển thị nội dung DOCX
-    }
+function displayPDF(fileUrl) {
+    const modalBody = document.getElementById('output');
+    modalBody.innerHTML = '<iframe src="' + fileUrl + '" style="width: 100%; height: 500px;"></iframe>';
+}
 
-    function displayPDF(fileUrl) {
-        document.getElementById('output').innerHTML = '<iframe src="' + fileUrl + '" style="width: 100%; height: 500px;"></iframe>';
-    }
+function displayRTF(rtf) {
+    const parser = new RTFJS.Document(rtf);
+    parser.render().then(html => {
+        document.getElementById('output').innerHTML = html; // Display the formatted RTF
+    });
+}
 
-    function displayText(text) {
-        document.getElementById('output').innerHTML = '<pre>' + text + '</pre>'; // Hiển thị nội dung file text
-    }
-
-    function displayRTF(rtf) {
-        document.getElementById('output').innerHTML = '<pre>' + rtf + '</pre>'; // Hiển thị nội dung file RTF
-    }
-
-    function handleError(err) {
-        console.log(err);
-        alert("Đã xảy ra lỗi khi đọc file.");
-    }
+function handleError(err) {
+    console.log(err);
+    alert("Đã xảy ra lỗi khi đọc file.");
+}
 </script>
 
 </body>

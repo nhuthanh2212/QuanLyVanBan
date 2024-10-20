@@ -99,12 +99,12 @@
                      <span>{{$vanbandi_chitiet->file}}</span>
                     
                      
-                    <a target="_blank" class="preview-file" data-file="{{ asset('uploads/vanbandi/'.$vanbandi_chitiet->file) }}" style="color: black; margin-left:10px; margin-right: 5px;" data-toggle="modal" data-target=".bd-example-modal-xl"> <i class="fa-regular fa-eye"></i></a>
+                    <a  target="_blank" class="preview-file" data-file="{{ asset('uploads/vanbandi/'.$vanbandi_chitiet->file) }}" style="color: black; margin-left:10px; margin-right: 5px;" data-toggle="modal" data-target=".bd-example-modal-xl"> <i class="fa-regular fa-eye"></i></a>
                     
                     <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl">
-                      <div class="modal-content">
-                      <div id="output"></div>
+                      <div class="modal-content" id="output">
+                     
                       </div>
                     </div>
                   </div>
