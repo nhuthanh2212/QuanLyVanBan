@@ -67,39 +67,46 @@
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Đơn Vị Ban Hành: </label>
-                        <input type="text" class="form-control" name=" " value="{{$tengroup}}" >
-                        <input type="hidden" class="form-control" name="id_Gr"  id="donvibanhanh" value="{{$id}}" >
+                        <input type="text" class="form-control" value="{{$tengroup}}" disabled>
+                        <input type="hidden"  name="id_Gr"  id="donvibanhanh" value="{{$id}}" >
+                        
                     </div>
                     
                     <div class="form-group">
                         <label for="exampleInputEmail1">Văn Bản Số: </label>
-                        <input type="text" class="form-control" name="SoHieu" id="exampleInputEmail1" placeholder="...">
+                        <div class="row">
+                            <input type="text" name="SoHieu" id="exampleInputEmail1" placeholder="..." style="width: 80px; margin: 0px 5px 0px 10px;">
+                            <input disabled  value="/" style="width: 15px; margin-right: 5px;">
+                            <input disabled  value="{{ \Carbon\Carbon::now()->format('Y') }}" style="width: 40px; margin-right: 5px;">
+                            <input disabled  value="/{{$slug}}">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Trích Yếu Nội Dung: </label>
-                        <input type="text" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
+                        <input type="text" class="form-control" name="NoiDung" id="exampleInputEmail1" placeholder="...">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Ghi Chú: </label>
-                        <input type="text" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
+                        <input type="text" class="form-control" name="GhiChu" id="exampleInputEmail1" placeholder="...">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Ngày Ban Hành: </label>
-                        <input type="text" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
+                        <input type="text" class="form-control" name="NgayBH"  id="datepicker"  value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Ngày Gửi: </label>
-                        <input type="text" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
+                        <input type="text" class="form-control"  id="exampleInputEmail1" disabled value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}">
+                        <input type="hidden" class="form-control" name="NgayGui" id="exampleInputEmail1"  >
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Người Gửi: </label>
-                        <input type="text" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
+                        <input type="text" class="form-control" name="id_TK" id="exampleInputEmail1" placeholder="..." value="{{$taikhoan->HoTen}}">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Tình Trạng Văn Bản: </label>
                         <div class="row">
-                            <input type="radio" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
-                            <input type="radio" class="form-control" name="TenVB" id="exampleInputEmail1" placeholder="...">
+                            <label style=" margin: 0px 5px 0px 10px;"><input type="radio" name="TrangThai" id="exampleInputEmail1" value="1" style="margin-right: 5px;" checked> Đã Duyệt</label>
+                            <label style=" margin-left: 10px;"><input type="radio"  name="TrangThai" id="exampleInputEmail1" value="0"  style="margin-right: 5px;">Chưa Duyệt</label>
                         </div>
                         
                     </div>
@@ -109,7 +116,7 @@
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Nơi Nhận: </label>
-                        <div id="recipientDisplay" class="selected-recipients" aria-expanded="false" >Chọn Nơi Gửi Đến</div>
+                        
                     </div>
                   <!-- Collapsible section -->
                   <div id="recipientListt" style="display: none;">

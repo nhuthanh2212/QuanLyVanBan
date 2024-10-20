@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
+use PhpOffice\PhpWord\IOFactory;
+
 use Carbon\Carbon;
 
 use App\Models\LoaiVanBan;
@@ -18,12 +20,19 @@ use App\Models\Nganh;
 use App\Models\ChuyenNganh;
 use App\Models\LVBTheoDVHB;
 use App\Models\TaiKhoan;
-use App\Models\NoiDen;
+
+use App\Models\BH_CN;
 use App\Models\BH_PB;
 use App\Models\BH_P;
 use App\Models\BH_DV;
 use App\Models\BH_N;
-use App\Models\BH_CN;
+
+use App\Models\VB_PB;
+use App\Models\VB_DV;
+use App\Models\VB_P;
+use App\Models\VB_N;
+use App\Models\VB_CN;
+
 
 class VanBanDiController extends Controller
 {
@@ -35,9 +44,12 @@ class VanBanDiController extends Controller
         $theloai = LoaiVanBan::orderBy('id_LVB','ASC')->get();
         $vanbandi = VanBanDi::with('taikhoan')->orderBy('id','DESC')->get();
         foreach ($vanbandi as $vb) {
+            // Chuyển đổi ngày gửi từ cơ sở dữ liệu sang Carbon
+            $ngayGui = Carbon::parse($vb->NgayGui);
+
             // Kiểm tra nếu ngày gửi trong vòng 3 ngày
-            $vb->isNew = Carbon::parse($vb->NgayGui)->greaterThanOrEqualTo(Carbon::now()->subDays(3));
-        }
+            $vb->isNew = $ngayGui->greaterThanOrEqualTo(Carbon::now()->subDays(3));
+                }
         return view('vanban.vanbandi.list',compact('theloai','vanbandi'));
     }
 
@@ -48,10 +60,11 @@ class VanBanDiController extends Controller
     {
         $id = Session::get('id');
         $taikhoan = TaiKhoan::where('id_TK', $id)->first();
-        $nhom = Nhom::orderBy('id', 'DESC')->get();
+        $group = Nhom::orderBy('id','ASC')->get();
+       
         $ten = '';
         $id = '';
-        foreach($nhom as $nh){
+        foreach($group as $nh){
             if($taikhoan->id_Gr == $nh->id){
                 $ten = $nh->TenGroup;
                 $id = $nh->id;
@@ -70,9 +83,57 @@ class VanBanDiController extends Controller
         $nganh = Nganh::orderBy('id', 'ASC')->get();
         $chuyennganh = ChuyenNganh::orderBy('id', 'ASC')->get();
         
+        //lay duoi so hieu
+        $nhom = Nhom::where('id',$taikhoan->id_Gr)->first();
+        $slug = '';
+        if($nhom->id_PB != NULL){
+            if($nhom->id_DV != NULL){
+                if($nhom->id_P != NULL){
+                    if($nhom->id_N != NULL){
+                        if($nhom->id_CN != NULL){
+                            foreach($chuyennganh as $cn){
+                                if($cn->id == $nhom->id_CN){
+                                    $slug = $cn->slug;
+                                }
+                            }
+                        }
+                        else{
+                            foreach($nganh as $ng){
+                                if($ng->id == $nhom->id_N){
+                                    $slug = $ng->slug;
+                                }
+                            }
+                        }
+                    }
+                    else{
+                        foreach($phong as $phg){
+                            if($phg->id == $nhom->id_P){
+                                $slug = $phg->slug;
+                            }
+                        }
+                    }
+                }
+                else{
+                    foreach($donvi as $dv){
+                        if($dv->id == $nhom->id_DV){
+                        $slug = $dv->slug;
+                        }
+                    }
+                }
+            }
+            else{
+                foreach($phongban as $phgb){
+                    if($phgb->id == $nhom->id_PB){
+                        $slug = $phgb->slug;
+                    }
+                }
+            }
+        }
+        else{
+            $slug = '';
+        }
         
-        
-        return view('vanban.vanbandi.create',compact('loaivanban', 'id', 'phongban', 'donvi', 'phong', 'nganh', 'chuyennganh','tengroup'));
+        return view('vanban.vanbandi.create',compact('loaivanban', 'taikhoan','id', 'phongban', 'donvi', 'phong', 'nganh', 'chuyennganh','tengroup','slug'));
     }
 
     //check nhung noi duoc gui theo loai văn bản và đon vị ban hanh được tạo trước đó
@@ -97,14 +158,14 @@ class VanBanDiController extends Controller
             $output = '<table class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col"><input type="checkbox" id="checkAll" class="check-all"> Chọn Tất Cả</th>
+                                    <th scope="col"><input type="checkbox" id="checkAlll" class="check-alll"> Chọn Tất Cả</th>
                                 </tr>
                                 <tr>
-                                    <th scope="col">Phòng Ban</th>
-                                    <th scope="col">Đơn Vị</th>
-                                    <th scope="col">Phòng</th>
-                                    <th scope="col">Ngành</th>
-                                    <th scope="col">Chuyên Ngành</th>
+                                    <th scope="col"><input type="checkbox" id="checkAlllPhongBan" class="check-alll">Phòng Ban</th>
+                                    <th scope="col"><input type="checkbox" id="checkAlllDonVi" class="check-alll">Đơn Vị</th>
+                                    <th scope="col"><input type="checkbox" id="checkAlllPhong" class="check-alll">Phòng</th>
+                                    <th scope="col"><input type="checkbox" id="checkAlllNganh" class="check-alll">Ngành</th>
+                                    <th scope="col"><input type="checkbox" id="checkAlllChuyenNganh" class="check-alll">Chuyên Ngành</th>
                                 </tr>
                             </thead>
                             <tbody>';
@@ -114,7 +175,7 @@ class VanBanDiController extends Controller
             foreach ($phongban as $pb) {
                 $checked = in_array($pb->id, $nhanpb) ? 'checked' : '';
                 $output .= '<label style="font-weight: normal;">
-                                <input type="checkbox" class="check-phong-ban" value="' . $pb->id . '" name="id_pb[]" ' . $checked . '>
+                                <input type="checkbox" class="checkk-phong-ban" value="' . $pb->id . '" name="id_pb[]" ' . $checked . '>
                                 ' . $pb->TenPB . '
                             </label><br>';
             }
@@ -125,7 +186,7 @@ class VanBanDiController extends Controller
             foreach ($donvi as $dv) {
                 $checked = in_array($dv->id, $nhandv) ? 'checked' : '';
                 $output .= '<label style="font-weight: normal;">
-                                <input type="checkbox" class="check-don-vi" value="' . $dv->id . '" name="id_dv[]" ' . $checked . '>
+                                <input type="checkbox" class="checkk-don-vi" value="' . $dv->id . '" name="id_dv[]" ' . $checked . '>
                                 ' . $dv->TenDV . '
                             </label><br>';
             }
@@ -135,7 +196,7 @@ class VanBanDiController extends Controller
             foreach ($phong as $p) {
                 $checked = in_array($p->id, $nhanp) ? 'checked' : '';
                 $output .= '<label style="font-weight: normal;">
-                                <input type="checkbox" class="check-don-vi" value="' . $p->id . '" name="id_p[]" ' . $checked . '>
+                                <input type="checkbox" class="checkk-phong" value="' . $p->id . '" name="id_p[]" ' . $checked . '>
                                 ' . $p->TenP . '
                             </label><br>';
             }
@@ -145,7 +206,7 @@ class VanBanDiController extends Controller
             foreach ($nganh as $n) {
                 $checked = in_array($n->id, $nhannganh) ? 'checked' : '';
                 $output .= '<label style="font-weight: normal;">
-                                <input type="checkbox" class="check-don-vi" value="' . $n->id . '" name="id_n[]" ' . $checked . '>
+                                <input type="checkbox" class="checkk-nganh" value="' . $n->id . '" name="id_n[]" ' . $checked . '>
                                 ' . $n->TenN . '
                             </label><br>';
             }
@@ -155,7 +216,7 @@ class VanBanDiController extends Controller
             foreach ($chuyennganh as $cn) {
                 $checked = in_array($cn->id, $nhanchuyennganh) ? 'checked' : '';
                 $output .= '<label style="font-weight: normal;">
-                                <input type="checkbox" class="check-don-vi" value="' . $cn->id . '" name="id_cn[]" ' . $checked . '>
+                                <input type="checkbox" class="checkk-chuyen-nganh" value="' . $cn->id . '" name="id_cn[]" ' . $checked . '>
                                 ' . $cn->TenCN . '
                             </label><br>';
             }
@@ -168,18 +229,38 @@ class VanBanDiController extends Controller
             return response()->json(['html' => $output]);
         }
     
-        return response()->json(['html' => '<p>Không tìm thấy thông tin.</p>']);
+        return response()->json(['html' => '<p style="color: red;">Loại Văn Bản Này Do Đơn Vị Ban Hành Gửi Chưa Có Nơi Gửi Đến Vui Lòng Cập Nhật Thêm.</p>']);
     }
     /**
      * Store a newly created resource in storage.
      */
-    public function chitiet(string $slug){
-        
-        $vanbandi_chitiet = VanBanDi::where('slug',$slug)->first();
-        $noiden = NoiDen::where('id_VB', $vanbandi_chitiet->id)->orderBy('id','DESC')->get();
-        
+    public function chitiet(string $id){
+       
+        $phongban = PhongBan::orderBy('id', 'ASC')->get();
+        $donvi = DonVi::orderBy('id', 'ASC')->get();
+        $phong = Phong::orderBy('id', 'ASC')->get();
+        $nganh = Nganh::orderBy('id', 'ASC')->get();
+        $chuyennganh = ChuyenNganh::orderBy('id', 'ASC')->get();
+
+        $vanbandi_chitiet = VanBanDi::where('id',$id)->first();
+        $filePath = public_path('uploads/vanbandi/'.$vanbandi_chitiet->file);
+        $nhom = Nhom::orderBy('id','ASC')->get();
+        foreach($nhom as $nh){
+            if($vanbandi_chitiet->id_Gr == $nh->id){
+                $ten = $nh->TenGroup;
+            }
+        }
+        // Tìm vị trí của dấu '-' cuối cùng
+        $tim = strrpos($ten, '-');
+        // Lấy chuỗi sau dấu '-' cuối cùng
+        $tengroup = substr($ten, $tim + 1);
         $theloai = LoaiVanBan::where('id_LVB',$vanbandi_chitiet->id_LVB)->first();
-        return view('vanban.vanbandi.chitiet', compact('vanbandi_chitiet','theloai','noiden'));
+        $vb_pb = VB_PB::where('id_VB' ,$vanbandi_chitiet->id)->get();
+        $vb_dv = VB_DV::where('id_VB' ,$vanbandi_chitiet->id)->get();
+        $vb_p = VB_P::where('id_VB' ,$vanbandi_chitiet->id)->get();
+        $vb_n = VB_N::where('id_VB' ,$vanbandi_chitiet->id)->get();
+        $vb_cn = VB_CN::where('id_VB' ,$vanbandi_chitiet->id)->get();
+        return view('vanban.vanbandi.chitiet', compact('vanbandi_chitiet','theloai','tengroup','vb_pb','vb_dv','vb_p','vb_n','vb_cn', 'phongban', 'donvi', 'phong', 'nganh', 'chuyennganh','filePath'));
     }
     public function loc()
     {
@@ -212,46 +293,83 @@ class VanBanDiController extends Controller
     {
         $id_TK = Session::get('id');
         $data = $request->validate([
-            'TenVB' => 'required|unique:vanbandi',
+            'NoiDung' => 'required',
             'SoHieu' => 'required',
             'id_LVB' => 'required',
-            'file' => 'required',
-            'id_DV' => 'required|array', // Kiểm tra id_DV là một mảng
+            'file' => 'required|mimes:doc,docx,xls,xlsx,ppt,pptx,pdf',  // Chỉ cho phép các định dạng văn bản
+            
         ],
         [
-            'TenVB.unique' => 'Tên văn bản này đã có, vui lòng điền tên khác',
-            'TenVB.required' => 'Tên Văn Bản Phải Có',
+            
+            'NoiDung.required' => 'Trích Nội Dung Văn Bản Phải Có',
             'SoHieu.required' => 'Số Hiệu Văn Bản Phải Có',
             'id_LVB.required' => 'Loai Văn Bản Phải Có',
             'file.required' => 'File Phải Có',
+            'file.mimes' => 'File phải là định dạng: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf',
         ]);
         $vanbandi = new VanBanDi();
-        $vanbandi->TenVB = $data['TenVB'];
-        $vanbandi->slug = Str::slug($data['TenVB']);
-        $vanbandi->SoHieu = $data['SoHieu'];
         $vanbandi->id_LVB = $data['id_LVB'];
+        $vanbandi->id_Gr = $request->id_Gr;
+        $vanbandi->SoHieu = $data['SoHieu'];
+        $vanbandi->NoiDung = $data['NoiDung'];
+        $vanbandi->GhiChu = $request->GhiChu;
+        $vanbandi->TrangThai = $request->TrangThai;
         $vanbandi->id_TK = $id_TK;
+        $vanbandi->NgayBH = $request->NgayBH;
         $vanbandi->NgayGui = Carbon::now('Asia/Ho_Chi_Minh');
 
-        if($data['file']){
-            $get_file = $data['file'];  // Lấy đối tượng file
+        if ($data['file']) {
+            $get_file = $data['file']; // Lấy đối tượng file
             $path = 'uploads/vanbandi'; // Đường dẫn lưu file
-
+        
             // Lấy tên gốc của file
-            $file_name = time() . '_' . $get_file->getClientOriginalName(); // Đảm bảo tên file duy nhất
-
-            // Di chuyển file đến thư mục đích và lưu với tên gốc (hoặc bạn có thể tạo tên mới)
+            $file_name = $get_file->getClientOriginalName(); // Lấy tên gốc của file
+        
+            // Kiểm tra xem file đã tồn tại hay chưa để đảm bảo tên file là duy nhất
+            $file_path = $path . '/' . $file_name; // Đường dẫn đầy đủ của file
+        
+            // Nếu file đã tồn tại, bạn có thể thêm một số logic ở đây, ví dụ như thêm số vào tên file
+            if (file_exists($file_path)) {
+                // Thêm logic để xử lý khi file đã tồn tại (Ví dụ: tạo tên mới)
+                $file_name = time() . '_' . $file_name; // Hoặc bạn có thể thêm logic khác
+            }
+        
+            // Di chuyển file đến thư mục đích và lưu với tên gốc
             $get_file->move($path, $file_name);
-
+        
             // Lưu tên file vào cột `file` trong cơ sở dữ liệu
             $vanbandi->file = $file_name;
         }
         $vanbandi->save();
        // Gán nơi đến (nhiều checkbox đã chọn)
-        if ($request->has('id_DV')) {
-            // Gán id_DV từ request vào cột id_Den của bảng pivot
-            foreach($request->id_DV as $id_DV) {
-                $vanbandi->noiden()->attach($id_DV); // Cột đúng là id_Den trong bảng noiden
+       if ($request->has('id_pb')) {
+        // Gán id_DV từ request vào cột id_Den của bảng pivot
+            foreach($request->id_pb as $id_pb) {
+                $vanbandi->denphongban()->attach($id_pb);
+            }
+        }
+        // Attach 'id_dv' to  table
+        if ($request->has('id_dv')) {
+            foreach($request->id_dv as $id_dv) {
+                $vanbandi->dendonvi()->attach($id_dv); 
+            }
+        }
+        
+        if ($request->has('id_p')) {
+            foreach($request->id_p as $id_p) {
+                $vanbandi->denphong()->attach($id_p); 
+            }
+        }
+        
+        if ($request->has('id_n')) {
+            foreach($request->id_n as $id_n) {
+                $vanbandi->dennganh()->attach($id_n); 
+            }
+        }
+        
+        if ($request->has('id_cn')) {
+            foreach($request->id_cn as $id_cn) {
+                $vanbandi->denchuyennganh()->attach($id_cn); 
             }
         }
         toastr()->success('Gửi Văn Bản Thành Công');

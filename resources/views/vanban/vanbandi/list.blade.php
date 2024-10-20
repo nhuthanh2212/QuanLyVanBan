@@ -114,12 +114,12 @@
                               </td>
                               <td>{{$vb->taikhoan->HoTen}}</td>
                               <td>
-                                    <a href="{{URL::to('/chi-tiet', $vb->slug)}}" id="vb{{$key}}" style="color: black">
-                                       {{$vb->TenVB}} <span class="date" data-ngay-gui="{{$vb->NgayGui}}"> {{$vb->NgayGui}}</span>
+                                    <a href="{{URL::to('/chi-tiet', $vb->id)}}" id="vb{{$key}}" style="color: black">
+                                       {{$vb->NoiDung}} <span class="date" data-ngay-gui="{{$vb->NgayGui}}"> {{$vb->NgayGui}}</span>
                                        
                                     </a>
                                     @if($vb->isNew)
-                                    <img src="{{'backend/dist/img/icon-news.gif'}}" alt="new" style=" width: 30px; margin-left: 5px;" id="new{{$key}}">
+                                    <img src="{{asset('backend/dist/img/icon-news.gif')}}" alt="new" style=" width: 30px; margin-left: 5px;" id="new{{$key}}">
                                     @endif
                                    
                               </td>

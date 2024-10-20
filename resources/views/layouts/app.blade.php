@@ -263,6 +263,9 @@
 <script src="{{asset('backend/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
 <script src="{{asset('backend/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
 
+<!-- xem trước trên web -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+
 <script>
     CKEDITOR.replace( 'ckeditor', {
         licenseKey: 'your license key'
@@ -278,7 +281,9 @@
 
 <script>
   $( function() {
-      $( "#datepicker" ).datepicker();
+      $( "#datepicker" ).datepicker({
+        dateFormat: "dd/mm/yy"
+      });
   } );
   </script>
 
@@ -401,7 +406,7 @@ $(document).ready(function() {
         $('.check-nganh:checked').each(function() {
             selectedNames.push($(this).next('span').text());
         });
-        $('.check-chuyennganh:checked').each(function() {
+        $('.check-chuyen-nganh:checked').each(function() {
             selectedNames.push($(this).next('span').text());
         });
         
@@ -585,8 +590,106 @@ $(document).ready(function() {
 
   });
 </script>
+
+<!-- gui van ban -->
 <script>
   jQuery(document).ready(function() {
+    
+    $(document).on('change', '.check-alll', function() {
+        var isChecked = $(this).is(':checked');
+        var className = $(this).attr('id').replace('checkAlll', 'check-');
+        $('.' + className).prop('checked', isChecked);
+        updateSelectedRecipients();
+    });
+
+    $(document).on('change', '.checkk-phong-ban, .checkk-don-vi, .checkk-phong, .checkk-nganh, .checkk-chuyen-nganh', function() {
+    updateSelectedRecipients();
+    updateCheckAllStatus();
+    });
+
+     // Show or hide the recipient list when clicking on recipientDisplay
+    $('#recipientDisplayy').on('click', function() {
+        $('#recipientListt').collapse('toggle');
+    });
+     // Function to collect and display selected recipients by name
+    function updateSelectedRecipients() {
+        var selectedNames = []; // Array to store selected names
+        
+        // Collect checked checkboxes and their corresponding names
+        $('.checkk-phong-ban:checked').each(function() {
+            selectedNames.push($(this).next('span').text()); // Get the text of the next sibling span
+        });
+        $('.checkk-don-vi:checked').each(function() {
+            selectedNames.push($(this).next('span').text());
+        });
+        $('.checkk-phong:checked').each(function() {
+            selectedNames.push($(this).next('span').text());
+        });
+        $('.checkk-nganh:checked').each(function() {
+            selectedNames.push($(this).next('span').text());
+        });
+        $('.checkk-chuyen-nganh:checked').each(function() {
+            selectedNames.push($(this).next('span').text());
+        });
+        
+
+        // Display the selected names in Bootstrap badges
+        var badgeHtml = selectedNames.map(function(name) {
+            return '<span class="badge badge-secondary m-1">' + name + '</span>'; // Create a span for each name with Bootstrap badge class
+        }).join(''); // Join all the span elements
+
+        // Update the recipient display
+        $('#recipientDisplayy').html(badgeHtml); // Set the inner HTML with badges
+    }
+    function updateCheckAllStatus() {
+        // Check for each group, if all checkboxes are selected, check the "check-all", otherwise uncheck it
+        $('#checkAlllPhongBan').prop('checked', $('.checkk-phong-ban:checked').length === $('.checkk-phong-ban').length);
+        $('#checkAlllDonVi').prop('checked', $('.checkk-don-vi:checked').length === $('.checkk-don-vi').length);
+        $('#checkAlllPhong').prop('checked', $('.checkk-phong:checked').length === $('.checkk-phong').length);
+        $('#checkAlllNganh').prop('checked', $('.checkk-nganh:checked').length === $('.checkk-nganh').length);
+        $('#checkAlllChuyenNganh').prop('checked', $('.checkk-chuyen-nganh:checked').length === $('.checkk-chuyen-nganh').length);
+       
+        
+    }
+    // Apply change handler to check-all for each group to ensure update on check/uncheck
+    $('#checkAlllPhongBan').on('change', function() {
+        $('.checkk-phong-ban').prop('checked', this.checked);
+        updateSelectedRecipients(); // Ensure to update recipients list after check/uncheck
+    });
+
+    $('#checkAlllDonVi').on('change', function() {
+        $('.checkk-don-vi').prop('checked', this.checked);
+        updateSelectedRecipients();
+    });
+
+    $('#checkAlllPhong').on('change', function() {
+        $('.checkk-phong').prop('checked', this.checked);
+        updateSelectedRecipients();
+    });
+
+    $('#checkAlllNganh').on('change', function() {
+        $('.checkk-nganh').prop('checked', this.checked);
+        updateSelectedRecipients();
+    });
+
+    $('#checkAlllChuyenNganh').on('change', function() {
+        $('.checkk-chuyen-nganh').prop('checked', this.checked);
+        updateSelectedRecipients();
+    });
+
+   
+    $('#checkAlll').on('change', function() {
+      $('.checkk-phong-ban').prop('checked', this.checked);
+      $('.checkk-don-vi').prop('checked', this.checked);
+      $('.checkk-phong').prop('checked', this.checked);
+      $('.checkk-nganh').prop('checked', this.checked);
+      $('.checkk-chuyen-nganh').prop('checked', this.checked);
+      
+      updateSelectedRecipients();
+    });
+    
+    
+
     $('#recipientListt').hide(); // Ẩn danh sách khi trang tải
 
     // Sự kiện thay đổi dropdown loại văn bản
@@ -604,6 +707,16 @@ $(document).ready(function() {
                 success: function(response) {
                     $('#recipientListt').html(response.html); // Cập nhật nội dung danh sách
                     $('#recipientListt').show(); // Hiện danh sách
+                   
+                    // Gọi lại các hàm để cập nhật danh sách đã chọn và trạng thái checkbox
+                      updateSelectedRecipients();
+                      updateCheckAllStatus();
+
+                      // Re-bind lại sự kiện cho các checkbox mới được thêm
+                      $(document).on('change', '.checkk-phong-ban, .checkk-don-vi, .checkk-phong, .checkk-nganh, .checkk-chuyen-nganh', function() {
+                          updateSelectedRecipients();
+                          updateCheckAllStatus();
+                      });
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log('Error:', textStatus, errorThrown); // Debug lỗi
@@ -613,5 +726,60 @@ $(document).ready(function() {
     });
   });
 </script>
+
+<!-- xem trước online  -->
+<script>
+    document.querySelectorAll('.preview-file').forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            const fileUrl = this.getAttribute('data-file');
+            const fileExtension = fileUrl.split('.').pop().toLowerCase();
+
+            if (fileExtension === 'docx') {
+                fetch(fileUrl)
+                    .then(response => response.arrayBuffer())
+                    .then(arrayBuffer => {
+                        mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
+                            .then(displayResult)
+                            .catch(handleError);
+                    });
+            } else if (fileExtension === 'pdf') {
+                displayPDF(fileUrl);
+            } else if (fileExtension === 'txt') {
+                fetch(fileUrl)
+                    .then(response => response.text())
+                    .then(displayText);
+            } else if (fileExtension === 'rtf') {
+                fetch(fileUrl)
+                    .then(response => response.text())
+                    .then(displayRTF);
+            } else {
+                alert("Định dạng file không hỗ trợ.");
+            }
+        });
+    });
+
+    function displayResult(result) {
+        document.getElementById('output').innerHTML = result.value; // Hiển thị nội dung DOCX
+    }
+
+    function displayPDF(fileUrl) {
+        document.getElementById('output').innerHTML = '<iframe src="' + fileUrl + '" style="width: 100%; height: 500px;"></iframe>';
+    }
+
+    function displayText(text) {
+        document.getElementById('output').innerHTML = '<pre>' + text + '</pre>'; // Hiển thị nội dung file text
+    }
+
+    function displayRTF(rtf) {
+        document.getElementById('output').innerHTML = '<pre>' + rtf + '</pre>'; // Hiển thị nội dung file RTF
+    }
+
+    function handleError(err) {
+        console.log(err);
+        alert("Đã xảy ra lỗi khi đọc file.");
+    }
+</script>
+
 </body>
 </html>

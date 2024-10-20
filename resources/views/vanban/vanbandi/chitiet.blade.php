@@ -45,34 +45,112 @@
               <form >
               	@csrf
                 <div class="card-body">
-                    <div class="form-group">
-                    <label for="exampleInputEmail1" style="margin-right: 5px;">Tên Văn bản: </label>
-                    <span>{{$vanbandi_chitiet->TenVB}}</span>
-                   
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" style="margin-right: 5px;">Loại Văn Bản: </label>
+                    <span>{{$theloai->TenLVB}}</span>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" style="margin-right: 5px;">Đơn Vị Ban Hành: </label>
+                    <span>{{$tengroup}}</span>
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1" style="margin-right: 5px;">Số Hiệu: </label>
                     <span>{{$vanbandi_chitiet->SoHieu}}</span>
                     
                   </div>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1" style="margin-right: 5px;">Trích Nội Dung: </label>
+                      <span>{{$vanbandi_chitiet->NoiDung}}</span>
+                   
+                  </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1" style="margin-right: 5px;">Loại Văn Bản: </label>
-                    <span>{{$theloai->TenLVB}}</span>
+                      <label for="exampleInputEmail1" style="margin-right: 5px;">Ghi Chú: </label>
+                      @if ($vanbandi_chitiet->GhiChu == NULL)
+                        <span>Không Có Ghi Chú Liên Quan</span>
+                      @else
+                      <span>{{$vanbandi_chitiet->GhiChu}}</span>
+                      @endif
+                      
+                   
+                  </div>
+                  
+                  
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" style="margin-right: 5px;">Ngày Ban Hành: </label>
+                    <span > {{$vanbandi_chitiet->NgayBH}}</span>
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1" style="margin-right: 5px;">Ngày Gửi: </label>
                     <span class="date" data-ngay-gui="{{$vanbandi_chitiet->NgayGui}}"> {{$vanbandi_chitiet->NgayGui}}</span>
                   </div>
                   <div class="form-group">
+                      <label for="exampleInputEmail1" style="margin-right: 5px;">Trạng Thái: </label>
+                      @if ($vanbandi_chitiet->TrangThai == 1)
+                        <span>Đã Duyệt</span>
+                      @else
+                      <span>Chưa Được Duyệt</span>
+                      @endif
+                      
+                   
+                  </div>
+                  <div class="form-group">
                     <label for="exampleInputEmail1" style="margin-right: 5px;">File Đính Kèm: </label>
-                    <a href="{{ asset('uploads/vanbandi/'.$vanbandi_chitiet->file) }}" target="_blank" style="margin-right: 5px;"> <span>{{$vanbandi_chitiet->file}}</span></a>
+                   
+                     <span>{{$vanbandi_chitiet->file}}</span>
                     
+                     
+                    <a target="_blank" class="preview-file" data-file="{{ asset('uploads/vanbandi/'.$vanbandi_chitiet->file) }}" style="color: black; margin-left:10px; margin-right: 5px;" data-toggle="modal" data-target=".bd-example-modal-xl"> <i class="fa-regular fa-eye"></i></a>
+                    
+                    <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                      <div class="modal-content">
+                      <div id="output"></div>
+                      </div>
+                    </div>
+                  </div>
+                   
                     <a href="#" class="download-file" data-filename="{{$vanbandi_chitiet->file}}"><button class="btn btn-light btn-sm" type="button"><i class="far fa-trash-alt"></i></button></a>
                     
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Gửi Đến: </label>
-                    
+                    <div>
+                      @foreach ($vb_pb as $vbpb)
+                        @foreach ($phongban as $pb )
+                          @if ($pb->id == $vbpb->id_PB)
+                            <span  class="badge badge-secondary">{{$pb->TenPB}}</span>  
+                          @endif                        
+                        @endforeach                                            
+                      @endforeach
+                      @foreach ($vb_dv as $vbdv)
+                        @foreach ($donvi as $dv )
+                          @if ($dv->id == $vbdv->id_DV)
+                            <span  class="badge badge-secondary">{{$dv->TenDV}}</span>  
+                          @endif                        
+                        @endforeach                                            
+                      @endforeach
+                      @foreach ($vb_p as $vbp)
+                        @foreach ($phong as $p )
+                          @if ($p->id == $vbp->id_P)
+                            <span  class="badge badge-secondary">{{$p->TenP}}</span>  
+                          @endif                        
+                        @endforeach                                            
+                      @endforeach
+                      @foreach ($vb_n as $vbn)
+                        @foreach ($nganh as $ng )
+                          @if ($ng->id == $vbn->id_N)
+                            <span  class="badge badge-secondary">{{$ng->TenN}}</span>  
+                          @endif                        
+                        @endforeach                                            
+                      @endforeach
+                      @foreach ($vb_cn as $vbcn)
+                        @foreach ($chuyennganh as $cn )
+                          @if ($cn->id == $vbcn->id_CN)
+                            <span  class="badge badge-secondary">{{$cn->TenCN}}</span>  
+                          @endif                        
+                        @endforeach                                            
+                      @endforeach
+                    </div>
                   </div>
                   <!-- Collapsible section -->
                   

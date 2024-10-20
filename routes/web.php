@@ -107,7 +107,7 @@ Route::get('/profile/{slug}',[UserController::class, 'profile']);
 
 
 
-Route::get('/chi-tiet/{slug}',[VanBanDiController::class, 'chitiet']); 
+Route::get('/chi-tiet/{id}',[VanBanDiController::class, 'chitiet']); 
 
 // Route tải file
 Route::get('/download-file', [VanBanDiController::class, 'downloadFile'])->name('file.download');
