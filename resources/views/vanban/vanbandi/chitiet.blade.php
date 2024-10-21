@@ -109,7 +109,7 @@
                     </div>
                   </div>
                    
-                    <a href="#" class="download-file" data-filename="{{$vanbandi_chitiet->file}}"><button class="btn btn-light btn-sm" type="button"><i class="far fa-trash-alt"></i></button></a>
+                    <a href="#" class="download-file" data-filename="{{$vanbandi_chitiet->file}}"><button class="btn btn-light btn-sm" type="button"><i class="fa-solid fa-download"></i></button></a>
                     
                   </div>
                   <div class="form-group">
