@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
 use PhpOffice\PhpWord\IOFactory;
-
+use Dompdf\Dompdf;
 use Carbon\Carbon;
 
 use App\Models\LoaiVanBan;
@@ -243,7 +243,7 @@ class VanBanDiController extends Controller
         $chuyennganh = ChuyenNganh::orderBy('id', 'ASC')->get();
 
         $vanbandi_chitiet = VanBanDi::where('id',$id)->first();
-        $filePath = public_path('uploads/vanbandi/'.$vanbandi_chitiet->file);
+        
         $nhom = Nhom::orderBy('id','ASC')->get();
         foreach($nhom as $nh){
             if($vanbandi_chitiet->id_Gr == $nh->id){
@@ -260,7 +260,52 @@ class VanBanDiController extends Controller
         $vb_p = VB_P::where('id_VB' ,$vanbandi_chitiet->id)->get();
         $vb_n = VB_N::where('id_VB' ,$vanbandi_chitiet->id)->get();
         $vb_cn = VB_CN::where('id_VB' ,$vanbandi_chitiet->id)->get();
-        return view('vanban.vanbandi.chitiet', compact('vanbandi_chitiet','theloai','tengroup','vb_pb','vb_dv','vb_p','vb_n','vb_cn', 'phongban', 'donvi', 'phong', 'nganh', 'chuyennganh','filePath'));
+
+        $filePath = 'uploads/vanbandi/' . $vanbandi_chitiet->file;
+         // Đường dẫn đến file .docx
+         $fullPath = public_path($filePath);
+    // dd($fullPath);
+    // // Kiểm tra sự tồn tại của file
+    
+    if (!file_exists($fullPath)) {
+        return response()->json(['error' => 'File does not exist.'], 404);
+    }
+    $fileExtension = pathinfo($fullPath, PATHINFO_EXTENSION);
+    $htmlOutput = '';
+
+    if ($fileExtension === 'pdf') {
+        // Nếu file là PDF, chỉ cần truyền đường dẫn đến view
+        $htmlOutput = '<iframe src="' . asset($filePath) . '" style="width: 100%; height: 600px;"></iframe>';
+    } elseif ($fileExtension === 'docx') {
+        // Nếu file là DOCX, sử dụng PHPWord để đọc file
+        $phpWord = IOFactory::load($fullPath);
+        
+        // Chuyển đổi thành HTML và lưu vào biến
+        ob_start(); // Bắt đầu ghi vào buffer
+        $htmlWriter = IOFactory::createWriter($phpWord, 'HTML');
+        $htmlWriter->save('php://output'); // Ghi nội dung ra buffer
+        $htmlOutput = ob_get_clean(); // Lấy nội dung từ buffer và dọn sạch buffer
+    } else {
+        return response()->json(['error' => 'Unsupported file type.'], 400);
+    }
+    // if (!file_exists($fullPath)) {
+    //     return response()->json(['error' => 'File does not exist.'], 404);
+    // }
+
+    // // Sử dụng PHPWord để đọc file
+    // $phpWord = IOFactory::load($fullPath);
+    
+    // // Chuyển đổi thành HTML
+    // $htmlWriter = IOFactory::createWriter($phpWord, 'HTML');
+    // $htmlFilePath = public_path('uploads/vanbandi/' . pathinfo($filePath, PATHINFO_FILENAME) . '.html');
+    // $htmlWriter->save($htmlFilePath);
+    // // Chuyển đổi HTML sang PDF
+    // $dompdf = new Dompdf();
+    // $dompdf->loadHtml(file_get_contents($htmlFilePath));
+    // $dompdf->setPaper('A4', 'portrait');
+    // $dompdf->render();
+
+        return view('vanban.vanbandi.chitiet', compact('vanbandi_chitiet','theloai','tengroup','vb_pb','vb_dv','vb_p','vb_n','vb_cn', 'phongban', 'donvi', 'phong', 'nganh', 'chuyennganh','htmlOutput'));
     }
     public function loc()
     {
