@@ -113,5 +113,8 @@ Route::get('/chi-tiet/{id}',[VanBanDiController::class, 'chitiet']);
 Route::get('/download-file', [VanBanDiController::class, 'downloadFile'])->name('file.download');
 
 Route::get('/loc',[VanBanDiController::class, 'loc']); 
+Route::get('/loc-chi-tiet',[VanBanDiController::class, 'loc_chi_tiet']);
+//xoa van ban
+Route::post('/van-ban-di/delete', [VanBanDiController::class, 'deleteSelected'])->name('van-ban-di.delete');
 
 Route::resource('/van-ban-den', VanBanDenController::class);

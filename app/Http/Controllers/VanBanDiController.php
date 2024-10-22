@@ -41,6 +41,7 @@ class VanBanDiController extends Controller
      */
     public function index()
     {
+        $nhom = Nhom::orderBy('id', 'ASC')->get();
         $theloai = LoaiVanBan::orderBy('id_LVB','ASC')->get();
         $vanbandi = VanBanDi::with('taikhoan')->orderBy('id','DESC')->get();
         foreach ($vanbandi as $vb) {
@@ -50,7 +51,7 @@ class VanBanDiController extends Controller
             // Kiểm tra nếu ngày gửi trong vòng 3 ngày
             $vb->isNew = $ngayGui->greaterThanOrEqualTo(Carbon::now()->subDays(3));
                 }
-        return view('vanban.vanbandi.list',compact('theloai','vanbandi'));
+        return view('vanban.vanbandi.list',compact('theloai','vanbandi','nhom'));
     }
 
     /**
@@ -310,9 +311,9 @@ class VanBanDiController extends Controller
     public function loc()
     {
         $loaivanban = $_GET['loaivanban'];
-        $Ngay = $_GET['ngay'];
+        $SoHieu = $_GET['SoHieu'];
         // If no filter is selected
-        if (empty($loaivanban) && empty($Ngay)) {
+        if (empty($loaivanban) && empty($SoHieu)) {
             toastr()->warning('Vui Lòng Chọn Dữ Liệu Muốn Lọc', 'Không Có Dữ Liệu Lọc');
             return redirect()->back();
         }
@@ -324,16 +325,71 @@ class VanBanDiController extends Controller
             $query->where('id_LVB', $loaivanban);
         }
         
-        if (!empty($Ngay)) {
-            $query->where('NgayGui', $Ngay);
+        if (!empty($SoHieu)) {
+            $query->where('SoHieu', $SoHieu);
         }
 
         $vanbandi = $query->orderBy('id', 'DESC')->get();
         $theloai = LoaiVanBan::orderBy('id_LVB', 'ASC')->get();
+        $nhom = Nhom::orderBy('id', 'ASC')->get();
+        foreach ($vanbandi as $vb) {
+            // Chuyển đổi ngày gửi từ cơ sở dữ liệu sang Carbon
+            $ngayGui = Carbon::parse($vb->NgayGui);
 
+            // Kiểm tra nếu ngày gửi trong vòng 3 ngày
+            $vb->isNew = $ngayGui->greaterThanOrEqualTo(Carbon::now()->subDays(3));
+                }
         // Return the same view with the filtered data
-        return view('vanban.vanbandi.list', compact('vanbandi', 'theloai'));
+        return view('vanban.vanbandi.list', compact('vanbandi', 'theloai','nhom'));
     }
+
+    public function loc_chi_tiet(){
+        $theloai = LoaiVanBan::orderBy('id_LVB', 'ASC')->get();
+        $nhom = Nhom::orderBy('id', 'ASC')->get();
+        $loaivanban = $_GET['loaivanban'];
+        $donvi = $_GET['donvibanhanh'];
+        $tungay = $_GET['tungay'];
+        $denngay = $_GET['denngay'];
+        if(empty($loaivanban) ){
+            toastr()->warning('Vui Lòng Chọn Loại Văn Bản', 'Thiếu Dữ Liệu Lọc');
+            return redirect()->route('van-ban-di.index');
+        }
+        if(empty($nhom) ){
+            toastr()->warning('Vui Lòng Chọn Đơn Vị Ban Hành', 'Thiếu Dữ Liệu Lọc');
+            return redirect()->route('van-ban-di.index');
+        }
+        if(empty($tungay) ){
+            toastr()->warning('Vui Lòng Chọn Thời Gian Đi', 'Thiếu Dữ Liệu Lọc');
+            return redirect()->route('van-ban-di.index');
+        }
+        if(empty($denngay) ){
+            toastr()->warning('Vui Lòng Chọn Thời Gian Đến', 'Thiếu Dữ Liệu Lọc');
+            return redirect()->route('van-ban-di.index');
+        }
+        // Check if the date fields are provided and convert the format
+        if (!empty($tungay)) {
+            $tungay = Carbon::createFromFormat('d/m/Y', $tungay)->startOfDay(); // Convert to Y-m-d and set to start of the day
+        }
+
+        if (!empty($denngay)) {
+            $denngay = Carbon::createFromFormat('d/m/Y', $denngay)->endOfDay(); // Convert to Y-m-d and set to end of the day
+        }
+        
+        if (empty($loaivanban) && empty($donvi) && empty($tungay) && empty($denngay)) {
+            toastr()->warning('Vui Lòng Nhập Đầy Đủ Dữ Liệu Muốn Lọc', 'Thiếu Dữ Liệu Lọc');
+            return redirect()->route('van-ban-di.index');
+        }
+        $vanbandi = VanBanDi::whereBetween('NgayGui',[$tungay,$denngay])->where('id_LVB',$loaivanban)->where('id_Gr',$donvi)->orderBy('id','DESC')->get();
+        foreach ($vanbandi as $vb) {
+            // Chuyển đổi ngày gửi từ cơ sở dữ liệu sang Carbon
+            $ngayGui = Carbon::parse($vb->NgayGui);
+
+            // Kiểm tra nếu ngày gửi trong vòng 3 ngày
+            $vb->isNew = $ngayGui->greaterThanOrEqualTo(Carbon::now()->subDays(3));
+                }
+        return view('vanban.vanbandi.loc', compact('vanbandi','theloai','nhom'));
+    }
+
     public function store(Request $request)
     {
         $id_TK = Session::get('id');
@@ -452,6 +508,43 @@ class VanBanDiController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+
+    // xóa 1 hoac nhieu van ban
+    public function deleteSelected(Request $request)
+    {
+        $ids = $request->input('ids');
+    
+        if (empty($ids)) {
+            return response()->json(['message' => 'Không Có Văn Bản Được Chọn.'], 400);
+        }
+
+        // Retrieve the records to delete their files and detach relationships
+        $vanBanDiList = VanBanDi::whereIn('id', $ids)->get();
+
+        foreach ($vanBanDiList as $vanBanDi) {
+            // Delete the associated file if it exists
+            $path_unlink = 'uploads/vanbandi/' . $vanBanDi->file;
+            if (file_exists(public_path($path_unlink))) {
+                unlink(public_path($path_unlink));
+            }
+
+            // Detach related relationships
+            $vanBanDi->denphongban()->detach($vanBanDi->id_pb); 
+            $vanBanDi->dendonvi()->detach($vanBanDi->id_dv);
+            $vanBanDi->denphong()->detach($vanBanDi->id_p);
+            $vanBanDi->dennganh()->detach($vanBanDi->id_n);
+            $vanBanDi->denchuyennganh()->detach($vanBanDi->id_cn);
+
+            // Delete the VanBanDi record
+            $vanBanDi->delete();
+        }
+
+        // Show success message
+        toastr()->success('Xóa Văn Bản Thành Công');
+        
+        return redirect()->route('van-ban-di.index');
     }
     public function downloadFile(Request $request){
         // Lấy tên file từ request

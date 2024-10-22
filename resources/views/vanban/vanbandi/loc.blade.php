@@ -6,13 +6,14 @@
          <div class="container-fluid">
             <div class="row mb-2">
                <div class="col-sm-6">
-                  <h1 class="m-0">Danh Sách Văn Bản Đi</h1>
+                  <h1 class="m-0">Lọc Chi Tiết Văn Bản Đi</h1>
                </div>
                <!-- /.col -->
                <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
                      <li class="breadcrumb-item"><a href="{{URL::to('/home')}}">Home</a></li>
-                     <li class="breadcrumb-item active">Danh Sách Văn Bản Đi</li>
+                     <li class="breadcrumb-item"><a href="{{Route('van-ban-di.index')}}">Văn Bản Đi</a></li>
+                     <li class="breadcrumb-item active">Lọc Chi Tiết</li>
                   </ol>
                </div>
                <!-- /.col -->
@@ -34,7 +35,7 @@
                            <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i>
                            </button>
                            <div class="btn-group">
-                              <button type="button" class="btn btn-default btn-sm delete-selected">
+                              <button type="button" class="btn btn-default btn-sm  delete-selected">
                               <i class="far fa-trash-alt"></i>
                               </button>
                            </div>
@@ -54,7 +55,7 @@
                         </div>
                         <div  class=" form-group " style="margin: 5px 0px 0px 20px;">
                            <form method="get" action="{{URL::to('loc')}}" >
-                             
+                              @csrf
                               <label for="exampleInputEmail1">Lọc Theo Số Hiệu: </label>
                               <input type="text" name="SoHieu"  style="margin-right: 20px;">
                               <label for="exampleInputEmail1">Lọc Theo Loại Văn Bản: </label>
@@ -79,7 +80,7 @@
                                     </button>
                                  </div>
                                  <form method="get" action="{{URL::to('loc-chi-tiet')}}">
-                                   
+                                    @csrf
                                     <div class="modal-body card-body">
                                        <div class="form-group">
                                           <label for="exampleInputEmail1">Loại Văn Bản: </label>
@@ -121,7 +122,7 @@
                      <div class=" mailbox-messages table table-reponsive">
                         <table class="table table-hover table-striped" id="myTable" >
                            <thead>
-                              <tr >
+                              <tr>
                                  <th scope="col" >
                                  </th>
                                  <th scope="col">Người Gửi </th>
@@ -145,7 +146,7 @@
                               </tr>
                               <!-- This will be displayed if the collection is empty -->
                               @else
-                             
+                              
                                  @foreach($vanbandi as $key => $vb)
                                  <tr id="scrollspyHeading{{$key}}" data-id="{{ $vb->id }}">
                                     <td>
