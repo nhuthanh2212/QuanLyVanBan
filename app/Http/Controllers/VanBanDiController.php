@@ -20,6 +20,7 @@ use App\Models\Nganh;
 use App\Models\ChuyenNganh;
 use App\Models\LVBTheoDVHB;
 use App\Models\TaiKhoan;
+use App\Models\VanBanDen;
 
 use App\Models\BH_CN;
 use App\Models\BH_PB;
@@ -32,6 +33,12 @@ use App\Models\VB_DV;
 use App\Models\VB_P;
 use App\Models\VB_N;
 use App\Models\VB_CN;
+
+use App\Models\Den_PB;
+use App\Models\Den_DV;
+use App\Models\Den_P;
+use App\Models\Den_N;
+use App\Models\Den_CN;
 
 
 class VanBanDiController extends Controller
@@ -397,7 +404,7 @@ class VanBanDiController extends Controller
             'NoiDung' => 'required',
             'SoHieu' => 'required',
             'id_LVB' => 'required',
-            'file' => 'required|mimes:doc,docx,xls,xlsx,ppt,pptx,pdf',  // Chỉ cho phép các định dạng văn bản
+            'file' => 'required|mimes:doc,docx,xls,xlsx,ppt,pptx,pdf|max:5120',  // Chỉ cho phép các định dạng văn bản
             
         ],
         [
@@ -421,23 +428,31 @@ class VanBanDiController extends Controller
 
         if ($data['file']) {
             $get_file = $data['file']; // Lấy đối tượng file
-            $path = 'uploads/vanbandi'; // Đường dẫn lưu file
-        
+    
+            // Thư mục đầu tiên: uploads/vanbandi
+            $path1 = public_path('uploads/vanbandi'); 
+            // Thư mục thứ hai: uploads/vanbanden
+            $path2 = public_path('uploads/vanbanden'); 
+            
             // Lấy tên gốc của file
             $file_name = $get_file->getClientOriginalName(); // Lấy tên gốc của file
-        
-            // Kiểm tra xem file đã tồn tại hay chưa để đảm bảo tên file là duy nhất
-            $file_path = $path . '/' . $file_name; // Đường dẫn đầy đủ của file
-        
-            // Nếu file đã tồn tại, bạn có thể thêm một số logic ở đây, ví dụ như thêm số vào tên file
-            if (file_exists($file_path)) {
-                // Thêm logic để xử lý khi file đã tồn tại (Ví dụ: tạo tên mới)
-                $file_name = time() . '_' . $file_name; // Hoặc bạn có thể thêm logic khác
+            
+            // Kiểm tra xem file đã tồn tại hay chưa trong cả hai thư mục để đảm bảo tên file là duy nhất
+            $file_path1 = $path1 . '/' . $file_name; // Đường dẫn đầy đủ của file trong thư mục thứ nhất
+            $file_path2 = $path2 . '/' . $file_name; // Đường dẫn đầy đủ của file trong thư mục thứ hai
+            
+            // Nếu file đã tồn tại trong bất kỳ thư mục nào, tạo tên mới cho file
+            if (file_exists($file_path1) || file_exists($file_path2)) {
+                // Thêm tiền tố thời gian vào tên file để tránh trùng lặp
+                $file_name = time() . '_' . $file_name;
             }
-        
-            // Di chuyển file đến thư mục đích và lưu với tên gốc
-            $get_file->move($path, $file_name);
-        
+
+            // Di chuyển file đến thư mục đầu tiên
+            $get_file->move($path1, $file_name); // Di chuyển đến uploads/vanbandi
+
+            // Sao chép file đến thư mục thứ hai
+            copy($file_path1, $file_path2); // Sao chép đến uploads/vanbanden
+
             // Lưu tên file vào cột `file` trong cơ sở dữ liệu
             $vanbandi->file = $file_name;
         }
@@ -473,6 +488,59 @@ class VanBanDiController extends Controller
                 $vanbandi->denchuyennganh()->attach($id_cn); 
             }
         }
+
+        //van ban den 
+        $vanbanden = new VanBanDen();
+        $vanbanden->id_LVB = $data['id_LVB'];
+        $vanbanden->id_Gr = $request->id_Gr;
+        $vanbanden->SoHieu = $data['SoHieu'];
+        $vanbanden->NoiDung = $data['NoiDung'];
+        $vanbanden->GhiChu = $request->GhiChu;
+        $vanbanden->TrangThai = $request->TrangThai;
+       
+        $vanbanden->NgayBH = $request->NgayBH;
+        $vanbanden->NgayNhan = Carbon::now('Asia/Ho_Chi_Minh');
+        if ($data['file']) {
+            $get_file = $data['file']; // Lấy đối tượng file
+            
+            // Lấy tên gốc của file
+            $file_name = $get_file->getClientOriginalName(); // Lấy tên gốc của file
+            // Lưu tên file vào cột `file` trong cơ sở dữ liệu
+            $vanbanden->file = $file_name;
+        }
+        $vanbanden->save();
+        //van ban den
+       if ($request->has('id_pb')) {
+        // Gán id_DV từ request vào cột id_Den của bảng pivot
+            foreach($request->id_pb as $id_pb) {
+                $vanbanden->denphongban()->attach($id_pb);
+            }
+        }
+        // Attach 'id_dv' to  table
+        if ($request->has('id_dv')) {
+            foreach($request->id_dv as $id_dv) {
+                $vanbanden->dendonvi()->attach($id_dv); 
+            }
+        }
+        
+        if ($request->has('id_p')) {
+            foreach($request->id_p as $id_p) {
+                $vanbanden->denphong()->attach($id_p); 
+            }
+        }
+        
+        if ($request->has('id_n')) {
+            foreach($request->id_n as $id_n) {
+                $vanbanden->dennganh()->attach($id_n); 
+            }
+        }
+        
+        if ($request->has('id_cn')) {
+            foreach($request->id_cn as $id_cn) {
+                $vanbanden->denchuyennganh()->attach($id_cn); 
+            }
+        }
+
         toastr()->success('Gửi Văn Bản Thành Công');
         return redirect()->route('van-ban-di.index');
 

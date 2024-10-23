@@ -381,6 +381,41 @@
             }
         });
     });
+    $('.deleted-selected').click(function() {
+        var selectedIds = [];
+        
+        // Collect all checked checkboxes
+        $('input[type="checkbox"]:checked').each(function() {
+            // Assuming the row id is stored in a data attribute (for example, data-id)
+            var rowId = $(this).closest('tr').data('id');
+            if (rowId) {
+                selectedIds.push(rowId);
+            }
+        });
+
+        if (selectedIds.length === 0) {
+            alert('Chọn Ít Nhất Một Văn Bản Để Xóa.');
+            return;
+        }
+
+        // Send an AJAX request to delete the selected rows
+        $.ajax({
+            url: '{{ route("van-ban-den.delete") }}', // Your delete route here
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}', // CSRF token
+                ids: selectedIds
+            },
+            success: function(response) {
+                // Reload the page or remove the deleted rows
+                location.reload(); // or manually remove the rows from the table
+            },
+            error: function(xhr) {
+                console.error('An error occurred:', xhr);
+                alert('Error deleting the records. Please try again.');
+            }
+        });
+    });
   });
 </script>
 <script>

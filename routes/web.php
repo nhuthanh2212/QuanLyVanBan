@@ -53,7 +53,14 @@ Route::prefix('van-ban')->group(function () {
     Route::resource('/van-ban-di', VanBanDiController::class);
     
     Route::post('/check-noi-nhan', [VanBanDiController::class, 'check_noinhan']);
+
+    //quản lý van ban den
+    Route::resource('/van-ban-den', VanBanDenController::class);
+
 });
+
+
+
 // Route cho phần quản lý 
 Route::prefix('manager')->group(function () {
     
@@ -113,8 +120,17 @@ Route::get('/chi-tiet/{id}',[VanBanDiController::class, 'chitiet']);
 Route::get('/download-file', [VanBanDiController::class, 'downloadFile'])->name('file.download');
 
 Route::get('/loc',[VanBanDiController::class, 'loc']); 
+
 Route::get('/loc-chi-tiet',[VanBanDiController::class, 'loc_chi_tiet']);
 //xoa van ban
 Route::post('/van-ban-di/delete', [VanBanDiController::class, 'deleteSelected'])->name('van-ban-di.delete');
 
-Route::resource('/van-ban-den', VanBanDenController::class);
+
+//loc van ban den
+
+Route::get('/loc-den',[VanBanDenController::class, 'loc']); 
+
+Route::get('/loc-chi-tiet-den',[VanBanDenController::class, 'loc_chi_tiet']);
+
+//xoa van ban den
+Route::post('/van-ban-den/delete', [VanBanDenController::class, 'deleteSelected'])->name('van-ban-den.delete');
