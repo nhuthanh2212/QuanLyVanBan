@@ -28,4 +28,8 @@ class VanBanDen extends Model
     public function denchuyennganh(){
         return $this->belongsToMany(ChuyenNganh::class, 'Den_CN', 'id_VB', 'id_CN');
     }
+    public function nhom()
+    {
+        return $this->belongsTo(Nhom::class, 'id_Gr');
+    }
 }

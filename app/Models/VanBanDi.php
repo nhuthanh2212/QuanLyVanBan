@@ -32,4 +32,8 @@ class VanBanDi extends Model
     {
         return $this->belongsTo(TaiKhoan::class, 'id_TK');
     }
+    public function nhom()
+    {
+        return $this->belongsTo(Nhom::class, 'id_Gr');
+    }
 }

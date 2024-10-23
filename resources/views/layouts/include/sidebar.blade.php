@@ -49,7 +49,7 @@
                with font-awesome or any other icon font library -->
             <li class="nav-item {{Request::segment(1) == 'van-ban' ? 'menu-is-opening menu-open' : ''}}">
                <a href="#" class="nav-link ">
-                  <i class="nav-icon fa-regular fa-folder-open"></i>
+               <i class="fa-solid fa-folder-tree" style="margin-right:5px"></i>
                   <p>
                      Văn Bản 
                      <i class="right fas fa-angle-left"></i>
@@ -58,14 +58,20 @@
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
                      <a href="{{route('van-ban-den.index')}}" class="nav-link">
-                        <i class="nav-icon fa-solid fa-folder-plus"></i>
+                     <i class="fa-solid fa-file-arrow-down"></i>
                         <p>Văn Bản Đến</p>
                      </a>
                   </li>
                   <li class="nav-item">
                      <a href="{{route('van-ban-di.index')}}" class="nav-link">
-                        <i class="nav-icon fa-solid fa-folder-minus"></i>
+                     <i class="fa-solid fa-file-arrow-up"></i>
                         <p>Văn Bản Đi</p>
+                     </a>
+                  </li>
+                  <li class="nav-item">
+                     <a href="{{route('van-ban-mau.index')}}" class="nav-link">
+                     <i class="fa-regular fa-file"></i>
+                        <p>Văn Bản Mẫu</p>
                      </a>
                   </li>
                </ul>

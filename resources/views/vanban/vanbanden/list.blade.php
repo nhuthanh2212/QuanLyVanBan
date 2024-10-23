@@ -119,10 +119,10 @@
                               <tr >
                                  <th scope="col" >
                                  </th>
-                                 <th scope="col">Người Gửi </th>
+                                 <th scope="col">Số Hiệu</th>
                                  <th scope="col">Nội Dung</th>
-                                 <th scope="col">Nơi Nhận</th>
-                                 <th scope="col"></th>
+                                 <th scope="col">Đơn Vị Ban Hành</th>
+                                
                               </tr>
                            </thead>
                            <tbody>
@@ -136,7 +136,7 @@
                                     @endif
                                  </td>
                                  <td></td>
-                                 <td></td>
+                                 
                               </tr>
                               <!-- This will be displayed if the collection is empty -->
                               @else
@@ -149,9 +149,11 @@
                                           <label for="check{{$key}}"></label>
                                        </div>
                                     </td>
-                                    <td></td>
                                     <td>
-                                       <a href="{{URL::to('/chi-tiet', $vb->id)}}" id="vb{{$key}}" style="color: black">
+                                    {{$vb->SoHieu}}
+                                    </td>
+                                    <td>
+                                       <a href="{{URL::to('/chi-tiet-den', $vb->id)}}" id="vb{{$key}}" style="color: black">
                                        {{$vb->NoiDung}} <span class="date" data-ngay-gui="{{$vb->NgayNhan}}"> {{$vb->NgayNhan}}</span>
                                        </a>
                                        @if($vb->isNew)
@@ -159,9 +161,8 @@
                                        @endif
                                     </td>
                                     <td>
-                                       <!-- Bạn có thể thêm dữ liệu ở đây -->
-                                    </td>
-                                    <td>
+                                         
+                                        {{ Str::afterLast($vb->nhom->TenGroup, '-') }}
                                     </td>
                                  </tr>
                                  @endforeach

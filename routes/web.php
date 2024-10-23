@@ -16,6 +16,7 @@ use App\Http\Controllers\PhongBanController;
 use App\Http\Controllers\PhongController;
 use App\Http\Controllers\NganhController;
 use App\Http\Controllers\ChuyenNganhController;
+use App\Http\Controllers\VanBanMauController;
 
 
 /*
@@ -56,6 +57,8 @@ Route::prefix('van-ban')->group(function () {
 
     //quản lý van ban den
     Route::resource('/van-ban-den', VanBanDenController::class);
+
+    Route::resource('/van-ban-mau', VanBanMauController::class);
 
 });
 
@@ -132,5 +135,10 @@ Route::get('/loc-den',[VanBanDenController::class, 'loc']);
 
 Route::get('/loc-chi-tiet-den',[VanBanDenController::class, 'loc_chi_tiet']);
 
+Route::get('/chi-tiet-den/{id}',[VanBanDenController::class, 'chitiet']); 
+
 //xoa van ban den
 Route::post('/van-ban-den/delete', [VanBanDenController::class, 'deleteSelected'])->name('van-ban-den.delete');
+
+//van ban mau 
+Route::get('/loc-van-mau',[VanBanMauController::class, 'loc']); 

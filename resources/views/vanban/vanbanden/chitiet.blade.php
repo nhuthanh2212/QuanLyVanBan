@@ -11,7 +11,7 @@
             <ol class="breadcrumb float-sm-right">
                <li class="breadcrumb-item"><a href="{{URL::to('/home')}}">Home</a></li>
                <li class="breadcrumb-item"><a href="{{Route('van-ban-den.index')}}">Văn Bản Đến</a></li>
-               <li class="breadcrumb-item active">{{$vanbandi_chitiet->NoiDung}}</li>
+               <li class="breadcrumb-item active">{{$vanbanden_chitiet->NoiDung}}</li>
             </ol>
          </div>
          <!-- /.col -->

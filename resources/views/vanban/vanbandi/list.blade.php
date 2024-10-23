@@ -124,10 +124,11 @@
                               <tr >
                                  <th scope="col" >
                                  </th>
-                                 <th scope="col">Người Gửi </th>
+                                 <th scope="col">Số Hiệu</th>
                                  <th scope="col">Nội Dung</th>
-                                 <th scope="col">Nơi Nhận</th>
-                                 <th scope="col"></th>
+                                 
+                                 <th scope="col">Đơn Vị Ban Hành</th>
+                                 <th scope="col">Người Gửi</th>
                               </tr>
                            </thead>
                            <tbody>
@@ -154,7 +155,9 @@
                                           <label for="check{{$key}}"></label>
                                        </div>
                                     </td>
-                                    <td>{{$vb->taikhoan->HoTen}}</td>
+                                    <td>
+                                       {{ $vb->SoHieu }}
+                                    </td>
                                     <td>
                                        <a href="{{URL::to('/chi-tiet', $vb->id)}}" id="vb{{$key}}" style="color: black">
                                        {{$vb->NoiDung}} <span class="date" data-ngay-gui="{{$vb->NgayGui}}"> {{$vb->NgayGui}}</span>
@@ -164,9 +167,10 @@
                                        @endif
                                     </td>
                                     <td>
-                                       <!-- Bạn có thể thêm dữ liệu ở đây -->
+                                    {{ Str::afterLast($vb->nhom->TenGroup, '-') }}
                                     </td>
                                     <td>
+                                       {{$vb->taikhoan->HoTen}}
                                     </td>
                                  </tr>
                                  @endforeach

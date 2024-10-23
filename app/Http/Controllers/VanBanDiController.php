@@ -50,7 +50,7 @@ class VanBanDiController extends Controller
     {
         $nhom = Nhom::orderBy('id', 'ASC')->get();
         $theloai = LoaiVanBan::orderBy('id_LVB','ASC')->get();
-        $vanbandi = VanBanDi::with('taikhoan')->orderBy('id','DESC')->get();
+        $vanbandi = VanBanDi::with('taikhoan')->with('nhom')->orderBy('id','DESC')->get();
         foreach ($vanbandi as $vb) {
             // Chuyển đổi ngày gửi từ cơ sở dữ liệu sang Carbon
             $ngayGui = Carbon::parse($vb->NgayGui);
