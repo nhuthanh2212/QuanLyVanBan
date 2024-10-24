@@ -18,7 +18,7 @@ use App\Http\Controllers\NganhController;
 use App\Http\Controllers\ChuyenNganhController;
 use App\Http\Controllers\VanBanMauController;
 
-
+use App\Http\Controllers\ChuKySoController;
 /*
 |--------------------------------------------------------------------------
 | Web Route
@@ -96,7 +96,9 @@ Route::prefix('manager')->group(function () {
 
     Route::resource('/chuc-vu', ChucVuController::class);
 
-    
+    Route::resource('/chu-ky-so', ChuKySoController::class);
+
+    Route::post('/select-ca-nhan', [ChuKySoController::class, 'select_ca_nhan']);
 
     Route::resource('/user', UserController::class);
 
@@ -110,7 +112,9 @@ Route::prefix('manager')->group(function () {
     // Các route khác ở đây
 });
 
-
+//chu ky so
+Route::get('/khoa/{id}', [ChuKySoController::class, 'khoa']);
+Route::get('/bo-khoa/{id}', [ChuKySoController::class, 'bo_khoa']);
 
 
 Route::get('/profile/{slug}',[UserController::class, 'profile']); 
@@ -142,3 +146,5 @@ Route::post('/van-ban-den/delete', [VanBanDenController::class, 'deleteSelected'
 
 //van ban mau 
 Route::get('/loc-van-mau',[VanBanMauController::class, 'loc']); 
+
+Route::get('/chi-tiet-mau/{id}',[VanBanMauController::class, 'chitiet']); 

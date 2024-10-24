@@ -141,6 +141,12 @@
                      </a>
                   </li>
                   <li class="nav-item">
+                     <a href="{{route('chu-ky-so.index')}}" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Chữ Ký Số</p>
+                     </a>
+                  </li>
+                  <li class="nav-item">
                      <a href="{{URL::to('/manager/group')}}" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Group</p>

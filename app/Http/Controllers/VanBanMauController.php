@@ -152,13 +152,30 @@ class VanBanMauController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+    public function chitiet(string $id){
+        $vanbanmau_chitiet = VB_Mau::where('id',$id)->first();
+        
+        $nhom = Nhom::orderBy('id','ASC')->get();
+        foreach($nhom as $nh){
+            if($vanbanmau_chitiet->id_Gr == $nh->id){
+                $ten = $nh->TenGroup;
+            }
+        }
+        // Tìm vị trí của dấu '-' cuối cùng
+        $tim = strrpos($ten, '-');
+        // Lấy chuỗi sau dấu '-' cuối cùng
+        $tengroup = substr($ten, $tim + 1);
+        $theloai = LoaiVanBan::where('id_LVB',$vanbanmau_chitiet->id_LVB)->first();
+        return view('vanban.vanbanmau.chitiet', compact('vanbanmau_chitiet','tengroup','theloai'));
+    }
     public function edit(string $id)
     {
+        $vanbanmau = VB_Mau::find($id);
         $id = Session::get('id');
         $taikhoan = TaiKhoan::where('id_TK', $id)->first();
         $nhom = Nhom::orderBy('id', 'ASC')->get();
         $loaivanban = LoaiVanBan::orderBy('id_LVB','ASC')->get();
-        $vanbanmau = VB_Mau::with('loaivanban')->with('nhom')->find($id);
+        
         $id = '';
         $ten = '';
         foreach($nhom as $nh){
@@ -179,7 +196,60 @@ class VanBanMauController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validate([
+            'TenVB' => 'required',
+            
+            'id_LVB' => 'required',
+            'file' => 'mimes:doc,docx,xls,xlsx,ppt,pptx,pdf|max:5120',  // Chỉ cho phép các định dạng văn bản
+            
+        ],
+        [
+            
+            'TenVB.required' => 'Tên Văn Bản Mẫu Phải Có',
+           
+            'id_LVB.required' => 'Loai Văn Bản Phải Có',
+           
+            'file.mimes' => 'File phải là định dạng: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf',
+        ]);
+        $vanbanmau = VB_Mau::find($id);
+        $vanbanmau->id_LVB = $data['id_LVB'];
+        $vanbanmau->id_Gr = $request->id_Gr;
+        $vanbanmau->TenVB = $data['TenVB'];
+        $vanbanmau->TrangThai = $request->TrangThai;
+        
+
+        if ($request->file) {
+            $get_file = $request->file; // Lấy đối tượng file
+    
+            // Thư mục đầu tiên: uploads/vanbandi
+            $path1 = public_path('uploads/vanbanmau'); 
+          
+            
+            // Lấy tên gốc của file
+            $file_name = $get_file->getClientOriginalName(); // Lấy tên gốc của file
+            
+            // Kiểm tra xem file đã tồn tại hay chưa trong cả hai thư mục để đảm bảo tên file là duy nhất
+            $file_path1 = $path1 . '/' . $file_name; // Đường dẫn đầy đủ của file trong thư mục thứ nhất
+          
+            
+            // Nếu file đã tồn tại trong bất kỳ thư mục nào, tạo tên mới cho file
+            if (file_exists($file_path1)) {
+                // Thêm tiền tố thời gian vào tên file để tránh trùng lặp
+                $file_name = time() . '_' . $file_name;
+            }
+
+            // Di chuyển file đến thư mục đầu tiên
+            $get_file->move($path1, $file_name); // Di chuyển đến uploads/vanbandi
+
+           
+
+            // Lưu tên file vào cột `file` trong cơ sở dữ liệu
+            $vanbanmau->file = $file_name;
+        }
+        $vanbanmau->save();
+
+        toastr()->success('Cập Nhật Văn Bản Mẫu Thành Công');
+        return redirect()->route('van-ban-mau.index');
     }
 
     /**

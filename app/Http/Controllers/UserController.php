@@ -6,6 +6,11 @@ use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+
+
+use phpseclib3\Crypt\RSA;
+use Illuminate\Support\Facades\Storage;
+
 use App\Models\TaiKhoan;
 use App\Models\ChucVu;
 
@@ -16,7 +21,7 @@ use App\Models\Phong;
 use App\Models\Nganh;
 use App\Models\ChuyenNganh;
 use App\Models\Nhom;
-
+use App\Models\ChuKySo;
 
 
 class UserController extends Controller
@@ -216,6 +221,27 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         $taikhoan = TaiKhoan::find($id);
+        if ($taikhoan) {
+            // Tìm và xóa bản ghi chữ ký số của người dùng
+            $chukyso = ChuKySo::where('id_TK', $taikhoan->id_TK)->first();
+            
+            if ($chukyso) {
+                // Xóa file chứa khóa bí mật
+                $privateKeyPath = 'private_keys/' . $taikhoan->id_TK . '_private.key';
+                if (Storage::exists($privateKeyPath)) {
+                    Storage::delete($privateKeyPath);
+                }
+    
+                // Xóa bản ghi chữ ký số
+                $chukyso->delete();
+            }
+    
+        }
+    
+        $path_unlink = 'public/uploads/img/'.$taikhoan->img;
+            if(file_exists($path_unlink)){
+                unlink($path_unlink);
+            }
         $taikhoan->delete();
         toastr()->success('Xóa Người Dùng Thành Công');
         return redirect()->route('user.index');

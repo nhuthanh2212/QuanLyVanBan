@@ -31,13 +31,7 @@
                      <div class="row">
                         <div class="mailbox-controls ">
                            <!-- Check all button -->
-                           <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i>
-                           </button>
-                           <div class="btn-group">
-                              <button type="button" class="btn btn-default btn-sm delete-selected">
-                              <i class="far fa-trash-alt"></i>
-                              </button>
-                           </div>
+                           
                            <!-- /.btn-group -->
                            <a href="{{route('van-ban-mau.index')}}">
                            <button type="button" class="btn btn-default btn-sm">
@@ -78,7 +72,7 @@
                         <table class="table table-hover table-striped" id="myTable" >
                            <thead>
                               <tr >
-                                 <th scope="col" >
+                                 <th scope="col" >STT
                                  </th>
                                  <th scope="col">Loại Văn Bản</th>
                                  <th scope="col">Tên Văn Bản</th>
@@ -108,16 +102,13 @@
                                  @foreach($vanbanmau as $key => $vb)
                                  <tr id="scrollspyHeading{{$key}}" data-id="{{ $vb->id }}">
                                     <td>
-                                       <div class="icheck-primary">
-                                          <input type="checkbox" value="" id="check{{$key}}">
-                                          <label for="check{{$key}}"></label>
-                                       </div>
+                                       {{ $key }}
                                     </td>
                                     <td>
                                        {{ $vb->loaivanban->TenLVB }}
                                     </td>
                                     <td>
-                                       <a href="{{URL::to('/chi-tiet', $vb->id)}}" id="vb{{$key}}" style="color: black">
+                                       <a href="{{URL::to('/chi-tiet-mau', $vb->id)}}" id="vb{{$key}}" style="color: black">
                                        {{$vb->TenVB}} 
                                        </a>
                                       
