@@ -50,6 +50,7 @@
                      <div class="form-group">
                         <label for="exampleInputEmail1" >Hình Ảnh: </label>
                         <input type="file" class="form-control form-control-sm" id="formFileSm" name="img"  >
+                        <img style="width: 150px;height: 150px;margin-top: 10px;" src="{{asset('uploads/img/'.$tk->img)}}" alt="{{$tk->HoTen}}">
                      </div>
                      <div class="form-group">
                         <label for="exampleInputEmail1" style="margin-right: 10px;" >Giới Tính: </label>

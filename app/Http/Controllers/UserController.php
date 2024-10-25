@@ -242,6 +242,9 @@ class UserController extends Controller
             if(file_exists($path_unlink)){
                 unlink($path_unlink);
             }
+          // Detach roles and permissions
+        $taikhoan->roles()->detach();
+        $taikhoan->permissions()->detach();
         $taikhoan->delete();
         toastr()->success('Xóa Người Dùng Thành Công');
         return redirect()->route('user.index');
@@ -251,6 +254,71 @@ class UserController extends Controller
     {
         return view('manager.user.profile');
     }
+
+    //phan quyen
+    public function phan_vai_tro($id){
+        $user = TaiKhoan::find($id);
+        $name_roles = $user->roles->all();
+        $all_column_roles = $user->roles->first();
+        $permission = Permission::orderBy('id','ASC')->get();
+        $role = Role::orderBy('id','DESC')->get();
+        
+        return view('manager.user.phanvaitro',compact('user','role','all_column_roles','name_roles','permission'));
+    } 
+    public function insert_roles(Request $request, $id){
+        $data = $request->all();
+        $user = TaiKhoan::find($id);
+        // dd($data);
+        $user->syncRoles($data['role']);
+        $role_id = $user->roles->first()->id;
+        toastr()->success('Thành Công','Thêm Vai Trò Cho User Thành Công');
+        return redirect()->back();
+    }
+
+    public function phan_quyen($id){
+        $user = TaiKhoan::find($id);
+        $name_roles = $user->roles->all();
+        $all_column_roles = $user->roles->first();
+        $permission = Permission::orderBy('id','ASC')->get();
+        
+        //lấy quyền
+        $get_permission_viarole= $user->getPermissionsViaRoles();
+        return view('manager.user.phanquyen',compact('user','all_column_roles','name_roles','permission','get_permission_viarole'));
+    }
+
+    public function insert_permission(Request $request, $id)
+    {
+        $data = $request->all();
+        $user = TaiKhoan::find($id);
+        
+        // Get the role ID associated with the user
+        $role_id = $user->roles->first()->id;
+        
+        // Find the role using the role ID
+        $role = Role::find($role_id);
+
+        // Retrieve the permissions by IDs and convert them to names
+        $permissions = Permission::whereIn('id', $data['permission'])->pluck('name')->toArray();
+
+        // Sync the permissions using the permission names
+        $role->syncPermissions($permissions);
+
+        toastr()->success('Thành Công', 'Thêm Quyền Cho User Thành Công');
+        return redirect()->back();
+    }
+
+    public function insert_per(Request $request){
+        $data = $request->all();
+        $permission = new Permission();
+        $permission->name = $data['permission'];
+        $permission->save();
+        toastr()->success('Thành Công','Thêm Quyền Thành Công');
+        return redirect()->back();
+
+    }
+
+
+
     //group thành viên
     public function add_group(){
         $khoi = Khoi::orderBy('id','ASC')->get();

@@ -41,7 +41,7 @@
          <!-- /.card-header -->
          <!-- form start -->
          <div class="table table-reponsive">
-         <table class="table table-striped" id="myTable">
+         <table class="table table-striped b-t b-light" id="myTable">
             <thead>
                <tr>
                     <th scope="col">#</th>
@@ -51,7 +51,7 @@
                     <th scope="col">Thuộc Group</th>
                     <th scope="col">Chức Vụ</th>
                     <th scope="col">Giới Tính</th>
-                    
+                    <th scope="col">Vai Tro</th>
 
                     <th scope="col">Quản Lý</th>
 
@@ -80,8 +80,12 @@
                     <span class="text text-success">Nữ </span>
                     @endif
                   </td>
-                  
                   <td>
+                     <a href="{{url('manager/phan-vai-tro/'.$tk->id_TK)}}" class="btn btn-danger btn-sm">Phân Vai Trò</a>
+                     <a href="{{url('manager/phan-quyen/'.$tk->id_TK)}}" class="btn btn-primary btn-sm">Phân Quyền</a>
+                     <!-- <a href="{{url('/impersonate/user/'.$tk->id_TK)}}" class="btn btn-warning btn-sm">Chuyển Quyền Nhanh</a> -->
+                  </td>
+                  <td style="display: inline;">
                      <div class="row">
                      <a  href="{{ route('user.show',[$tk->slug]) }}" style="margin-right: 3px;">
                      <button class="btn btn-primary btn-sm">  <i class="fa-solid fa-eye"></i></button>

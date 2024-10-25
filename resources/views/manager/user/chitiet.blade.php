@@ -71,7 +71,7 @@
                      
                      <div class="form-group row">
                         <label style="margin-right: 5px;">Thuộc Phòng Ban:</label>
-                        <h5>{{$taikhoan->nhom->TenGroup}}</h5>
+                        <h5>{{ Str::afterLast($taikhoan->nhom->TenGroup, '-') }}</h5>
                      </div>
                      <div class="form-group row">
                         <label style="margin-right: 5px;">Chức Vụ:</label>

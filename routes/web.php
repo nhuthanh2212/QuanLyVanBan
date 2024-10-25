@@ -102,6 +102,12 @@ Route::prefix('manager')->group(function () {
 
     Route::resource('/user', UserController::class);
 
+    Route::get('phan-vai-tro/{id}',[UserController::class,'phan_vai_tro'])->name('phan-vai_tro');
+    Route::post('insert-roles/{id}', [UserController::class,'insert_roles']);
+    Route::get('phan-quyen/{id}',[UserController::class,'phan_quyen'])->name('phan-quyen');
+    Route::post('insert-permission/{id}', [UserController::class,'insert_permission']);
+    Route::post('insert-per', [UserController::class,'insert_per']);
+
     // group thanh vien
     Route::get('/group', [UserController::class, 'add_group']);
 
