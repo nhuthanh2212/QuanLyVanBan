@@ -78,7 +78,7 @@
                             <input type="text" name="SoHieu" id="exampleInputEmail1" placeholder="..." style="width: 80px; margin: 0px 5px 0px 10px;">
                             <input disabled  value="/" style="width: 15px; margin-right: 5px;">
                             <input disabled  value="{{ \Carbon\Carbon::now()->format('Y') }}" style="width: 40px; margin-right: 5px;">
-                            <input disabled  value="/{{$slug}}">
+                            <input disabled  value="/DHDT">
                         </div>
                     </div>
                     <div class="form-group">

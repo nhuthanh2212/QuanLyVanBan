@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
@@ -427,34 +428,33 @@ class VanBanDiController extends Controller
         $vanbandi->NgayGui = Carbon::now('Asia/Ho_Chi_Minh');
 
         if ($data['file']) {
-            $get_file = $data['file']; // Lấy đối tượng file
-    
-            // Thư mục đầu tiên: uploads/vanbandi
-            $path1 = public_path('uploads/vanbandi'); 
-            // Thư mục thứ hai: uploads/vanbanden
-            $path2 = public_path('uploads/vanbanden'); 
-            
-            // Lấy tên gốc của file
-            $file_name = $get_file->getClientOriginalName(); // Lấy tên gốc của file
-            
-            // Kiểm tra xem file đã tồn tại hay chưa trong cả hai thư mục để đảm bảo tên file là duy nhất
-            $file_path1 = $path1 . '/' . $file_name; // Đường dẫn đầy đủ của file trong thư mục thứ nhất
-            $file_path2 = $path2 . '/' . $file_name; // Đường dẫn đầy đủ của file trong thư mục thứ hai
-            
-            // Nếu file đã tồn tại trong bất kỳ thư mục nào, tạo tên mới cho file
-            if (file_exists($file_path1) || file_exists($file_path2)) {
-                // Thêm tiền tố thời gian vào tên file để tránh trùng lặp
-                $file_name = time() . '_' . $file_name;
+            $get_file = $data['file'];
+            $path1 = public_path('uploads/vanbandi');
+            $path2 = public_path('uploads/vanbanden');
+            $file_name = $get_file->getClientOriginalName();
+            $file_path1 = $path1 . '/' . $file_name;
+            $file_path2 = $path2 . '/' . $file_name;
+
+            // Ensure the directories exist
+            if (!file_exists($path1)) {
+                mkdir($path1, 0777, true);
+            }
+            if (!file_exists($path2)) {
+                mkdir($path2, 0777, true);
             }
 
-            // Di chuyển file đến thư mục đầu tiên
-            $get_file->move($path1, $file_name); // Di chuyển đến uploads/vanbandi
+            // Check if the file exists and adjust name if necessary
+            if (file_exists($file_path1) || file_exists($file_path2)) {
+                $file_name = time() . '_' . $file_name;
+                $file_path1 = $path1 . '/' . $file_name;
+            }
 
-            // Sao chép file đến thư mục thứ hai
-            copy($file_path1, $file_path2); // Sao chép đến uploads/vanbanden
-
-            // Lưu tên file vào cột `file` trong cơ sở dữ liệu
-            $vanbandi->file = $file_name;
+            // Move the file to the first directory
+            if ($get_file->move($path1, $file_name)) {
+                // Copy the file to the second directory
+                copy($file_path1, $file_path2);
+                $vanbandi->file = $file_name;
+            } 
         }
         $vanbandi->save();
        // Gán nơi đến (nhiều checkbox đã chọn)
