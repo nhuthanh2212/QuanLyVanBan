@@ -35,11 +35,7 @@ use App\Models\VB_P;
 use App\Models\VB_N;
 use App\Models\VB_CN;
 
-use App\Models\Den_PB;
-use App\Models\Den_DV;
-use App\Models\Den_P;
-use App\Models\Den_N;
-use App\Models\Den_CN;
+
 
 
 class VanBanDiController extends Controller
@@ -92,57 +88,8 @@ class VanBanDiController extends Controller
         $nganh = Nganh::orderBy('id', 'ASC')->get();
         $chuyennganh = ChuyenNganh::orderBy('id', 'ASC')->get();
         
-        //lay duoi so hieu
-        $nhom = Nhom::where('id',$taikhoan->id_Gr)->first();
-        $slug = '';
-        if($nhom->id_PB != NULL){
-            if($nhom->id_DV != NULL){
-                if($nhom->id_P != NULL){
-                    if($nhom->id_N != NULL){
-                        if($nhom->id_CN != NULL){
-                            foreach($chuyennganh as $cn){
-                                if($cn->id == $nhom->id_CN){
-                                    $slug = $cn->slug;
-                                }
-                            }
-                        }
-                        else{
-                            foreach($nganh as $ng){
-                                if($ng->id == $nhom->id_N){
-                                    $slug = $ng->slug;
-                                }
-                            }
-                        }
-                    }
-                    else{
-                        foreach($phong as $phg){
-                            if($phg->id == $nhom->id_P){
-                                $slug = $phg->slug;
-                            }
-                        }
-                    }
-                }
-                else{
-                    foreach($donvi as $dv){
-                        if($dv->id == $nhom->id_DV){
-                        $slug = $dv->slug;
-                        }
-                    }
-                }
-            }
-            else{
-                foreach($phongban as $phgb){
-                    if($phgb->id == $nhom->id_PB){
-                        $slug = $phgb->slug;
-                    }
-                }
-            }
-        }
-        else{
-            $slug = '';
-        }
-        
-        return view('vanban.vanbandi.create',compact('loaivanban', 'taikhoan','id', 'phongban', 'donvi', 'phong', 'nganh', 'chuyennganh','tengroup','slug'));
+                
+        return view('vanban.vanbandi.create',compact('loaivanban', 'taikhoan','id', 'phongban', 'donvi', 'phong', 'nganh', 'chuyennganh','tengroup'));
     }
 
     //check nhung noi duoc gui theo loai văn bản và đon vị ban hanh được tạo trước đó
@@ -239,6 +186,26 @@ class VanBanDiController extends Controller
         }
     
         return response()->json(['html' => '<p style="color: red;">Loại Văn Bản Này Do Đơn Vị Ban Hành Gửi Chưa Có Nơi Gửi Đến Vui Lòng Cập Nhật Thêm.</p>']);
+    }
+
+    public function getNextSoThuTu($id_LVB)
+    {
+        // Lấy tháng và năm hiện tại
+        $currentMonth = Carbon::now()->month; // Tháng hiện tại
+        $currentYear = Carbon::now()->year;   // Năm hiện tại
+
+        // Tìm số thứ tự cao nhất của loại văn bản này trong tháng hiện tại
+        $maxSoThuTu = VanBanDi::where('id_LVB', $id_LVB)
+                            ->whereMonth('NgayGui', $currentMonth)
+                            ->whereYear('NgayGui', $currentYear)
+                            ->max('tt_lvb');
+
+        // Nếu chưa có bản ghi nào thì bắt đầu từ 1
+        $nextSoThuTu = $maxSoThuTu ? $maxSoThuTu + 1 : 1;
+        $loaivanban = LoaiVanBan::where('id_LVB',$id_LVB)->first();
+        $kytu = $loaivanban->ky_tu;
+        // Trả về số thứ tự mới dưới dạng JSON
+        return response()->json(['next_so_thu_tu' => $nextSoThuTu, 'ky_tu' => $kytu]);
     }
     /**
      * Store a newly created resource in storage.
@@ -403,7 +370,7 @@ class VanBanDiController extends Controller
         $id_TK = Session::get('id');
         $data = $request->validate([
             'NoiDung' => 'required',
-            'SoHieu' => 'required',
+            
             'id_LVB' => 'required',
             'file' => 'required|mimes:doc,docx,xls,xlsx,ppt,pptx,pdf|max:5120',  // Chỉ cho phép các định dạng văn bản
             
@@ -411,7 +378,7 @@ class VanBanDiController extends Controller
         [
             
             'NoiDung.required' => 'Trích Nội Dung Văn Bản Phải Có',
-            'SoHieu.required' => 'Số Hiệu Văn Bản Phải Có',
+           
             'id_LVB.required' => 'Loai Văn Bản Phải Có',
             'file.required' => 'File Phải Có',
             'file.mimes' => 'File phải là định dạng: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf',
@@ -419,9 +386,12 @@ class VanBanDiController extends Controller
         $vanbandi = new VanBanDi();
         $vanbandi->id_LVB = $data['id_LVB'];
         $vanbandi->id_Gr = $request->id_Gr;
-        $vanbandi->SoHieu = $data['SoHieu'];
+
+        $vanbandi->SoHieu = $request->tt. '-'.$request->kytu. '-' .$request->namgui. '-' .$request->thuoc;
+
         $vanbandi->NoiDung = $data['NoiDung'];
         $vanbandi->GhiChu = $request->GhiChu;
+        $vanbandi->tt_lvb = $request->tt;
         $vanbandi->TrangThai = $request->TrangThai;
         $vanbandi->id_TK = $id_TK;
         $vanbandi->NgayBH = $request->NgayBH;
@@ -493,7 +463,7 @@ class VanBanDiController extends Controller
         $vanbanden = new VanBanDen();
         $vanbanden->id_LVB = $data['id_LVB'];
         $vanbanden->id_Gr = $request->id_Gr;
-        $vanbanden->SoHieu = $data['SoHieu'];
+        $vanbanden->SoHieu = $request->tt. '-'.$request->kytu. '-' .$request->namgui. '-' .$request->thuoc;
         $vanbanden->NoiDung = $data['NoiDung'];
         $vanbanden->GhiChu = $request->GhiChu;
         $vanbanden->TrangThai = $request->TrangThai;

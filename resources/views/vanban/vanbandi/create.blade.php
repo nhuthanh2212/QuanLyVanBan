@@ -75,10 +75,13 @@
                     <div class="form-group">
                         <label for="exampleInputEmail1">Văn Bản Số: </label>
                         <div class="row">
-                            <input type="text" name="SoHieu" id="exampleInputEmail1" placeholder="..." style="width: 80px; margin: 0px 5px 0px 10px;">
-                            <input disabled  value="/" style="width: 15px; margin-right: 5px;">
-                            <input disabled  value="{{ \Carbon\Carbon::now()->format('Y') }}" style="width: 40px; margin-right: 5px;">
-                            <input disabled  value="/DHDT">
+                            <input type="text" name="tt" id="so_thu_tu" style="width: 80px; margin: 0px 5px 0px 10px;" >
+                            <input disabled  value="-" style="width: 15px; margin-right: 5px;">
+                            <input readonly   name="kytu" id="kytu" style="width: 40px; margin-right: 5px;">
+                            <input disabled  value="-" style="width: 15px; margin-right: 5px;">
+                            <input readonly   name="namgui" value="{{ \Carbon\Carbon::now()->format('Y') }}" style="width: 40px; margin-right: 5px;">
+                            <input disabled  value="-" style="width: 15px; margin-right: 5px;">
+                            <input readonly   name="thuoc" value="DHDT">
                         </div>
                     </div>
                     <div class="form-group">

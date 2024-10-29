@@ -125,7 +125,8 @@ Route::get('/bo-khoa/{id}', [ChuKySoController::class, 'bo_khoa']);
 
 Route::get('/profile/{slug}',[UserController::class, 'profile']); 
 
-
+// <!-- xử lý số hiệu tăng theo loại văn bản cua tháng -->
+Route::get('/get-next-so-thu-tu/{id_LVB}', [VanBanDiController::class, 'getNextSoThuTu']);
 
 Route::get('/chi-tiet/{id}',[VanBanDiController::class, 'chitiet']); 
 

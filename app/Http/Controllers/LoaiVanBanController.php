@@ -70,10 +70,18 @@ class LoaiVanBanController extends Controller
            
             
         ]);
+        // Tách chuỗi thành các từ
+        $words = explode(' ', $data['TenLVB']);
+        // Lấy ký tự đầu tiên của mỗi từ
+        $initials = array_map(function($word) {
+            return mb_substr($word, 0, 1);
+        }, $words);
+
         $loaivanban = new LoaiVanBan();
         $loaivanban->TenLVB = $data['TenLVB'];
         $loaivanban->MoTaLVB = $data['MoTaLVB'];
         $loaivanban->TrangThai = 1;
+        $loaivanban->ky_tu = implode('', $initials);
         $loaivanban->save();
         toastr()->success('Thêm loại văn bản Thành Công');
         return redirect()->route('loai-van-ban.index');
@@ -111,9 +119,16 @@ class LoaiVanBanController extends Controller
            
             
         ]);
+         // Tách chuỗi thành các từ
+         $words = explode(' ', $data['TenLVB']);
+         // Lấy ký tự đầu tiên của mỗi từ
+         $initials = array_map(function($word) {
+             return mb_substr($word, 0, 1);
+         }, $words);
         $loaivanban = LoaiVanBan::find($id);
         $loaivanban->TenLVB = $data['TenLVB'];
         $loaivanban->MoTaLVB = $data['MoTaLVB'];
+        $loaivanban->ky_tu = implode('', $initials);
         $loaivanban->TrangThai = $request->TrangThai;
         $loaivanban->save();
         toastr()->success('Cập nhật loại văn bản Thành Công');

@@ -862,6 +862,32 @@ function handleError(err) {
     alert("Đã xảy ra lỗi khi đọc file.");
 }
 </script>
+<!-- xử lý số hiệu tăng theo loại văn bản cua tháng -->
+<script>
+    $(document).ready(function() {
+        $('#loaivanban').on('change', function() {
+            var id_LVB = $(this).val();
 
+            // Kiểm tra nếu không chọn loại văn bản nào
+            if (id_LVB == 0) {
+                $('#so_thu_tu').val(''); // Xóa giá trị nếu không chọn gì
+                return;
+            }
+
+            // Gửi AJAX request đến Controller để lấy số thứ tự tiếp theo
+            $.ajax({
+                url: '/get-next-so-thu-tu/' + id_LVB,
+                method: 'GET',
+                success: function(response) {
+                    $('#so_thu_tu').val(response.next_so_thu_tu);
+                    $('#kytu').val(response.ky_tu);
+                },
+                error: function() {
+                    alert('Có lỗi xảy ra, vui lòng thử lại!');
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
