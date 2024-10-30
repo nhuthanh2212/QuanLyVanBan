@@ -20,4 +20,8 @@ class PhongBan extends Model
     {
         return $this->hasMany(DonVi::class, 'id_PB');
     }
+    public function vanBanDen()
+    {
+        return $this->belongsToMany(VanBanDen::class, 'Den_PB', 'id_PB', 'id_VB');
+    }
 }

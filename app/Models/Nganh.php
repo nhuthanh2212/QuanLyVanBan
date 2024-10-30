@@ -20,5 +20,8 @@ class Nganh extends Model
     {
         return $this->hasMany(ChuyenNganh::class, 'id_N');
     }
-   
+    public function vanBanDen()
+    {
+        return $this->belongsToMany(VanBanDen::class, 'Den_N', 'id_N', 'id_VB');
+    }
 }

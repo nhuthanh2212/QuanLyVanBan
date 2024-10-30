@@ -16,5 +16,9 @@ class ChuyenNganh extends Model
     {
         return $this->belongsTo(Nganh::class, 'id_N');
     }
+    public function vanBanDen()
+    {
+        return $this->belongsToMany(VanBanDen::class, 'Den_CN', 'id_CN', 'id_VB');
+    }
     
 }

@@ -13,6 +13,13 @@ use Carbon\Carbon;
 use App\Models\LoaiVanBan;
 use App\Models\Nhom;
 use App\Models\VanBanDen;
+use App\Models\TaiKhoan;
+
+use App\Models\Den_PB;
+use App\Models\Den_DV;
+use App\Models\Den_P;
+use App\Models\Den_N;
+use App\Models\Den_CN;
 
 class VanBanDenController extends Controller
 {
@@ -21,9 +28,55 @@ class VanBanDenController extends Controller
      */
     public function index()
     {
+        $id_TK = Session::get('id');
+        $taikhoan = TaiKhoan::where('id_TK',$id_TK)->first();
+        $query = VanBanDen::query();
+
         $nhom = Nhom::orderBy('id', 'ASC')->get();
         $theloai = LoaiVanBan::orderBy('id_LVB','ASC')->get();
-        $vanbanden = VanBanDen::with('nhom')->orderBy('id','DESC')->get();
+
+        $chuyennganh = Den_CN::orderBy('id', 'ASC')->get();
+        $phongban = Den_PB::orderBy('id', 'ASC')->get();
+        $donvi = Den_DV::orderBy('id', 'ASC')->get();
+        $phong = Den_P::orderBy('id', 'ASC')->get();
+        $nganh = Den_N::orderBy('id', 'ASC')->get();
+
+        // $vanbanden = VanBanDen::with('nhom')->orderBy('id','DESC')->get();
+        // foreach ($vanbanden as $vb) {
+        //     // Chuyển đổi ngày gửi từ cơ sở dữ liệu sang Carbon
+        //     $ngayNhan = Carbon::parse($vb->NgayNhan);
+
+        //     // Kiểm tra nếu ngày gửi trong vòng 3 ngày
+        //     $vb->isNew = $ngayNhan->greaterThanOrEqualTo(Carbon::now()->subDays(3));
+        //         }
+
+        foreach ($nhom as $key => $nh) {
+            if ($nh->id == $taikhoan->id_Gr) {
+                // Kiểm tra các điều kiện và xây dựng truy vấn dựa trên từng trường phòng ban
+                if ($nh->id_CN != null) {
+                    $query->whereHas('denchuyennganh', function ($q) use ($nh) {
+                        $q->where('id_CN', $nh->id_CN);
+                    });
+                } elseif ($nh->id_N != null) {
+                    $query->whereHas('dennganh', function ($q) use ($nh) {
+                        $q->where('id_N', $nh->id_N);
+                    });
+                } elseif ($nh->id_P != null) {
+                    $query->whereHas('denphong', function ($q) use ($nh) {
+                        $q->where('id_P', $nh->id_P);
+                    });
+                } elseif ($nh->id_DV != null) {
+                    $query->whereHas('dendonvi', function ($q) use ($nh) {
+                        $q->where('id_DV', $nh->id_DV);
+                    });
+                } elseif ($nh->id_PB != null) {
+                    $query->whereHas('denphongban', function ($q) use ($nh) {
+                        $q->where('id_PB', $nh->id_PB);
+                    });
+                }
+            }
+        }
+        $vanbanden = $query->orderBy('id', 'DESC')->get();
         foreach ($vanbanden as $vb) {
             // Chuyển đổi ngày gửi từ cơ sở dữ liệu sang Carbon
             $ngayNhan = Carbon::parse($vb->NgayNhan);
@@ -31,6 +84,7 @@ class VanBanDenController extends Controller
             // Kiểm tra nếu ngày gửi trong vòng 3 ngày
             $vb->isNew = $ngayNhan->greaterThanOrEqualTo(Carbon::now()->subDays(3));
                 }
+
         return view('vanban.vanbanden.list',compact('theloai','vanbanden','nhom'));
     }
 

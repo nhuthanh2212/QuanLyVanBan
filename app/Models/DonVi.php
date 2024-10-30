@@ -21,4 +21,8 @@ class DonVi extends Model
     {
         return $this->hasMany(Phong::class, 'id_DV');
     }
+    public function vanBanDen()
+    {
+        return $this->belongsToMany(VanBanDen::class, 'Den_DV', 'id_DV', 'id_VB');
+    }
 }
