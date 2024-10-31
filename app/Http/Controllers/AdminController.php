@@ -39,6 +39,7 @@ class AdminController extends Controller
         $dangnhap = TaiKhoan::where('TenDN', $data['TenDN'])->first();
 
         if($dangnhap && md5($data['password']) === $dangnhap->password) {
+            Auth::login($dangnhap);
             Session::put('name',$dangnhap->HoTen);
             Session::put('id',$dangnhap->id_TK);
             // Nếu đúng mật khẩu MD5

@@ -76,7 +76,7 @@
                   </li>
                </ul>
             </li>
-            
+            @role('admin')
             <li class="nav-item {{Request::segment(1) == 'manager' ? 'menu-is-opening menu-open' : ''}}">
                <a href="#" class="nav-link ">
                   <i class="nav-icon fa-solid fa-bars-progress"></i>
@@ -160,6 +160,7 @@
                   </li>
                </ul>
             </li>
+            @endrole
          </ul>
       </nav>
       <!-- /.sidebar-menu -->
