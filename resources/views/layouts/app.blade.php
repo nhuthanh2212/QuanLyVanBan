@@ -247,6 +247,7 @@
 
 <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
 
 <!-- DataTables  & Plugins -->
@@ -888,6 +889,22 @@ function handleError(err) {
             });
         });
     });
+</script>
+<script>
+  $(document).ready(function(){
+    var chart = new Morris.Bar({
+      // ID of the element in which to draw the chart.
+      element: 'myfirstchart',
+      lineColors:['#819c79'],
+    		
+    			parseTime: false,
+    			xkey: 'period',
+    			ykeys: ['order'],
+    			behaveLikeLine: true,
+    			labels: ['Loại Văn Bản']
+    });
+  });
+  
 </script>
 </body>
 </html>

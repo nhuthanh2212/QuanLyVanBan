@@ -1,27 +1,52 @@
 @extends('layouts.app')
 
 @section('content')
+<style type="text/css">
+		h1.tile {
+			text-align: center;
+			font-size: 30px;
+			font-weight: bold;
+			margin: 10px;
+		}
+	</style>
 <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Dashboard v3</h1>
+          <div class="col-sm-12 ">
+            <h1 class="m-0 tile">Thống Kê Theo Loại Văn Bản</h1>
           </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard v3</li>
-            </ol>
-          </div><!-- /.col -->
+         
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
 
     <!-- Main content -->
-    <div class="content">
-      <div class="container-fluid">
-        <div class="row">
+    <section class="content">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-12">
+                  <div class="card-body p-0">
+                     <div class="row">
+                     <div  class=" form-group " style="margin: 5px 0px 0px 20px;">
+                           <form method="get" action="{{URL::to('loc')}}" >
+                             
+                              <label for="exampleInputEmail1">Lọc Theo Số Hiệu: </label>
+                              <input type="text" name="SoHieu"  style="margin-right: 20px;">
+                              <label for="exampleInputEmail1">Lọc Theo Loại Văn Bản: </label>
+                              <select name="loaivanban" class="form-select form-select-sm" aria-label="Small select example" style="margin:3px 30px 10px 5px">
+                                 <option value="" selected>-----------Chọn-----------</option>
+                                 
+                              </select>
+                              <input type="submit" value="Lọc" class="btn btn-success btn-sm">
+                           </form>
+                        </div>
+                     </div>
+                     <div id="myfirstchart" style="height: 250px;"></div>
+                    </div>
+          </div>
+        </div>
+        <!-- <div class="row">
           <div class="col-lg-6">
             <div class="card">
               <div class="card-header border-0">
@@ -43,7 +68,7 @@
                     <span class="text-muted">Since last week</span>
                   </p>
                 </div>
-                <!-- /.d-flex -->
+                
 
                 <div class="position-relative mb-4">
                   <canvas id="visitors-chart" height="200"></canvas>
@@ -60,7 +85,7 @@
                 </div>
               </div>
             </div>
-            <!-- /.card -->
+          
 
             <div class="card">
               <div class="card-header border-0">
@@ -166,9 +191,9 @@
                 </table>
               </div>
             </div>
-            <!-- /.card -->
+            
           </div>
-          <!-- /.col-md-6 -->
+        
           <div class="col-lg-6">
             <div class="card">
               <div class="card-header border-0">
@@ -190,7 +215,7 @@
                     <span class="text-muted">Since last month</span>
                   </p>
                 </div>
-                <!-- /.d-flex -->
+             
 
                 <div class="position-relative mb-4">
                   <canvas id="sales-chart" height="200"></canvas>
@@ -207,8 +232,7 @@
                 </div>
               </div>
             </div>
-            <!-- /.card -->
-
+           
             <div class="card">
               <div class="card-header border-0">
                 <h3 class="card-title">Online Store Overview</h3>
@@ -233,7 +257,7 @@
                     <span class="text-muted">CONVERSION RATE</span>
                   </p>
                 </div>
-                <!-- /.d-flex -->
+          
                 <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
                   <p class="text-warning text-xl">
                     <i class="ion ion-ios-cart-outline"></i>
@@ -245,7 +269,7 @@
                     <span class="text-muted">SALES RATE</span>
                   </p>
                 </div>
-                <!-- /.d-flex -->
+              
                 <div class="d-flex justify-content-between align-items-center mb-0">
                   <p class="text-danger text-xl">
                     <i class="ion ion-ios-people-outline"></i>
@@ -257,14 +281,14 @@
                     <span class="text-muted">REGISTRATION RATE</span>
                   </p>
                 </div>
-                <!-- /.d-flex -->
+            
               </div>
             </div>
           </div>
-          <!-- /.col-md-6 -->
-        </div>
+        
+        </div> -->
         <!-- /.row -->
       </div>
-      <!-- /.container-fluid -->
-    </div>
+     
+    </section>
 @endsection
