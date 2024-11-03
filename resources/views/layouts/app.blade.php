@@ -890,21 +890,88 @@ function handleError(err) {
         });
     });
 </script>
+<!-- //thong ke -->
 <script>
-  $(document).ready(function(){
-    var chart = new Morris.Bar({
-      // ID of the element in which to draw the chart.
-      element: 'myfirstchart',
-      lineColors:['#819c79'],
-    		
+// Convert the PHP data to JavaScript
+var chartData = @json($data);
+
+// Create the donut chart
+var chart = new Morris.Donut({
+    element: 'donut',
+    resize: true,
+    colors: [
+        '#ce616a',
+        '#61a1ce',
+        '#ce8f61',
+        '#f5b942',
+        '#4842f5'
+    ],
+    data: chartData.map(item => ({
+        label: item.label,
+        value: item.value // Value must be specified for each label
+    }))
+});
+</script>
+<script type="text/javascript">
+    	$(document).ready(function(){
+    		chart30daysorder();
+    		var chart = new Morris.Bar({
+    			element: 'myfirstchart',
+    			lineColors:['#819c79','#fc8710','#FF6541','#A4ADD3','#766B56'],
+    			pointFillColors: ['#ffffff'],
+    			pointStrokeColors: ['black'],
+    			fillOpacity: 0.6,
+    			hideHover: 'auto',
     			parseTime: false,
     			xkey: 'period',
-    			ykeys: ['order'],
+    			ykeys: ['type', 'quantity'],
     			behaveLikeLine: true,
-    			labels: ['Loại Văn Bản']
-    });
-  });
-  
-</script>
+    			labels: ['Công Văn','Số Lương']
+    		});
+
+    		function chart30daysorder(){
+    			var _token = $('input[name="_token"]').val();
+    			$.ajax({
+    				url: "{{url('/days-order')}}",
+    				method: "POST",
+    				dataType: "JSON",
+    				data: {_token:_token},
+    				success:function(data){
+    					chart.setData(data);
+    				}
+    			});
+    		}
+
+    		$('.dashboard-filter').change(function(){
+    			var dashboard_value = $(this).val();
+    			var _token = $('input[name="_token"]').val();
+    			$.ajax({
+    				url: "{{url('/dashboard-filter')}}",
+    				method:"POST",
+    				dataType:"JSON",
+    				data:{dashboard_value:dashboard_value, _token:_token },
+    				success:function(data){
+    					chart.setData(data);
+     				}
+    			});
+
+    		});
+
+    		$('#thong_ke').click(function(){
+    			var _token = $('input[name="_token"]').val();
+    			var from_date = $('#datepicker').val();
+    			var to_date = $('#datepicker1').val();
+    			$.ajax({
+    				url: "{{url('/filter-by-date')}}",
+    				method:"POST",
+    				dataType:"JSON",
+    				data:{from_date:from_date, to_date:to_date, to_date:to_date, _token:_token },
+    				success:function(data){
+    					chart.setData(data);
+    				}
+    			});
+    		});
+    	});
+    </script>
 </body>
 </html>

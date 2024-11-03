@@ -12,4 +12,8 @@ class LoaiVanBan extends Model
     protected $fillable = ['TenLVB', 'MoTaLVB', 'TrangThai','ky_tu'];
     protected $primaryKey = 'id_LVB';
     protected $table = 'loaivanban';
+    public function vanbandi()
+    {
+        return $this->hasMany(VanBanDi::class, 'id_LVB');
+    }
 }

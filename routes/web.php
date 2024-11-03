@@ -155,3 +155,10 @@ Route::post('/van-ban-den/delete', [VanBanDenController::class, 'deleteSelected'
 Route::get('/loc-van-mau',[VanBanMauController::class, 'loc']); 
 
 Route::get('/chi-tiet-mau/{id}',[VanBanMauController::class, 'chitiet']); 
+
+//thong ke
+Route::post('filter-by-date',[HomeController::class, 'filter_by_date']);
+
+Route::post('days-order',[HomeController::class, 'days_order']);
+
+Route::post('dashboard-filter',[HomeController::class, 'dashboard_filter']);

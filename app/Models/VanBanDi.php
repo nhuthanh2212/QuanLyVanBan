@@ -36,4 +36,8 @@ class VanBanDi extends Model
     {
         return $this->belongsTo(Nhom::class, 'id_Gr');
     }
+    public function loaivanban()
+    {
+        return $this->belongsTo(LoaiVanBan::class, 'id_LVB');
+    }
 }

@@ -27,22 +27,26 @@
       <div class="row">
          <div class="col-12">
                   <div class="card-body p-0">
-                     <div class="row">
-                     <div  class=" form-group " style="margin: 5px 0px 0px 20px;">
-                           <form method="get" action="{{URL::to('loc')}}" >
-                             
-                              <label for="exampleInputEmail1">Lọc Theo Số Hiệu: </label>
-                              <input type="text" name="SoHieu"  style="margin-right: 20px;">
-                              <label for="exampleInputEmail1">Lọc Theo Loại Văn Bản: </label>
-                              <select name="loaivanban" class="form-select form-select-sm" aria-label="Small select example" style="margin:3px 30px 10px 5px">
-                                 <option value="" selected>-----------Chọn-----------</option>
-                                 
-                              </select>
-                              <input type="submit" value="Lọc" class="btn btn-success btn-sm">
-                           </form>
-                        </div>
-                     </div>
-                     <div id="myfirstchart" style="height: 250px;"></div>
+                    <div class="row">
+                      <div class="form-group col-md-12" style="margin: 5px 0px 0px 20px;">
+                          <form autocomplete="off" class="d-flex align-items-center">
+                          @csrf
+                              <p class="mb-0 me-4">Từ Ngày: <input type="text" name="" id="datepicker" class="form-control" style="width: auto;     margin-right: 50px;"></p>
+                              <p class="mb-0 me-4">Đến Ngày: <input type="text" id="datepicker1" name="" class="form-control" style="width: auto;     margin-right: 50px;"></p>
+                              <input type="submit" value="Thống Kê" class="btn btn-success btn-sm me-3" id="thong_ke" style="margin-right: 50px;">
+                              <p class="mb-4">Lọc Theo: 
+                                  <select class="dashboard-filter form-control">
+                                      <option>------Chọn-----</option>
+                                      <option value="7ngay">Tuần Trước</option>
+                                      <option value="thangtruoc">Tháng Trước</option>
+                                      <option value="thangnay">Tháng Này</option>
+                                      <option value="365ngayqua">Năm</option>
+                                  </select>
+                              </p>
+                          </form>
+                      </div>
+                  </div>
+                     <div id="donut" style="height: 250px;"></div>
                     </div>
           </div>
         </div>
