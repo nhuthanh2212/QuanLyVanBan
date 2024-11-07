@@ -891,27 +891,7 @@ function handleError(err) {
     });
 </script>
 <!-- //thong ke -->
-<script>
-// Convert the PHP data to JavaScript
-var chartData = @json($data);
 
-// Create the donut chart
-var chart = new Morris.Donut({
-    element: 'donut',
-    resize: true,
-    colors: [
-        '#ce616a',
-        '#61a1ce',
-        '#ce8f61',
-        '#f5b942',
-        '#4842f5'
-    ],
-    data: chartData.map(item => ({
-        label: item.label,
-        value: item.value // Value must be specified for each label
-    }))
-});
-</script>
 <script type="text/javascript">
     	$(document).ready(function(){
     		chart30daysorder();

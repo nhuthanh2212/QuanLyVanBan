@@ -46,7 +46,7 @@
                           </form>
                       </div>
                   </div>
-                     <div id="donut" style="height: 250px;"></div>
+                     <div id="myfirstchart" style="height: 250px;"></div>
                     </div>
           </div>
         </div>
