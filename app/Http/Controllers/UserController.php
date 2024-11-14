@@ -6,7 +6,7 @@ use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\URL;
 
 use phpseclib3\Crypt\RSA;
 use Illuminate\Support\Facades\Storage;
@@ -383,7 +383,7 @@ class UserController extends Controller
                                 <th>Tên Ngành</th>
                                 <th>Tên Chuyên Ngành</th>
                                 <th>Tên Group</th>
-                               
+                                <th>Quản Lý</th>
                             </tr>
                         </thead>
                         <tbody>';
@@ -398,7 +398,13 @@ class UserController extends Controller
                         <td>'.(optional($gr->nganh)->TenN ?? 'Không có').'</td>
                         <td>'.(optional($gr->chuyennganh)->TenCN ?? 'Không có').'</td>
                         <td>'.$gr->TenGroup.'</td>
-                        
+                        <td>
+                            <form onsubmit="return confirm(\'Bạn Có Muốn Xóa Nhóm Này Không?\')" action="'.URL::to('manager/delete-nhom', [$gr->id]).'" method="post" enctype="multipart/form-data">
+                            '.csrf_field().'
+                            '.method_field('DELETE').'
+                            <input type="submit" class="btn btn-danger" value="Xóa">
+                            </form>
+                        </td>
                     </tr>
                     ';
         }
@@ -462,5 +468,19 @@ class UserController extends Controller
             }
         
         
+    }
+    public function delete_nhom(string $id){
+        $nhom = Nhom::find($id);
+        $nhom->delete();
+        toastr()->success('Xóa Nhóm Thành Công');
+        return redirect()->back();
+    }
+    //cap chu ky so
+    public function cap_chu_ky_so(Request $request){
+        $taikhoan = TaiKhoan::where('id_Tk',$request->canhan)->first();
+        $taikhoan->chu_ky_so = 1;
+        $taikhoan->save();
+        toastr()->success('Cấp Chữ Ký Số Thành Công');
+        return redirect()->route('chu-ky-so.index');
     }
 }

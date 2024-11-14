@@ -15,7 +15,7 @@ class TaiKhoan extends Authenticatable
     use HasRoles;
     protected $guard_name = 'web'; // Explicitly set the guard name
     public $timestamps = false;
-    protected $fillable = ['HoTen', 'slug', 'NamSinh','DienThoai','Gmail', 'GioiTinh','DiaChi','img','id_Gr','id_CV','TenDN','password'];
+    protected $fillable = ['HoTen', 'slug', 'NamSinh','DienThoai','Gmail', 'GioiTinh','DiaChi','img','id_Gr','id_CV','TenDN','password','chu_ky_so'];
     protected $primaryKey = 'id_TK';
     protected $table = 'taikhoan';
     public function chucvu()

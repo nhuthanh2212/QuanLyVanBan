@@ -102,6 +102,8 @@ Route::prefix('manager')->group(function () {
 
     Route::resource('/user', UserController::class);
 
+    Route::post('cap-chu-ky-so', [UserController::class,'cap_chu_ky_so']);
+
     Route::get('phan-vai-tro/{id}',[UserController::class,'phan_vai_tro'])->name('phan-vai_tro');
     Route::post('insert-roles/{id}', [UserController::class,'insert_roles']);
     Route::get('phan-quyen/{id}',[UserController::class,'phan_quyen'])->name('phan-quyen');
@@ -114,6 +116,7 @@ Route::prefix('manager')->group(function () {
     Route::post('/select-group', [UserController::class, 'select_group']);
     Route::post('/insert-group', [UserController::class, 'insert_group']);
     Route::post('/list-group', [UserController::class, 'list_group']);
+    Route::delete('/delete-nhom/{id}', [UserController::class, 'delete_nhom']);
 
     // Các route khác ở đây
 });
