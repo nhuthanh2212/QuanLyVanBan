@@ -69,20 +69,62 @@ class ChuKySoController extends Controller
     public function store(Request $request)
     {
          // Tạo khóa RSA (2048 bit)
-         $keyPair = RSA::createKey(2048);
+        //  $keyPair = RSA::createKey(2048);
+         $data = $request->validate([
+            'HoTen' => 'required',
+            'DienThoai' => 'required',
+            'CCCD' => 'required',
+           
+        ],
+        [
+            
+            'HoTen.required' => 'Họ Tên Phải Có',
+            'DienThoai.required' => 'Số Điện Thoại Phải Có',
+            'CCCD.required' => 'Số CCCD Phải Có',
+           
+            
+        ]);
 
-         // Khóa công khai và khóa bí mật
-         $publicKey = $keyPair->getPublicKey()->toString('PKCS1');
-         $privateKey = $keyPair->toString('PKCS1');
-         $chukyso = new ChuKySo();
-         $chukyso->id_TK = $request->canhan;
-         $chukyso->TrangThai = 1;
-         $chukyso->NgayKy =  Carbon::now('Asia/Ho_Chi_Minh');
-         //khoa cong khai
-         $chukyso->public_Key = $publicKey;
-         $chukyso->save();
-         // Lưu khóa bí mật vào file bảo mật hoặc sử dụng mã hóa để lưu trữ
-         Storage::put('private_keys/'.$request->canhan.'_private.key', $privateKey);
+         // Concatenate Họ Tên, Số Điện Thoại, and CCCD
+        //  $combinedData = $data['HoTen'] . ' ' . $data['DienThoai'] . ' ' . $data['CCCD'];
+
+        // Generate RSA key pair using PHP's OpenSSL functions
+        $config = [
+            "private_key_bits" => 2048,
+            "private_key_type" => OPENSSL_KEYTYPE_RSA,
+        ];
+
+        // Create a new private key
+        $resource = openssl_pkey_new($config);
+        openssl_pkey_export($resource, $privateKey);
+        $publicKey = openssl_pkey_get_details($resource)['key'];
+
+        // Store the public key in the database
+        $chukyso = new ChuKySo();
+        $chukyso->id_TK = $request->input('id'); // Using CCCD as an identifier, adjust if needed
+        $chukyso->TrangThai = 1;
+        $chukyso->NgayKy = Carbon::now('Asia/Ho_Chi_Minh');
+        $chukyso->public_Key = $publicKey;
+        $chukyso->save();
+
+        // Save the private key securely to a file
+        $fileName = 'private_keys/' . $request->input('id') . '_private.key';
+        Storage::put($fileName, $privateKey);
+ 
+         // Display success message
+
+        //  // Khóa công khai và khóa bí mật
+        //  $publicKey = $keyPair->getPublicKey()->toString('PKCS1');
+        //  $privateKey = $keyPair->toString('PKCS1');
+        //  $chukyso = new ChuKySo();
+        //  $chukyso->id_TK = $request->canhan;
+        //  $chukyso->TrangThai = 1;
+        //  $chukyso->NgayKy =  Carbon::now('Asia/Ho_Chi_Minh');
+        //  //khoa cong khai
+        //  $chukyso->public_Key = $publicKey;
+        //  $chukyso->save();
+        //  // Lưu khóa bí mật vào file bảo mật hoặc sử dụng mã hóa để lưu trữ
+        //  Storage::put('private_keys/'.$request->canhan.'_private.key', $privateKey);
          toastr()->success('Cấp Chữ Ký Số Thành Công');
         return redirect()->route('chu-ky-so.index');
     }

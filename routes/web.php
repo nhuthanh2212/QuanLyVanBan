@@ -110,6 +110,8 @@ Route::prefix('manager')->group(function () {
     Route::post('insert-permission/{id}', [UserController::class,'insert_permission']);
     Route::post('insert-per', [UserController::class,'insert_per']);
 
+    Route::get('create-ky-so',[UserController::class,'chu_ky_so']);
+
     // group thanh vien
     Route::get('/group', [UserController::class, 'add_group']);
 

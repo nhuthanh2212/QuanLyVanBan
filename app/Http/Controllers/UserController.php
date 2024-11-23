@@ -483,4 +483,8 @@ class UserController extends Controller
         toastr()->success('Cấp Chữ Ký Số Thành Công');
         return redirect()->route('chu-ky-so.index');
     }
+
+    public function chu_ky_so(){
+        return view('manager.user.chukyso');
+    }
 }
