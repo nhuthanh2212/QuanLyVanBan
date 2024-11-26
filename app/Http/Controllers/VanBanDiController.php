@@ -22,6 +22,7 @@ use App\Models\ChuyenNganh;
 use App\Models\LVBTheoDVHB;
 use App\Models\TaiKhoan;
 use App\Models\VanBanDen;
+use App\Models\Statistical;
 
 use App\Models\BH_CN;
 use App\Models\BH_PB;
@@ -427,6 +428,33 @@ class VanBanDiController extends Controller
             } 
         }
         $vanbandi->save();
+
+        //thống kê
+        $thongke = Statistical::orderBy('id','DESC')->get();
+        foreach($thongke as $key => $thke){
+            if($thke->id_LVB == $data['id_LVB'] && $thke->date == Carbon::now()->toDateString() ){
+                $thke->total_LVB = $thke->total_LVB + 1;
+                $thongke->save();
+            }
+            else{
+                $baocao = new Statistical();
+                $baocao->id_LVB = $data['id_LVB'];
+                $thke->total_LVB = $thke->total_LVB + 1;
+                $baocao->date = Carbon::now()->toDateString(); 
+                $baocao->save();
+            }
+           if($thke->id_Gr == $request->id_Gr && $thke->date == Carbon::now()->toDateString() ){
+                $thke->total_Gr = $thke->total_Gr + 1;
+                $thongke->save();
+           }
+           else{
+            $baocao = new Statistical();
+            $baocao->id_Gr = $request->id_Gr;
+            $thke->total_Gr = $thke->total_Gr + 1;
+            $baocao->date = Carbon::now()->toDateString(); 
+            $baocao->save();
+           }
+        }
        // Gán nơi đến (nhiều checkbox đã chọn)
        if ($request->has('id_pb')) {
         // Gán id_DV từ request vào cột id_Den của bảng pivot
