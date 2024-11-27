@@ -230,6 +230,12 @@
       $( "#datepicker1" ).datepicker({
         dateFormat: "dd/mm/yy"
       });
+      $( "#datepicker2" ).datepicker({
+        dateFormat: "dd/mm/yy"
+      });
+      $( "#datepicker3" ).datepicker({
+        dateFormat: "dd/mm/yy"
+      });
   } );
   </script>
 
@@ -842,10 +848,10 @@ function handleError(err) {
     			fillOpacity: 0.6,
     			hideHover: 'auto',
     			parseTime: false,
-    			xkey: 'period',
-    			ykeys: ['type', 'quantity'],
+    			xkey: 'loaivanban_name',
+    			ykeys: ['total_LVB'],
     			behaveLikeLine: true,
-    			labels: ['Công Văn','Số Lương']
+    			labels: ['Tổng'],
     		});
 
     		function chart30daysorder(){
@@ -882,6 +888,69 @@ function handleError(err) {
     			var to_date = $('#datepicker1').val();
     			$.ajax({
     				url: "{{url('/filter-by-date')}}",
+    				method:"POST",
+    				dataType:"JSON",
+    				data:{from_date:from_date, to_date:to_date, to_date:to_date, _token:_token },
+    				success:function(data){
+    					chart.setData(data);
+    				}
+    			});
+    		});
+    	});
+    </script>
+
+    <!-- don vi ban hanh -->
+<script type="text/javascript">
+    	$(document).ready(function(){
+    		chart30daysorder();
+    		var chart = new Morris.Bar({
+    			element: 'myfirstchart1',
+    			lineColors:['#819c79','#fc8710','#FF6541','#A4ADD3','#766B56'],
+    			pointFillColors: ['#ffffff'],
+    			pointStrokeColors: ['black'],
+    			fillOpacity: 0.6,
+    			hideHover: 'auto',
+    			parseTime: false,
+    			xkey: 'group_name',
+    			ykeys: ['total_Gr'],
+    			behaveLikeLine: true,
+    			labels: ['Tổng'],
+    		});
+
+    		function chart30daysorder(){
+    			var _token = $('input[name="_token"]').val();
+    			$.ajax({
+    				url: "{{url('/days-order')}}",
+    				method: "POST",
+    				dataType: "JSON",
+    				data: {_token:_token},
+    				success:function(data){
+    					chart.setData(data);
+    				}
+    			});
+    		}
+
+    		$('.dashboard-filter1').change(function(){
+    			var dashboard_value = $(this).val();
+    			var _token = $('input[name="_token"]').val();
+    			$.ajax({
+    				url: "{{url('/dashboard-filterr')}}",
+    				method:"POST",
+    				dataType:"JSON",
+    				data:{dashboard_value:dashboard_value, _token:_token },
+    				success:function(data){
+    					chart.setData(data);
+     				}
+    			});
+
+    		});
+
+    		$('#thong_ke_dvbh').click(function(){
+    			var _token = $('input[name="_token"]').val();
+    			var from_date = $('#datepicker2').val();
+    			var to_date = $('#datepicker3').val();
+    			$.ajax({
+    				url: "{{url('/filter-by-date-dvbh')}}",
     				method:"POST",
     				dataType:"JSON",
     				data:{from_date:from_date, to_date:to_date, to_date:to_date, _token:_token },

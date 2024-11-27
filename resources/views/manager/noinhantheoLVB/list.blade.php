@@ -120,7 +120,7 @@
                            </td>
                            <td>
                               <a  href="{{URL::to('/manager/noi-nhan-loai-van-ban/edite',[$n->id])}}" class=" btn btn btn-success">
-                              Sữa
+                              Sửa
                               </a>
                               <form onsubmit="return confirm('Bạn Có Muốn Xóa Nơi Nhận Theo Loại Văn Bản Do Đơn Vị Ban Hành Này Không?')" action="{{URL::to('/manager/noi-nhan-loai-van-ban/delete',[$n->id])}}" method="post" enctype="multipart/form-data">
                                  @csrf

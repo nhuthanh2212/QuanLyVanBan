@@ -82,7 +82,7 @@
                            </td>
                            <td>
                               <a  href="{{ route('chuyen-nganh.edit',[$cn->id]) }}" class="btn btn-success" ui-toggle-class="">
-                              Sữa
+                              Sửa
                               </a>
                               <form onsubmit="return confirm('Bạn Có Muốn Xóa Chuyên Ngành Này không?')" action="{{route('chuyen-nganh.destroy',[$cn->id])}}" method="post" enctype="multipart/form-data">
                                  @csrf

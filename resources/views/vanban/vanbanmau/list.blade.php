@@ -119,7 +119,7 @@
                                     
                                     <td>
                                         <a  href="{{ route('van-ban-mau.edit',[$vb->id]) }}" class="btn btn-success" ui-toggle-class="">
-                                        Sữa
+                                        Sửa
                                         </a>
                                         <form onsubmit="return confirm('Bạn Có Muốn Xóa Văn Bản Mẫu Này không?')" action="{{route('van-ban-mau.destroy',[$vb->id])}}" method="post" enctype="multipart/form-data">
                                             @csrf

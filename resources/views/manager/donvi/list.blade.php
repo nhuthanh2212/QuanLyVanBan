@@ -82,7 +82,7 @@
                            </td>
                            <td>
                               <a  href="{{ route('don-vi.edit',[$dv->id]) }}" class="btn btn-success" ui-toggle-class="">
-                              Sữa
+                              Sửa
                               </a>
                               <form onsubmit="return confirm('Bạn Có Muốn Xóa Đơn Vị Này Không?')" action="{{route('don-vi.destroy',[$dv->id])}}" method="post" enctype="multipart/form-data">
                                  @csrf

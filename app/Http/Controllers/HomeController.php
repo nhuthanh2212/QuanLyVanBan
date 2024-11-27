@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Statistical;
 use App\Models\VanBanDi;
 use Carbon\Carbon;
 class HomeController extends Controller
@@ -28,27 +28,9 @@ class HomeController extends Controller
     public function index()
     {
         $this->session_login();
-        // Get counts of documents by type
-            $counts = VanBanDi::select('id_LVB', DB::raw('count(*) as count'))
-            ->groupBy('id_LVB')
-            ->pluck('count', 'id_LVB'); // Plucking count with id_LVB as keys
+      
 
-        // Get all document types
-        $documentTypes = LoaiVanBan::all();
-
-        // Prepare data for the chart
-        $data = [];
-        foreach ($documentTypes as $type) {
-            // Check if there is a count for this type
-            if ($counts->has($type->id_LVB)) {
-                $data[] = [
-                    'label' => $type->name, // Assuming 'name' is the column for the document type name
-                    'value' => $counts[$type->id_LVB] // Only include types with counts
-                ];
-            }
-        }
-
-        return view('home', compact('data'));
+        return view('home');
     }
      // lọc ngày tháng năm
      public function filter_by_date(Request $request)
@@ -57,24 +39,20 @@ class HomeController extends Controller
         $from_date = $data['from_date'];
         $to_date = $data['to_date'];
         
-        $get = VanBanDi::selectRaw('DATE(NgayGui) as date, id_LVB, COUNT(*) as count')
-            ->whereBetween('NgayGui', [$from_date, $to_date])
-            ->groupBy('id_LVB')
-            ->orderBy('NgayGui', 'ASC')
-            ->with('loaivanban') // Eager load to get the type name of the document
-            ->get();
+        $data = Statistical::with(['loaivanban', 'group'])->whereBetween('date',[$from_date,$to_date])->orderby('date','ASC')
+             ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
+             ->get()
+             ->map(function ($item) {
+                 return [
+                     'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
+                     'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                     'total_LVB' => $item->total_LVB,
+                     'total_Gr' => $item->total_Gr,
+                  
+                 ];
+             });
         
-        $chart_data = []; // Initialize the variable
-        
-        foreach ($get as $key => $val) {
-            $chart_data[] = array(
-                'period' => $val->NgayGui,
-                'type' => $val->loaivanban->TenLVB, // Ensure this property exists
-                'quantity' => $val->count,
-            );
-        }
-        
-        echo json_encode($chart_data);
+        echo $data = json_encode($data);
  
      }
  
@@ -92,26 +70,65 @@ class HomeController extends Controller
          $now = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
  
          if($data['dashboard_value']=='7ngay'){
-             $get = VanBanDi::whereBetween('NgayGui',[$sub7ngay,$now])->orderby('NgayGui','ASC')->get();
+           
+            $datas = Statistical::with(['loaivanban', 'group'])->whereBetween('date',[$sub7ngay,$now])->orderby('date','ASC')
+             ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
+             ->get()
+             ->map(function ($item) {
+                 return [
+                     'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
+                     'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                     'total_LVB' => $item->total_LVB,
+                     'total_Gr' => $item->total_Gr,
+                  
+                 ];
+             });
          }elseif($data['dashboard_value']=='thangtruoc'){
-             $get = VanBanDi::whereBetween('NgayGui',[$dau_thang_truoc,$cuoi_thang_truoc])->orderby('NgayGui','ASC')->get();
+             
+             $datas = Statistical::with(['loaivanban', 'group'])->whereBetween('date',[$dau_thang_truoc,$cuoi_thang_truoc])->orderby('date','ASC')
+             ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
+             ->get()
+             ->map(function ($item) {
+                 return [
+                     'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
+                     'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                     'total_LVB' => $item->total_LVB,
+                     'total_Gr' => $item->total_Gr,
+                  
+                 ];
+             });
          }elseif($data['dashboard_value']=='thangnay'){
-             $get = VanBanDi::whereBetween('NgayGui',[$dau_thang_nay,$now])->orderby('NgayGui','ASC')->get();
+             
+             $datas = Statistical::with(['loaivanban', 'group'])->whereBetween('date',[$dau_thang_nay,$now])->orderby('date','ASC')
+             ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
+             ->get()
+             ->map(function ($item) {
+                 return [
+                     'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
+                     'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                     'total_LVB' => $item->total_LVB,
+                     'total_Gr' => $item->total_Gr,
+                  
+                 ];
+             });
          }else{
-             $get = VanBanDi::whereBetween('NgayGui',[$sub365ngay,$now])->orderby('NgayGui','ASC')->get();
+          
+             $datas = Statistical::with(['loaivanban', 'group'])->whereBetween('date',[$sub365ngay,$now])->orderby('date','ASC')
+             ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
+             ->get()
+             ->map(function ($item) {
+                 return [
+                     'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
+                     'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                     'total_LVB' => $item->total_LVB,
+                     'total_Gr' => $item->total_Gr,
+                  
+                 ];
+             });
          }
  
-         foreach($get as $key => $val){
-             $chart_data[] = array(
-                 'period' => $val->NgayGui,
-                 'order' => $val->total_order,
-                 'sales' => $val->sales,
- 
-                 'profit' => $val->profit,
-                 'quantity' => $val->quantity,
-             );
-         }
-         echo $data = json_encode($chart_data);
+        
+         echo $data = json_encode($datas);
      }
   
      /**
@@ -122,19 +139,122 @@ class HomeController extends Controller
          
          $sub60days = Carbon::now('Asia/Ho_Chi_Minh')->subdays(60)->toDateString();
          $now = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
-         $get = VanBanDi::whereBetween('NgayGui',[$sub60days,$now])->orderby('NgayGui','ASC')->get();
-         foreach($get as $key => $val){
-             $chart_data[] = array(
-                 'period' => $val->NgayGui,
-                 'order' => $val->total_order,
-                 'sales' => $val->sales,
- 
-                 'profit' => $val->profit,
-                 'quantity' => $val->quantity,
-             );
-         }
-         echo $data = json_encode($chart_data);
+         // Truy vấn dữ liệu và lấy tên liên quan từ các bảng
+        $data = Statistical::with(['loaivanban', 'group'])->whereBetween('date',[$sub60days,$now])->orderby('date','ASC')
+        ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
+        ->get()
+        ->map(function ($item) {
+            return [
+                'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
+                'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                'total_LVB' => $item->total_LVB,
+                'total_Gr' => $item->total_Gr,
+             
+            ];
+        });
+       
+         echo $data = json_encode($data);
      }
+
+     //don vi ban hanh 
+      // lọc ngày tháng năm
+      public function filter_by_date_dvbh(Request $request)
+      {
+         $data = $request->all();
+         $from_date = $data['from_date'];
+         $to_date = $data['to_date'];
+         
+         $data = Statistical::with(['loaivanban', 'group'])->whereBetween('date',[$from_date,$to_date])->orderby('date','ASC')
+              ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
+              ->get()
+              ->map(function ($item) {
+                  return [
+                      'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
+                      'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                      'total_LVB' => $item->total_LVB,
+                      'total_Gr' => $item->total_Gr,
+                   
+                  ];
+              });
+         
+         echo $data = json_encode($data);
+  
+      }
+  
+      /**
+       * Store a newly created resource in storage.
+       */
+      public function dashboard_filter1(Request $request)
+      {
+          $data = $request->all();
+          $dau_thang_nay = Carbon::now('Asia/Ho_Chi_Minh')->startOfMonth()->toDateString();
+          $dau_thang_truoc = Carbon::now('Asia/Ho_Chi_Minh')->subMonth()->startOfMonth()->toDateString();
+          $cuoi_thang_truoc = Carbon::now('Asia/Ho_Chi_Minh')->subMonth()->endOfMonth()->toDateString();
+          $sub7ngay = Carbon::now('Asia/Ho_Chi_Minh')->subdays(7)->toDateString();
+          $sub365ngay = Carbon::now('Asia/Ho_Chi_Minh')->subdays(365)->toDateString();
+          $now = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
+  
+          if($data['dashboard_value']=='7ngay'){
+            
+             $datas = Statistical::with(['loaivanban', 'group'])->whereBetween('date',[$sub7ngay,$now])->orderby('date','ASC')
+              ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
+              ->get()
+              ->map(function ($item) {
+                  return [
+                      'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
+                      'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                      'total_LVB' => $item->total_LVB,
+                      'total_Gr' => $item->total_Gr,
+                   
+                  ];
+              });
+          }elseif($data['dashboard_value']=='thangtruoc'){
+              
+              $datas = Statistical::with(['loaivanban', 'group'])->whereBetween('date',[$dau_thang_truoc,$cuoi_thang_truoc])->orderby('date','ASC')
+              ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
+              ->get()
+              ->map(function ($item) {
+                  return [
+                      'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
+                      'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                      'total_LVB' => $item->total_LVB,
+                      'total_Gr' => $item->total_Gr,
+                   
+                  ];
+              });
+          }elseif($data['dashboard_value']=='thangnay'){
+              
+              $datas = Statistical::with(['loaivanban', 'group'])->whereBetween('date',[$dau_thang_nay,$now])->orderby('date','ASC')
+              ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
+              ->get()
+              ->map(function ($item) {
+                  return [
+                      'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
+                      'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                      'total_LVB' => $item->total_LVB,
+                      'total_Gr' => $item->total_Gr,
+                   
+                  ];
+              });
+          }else{
+           
+              $datas = Statistical::with(['loaivanban', 'group'])->whereBetween('date',[$sub365ngay,$now])->orderby('date','ASC')
+              ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
+              ->get()
+              ->map(function ($item) {
+                  return [
+                      'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
+                      'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                      'total_LVB' => $item->total_LVB,
+                      'total_Gr' => $item->total_Gr,
+                   
+                  ];
+              });
+          }
+  
+         
+          echo $data = json_encode($datas);
+      }
     /**
      * Show the form for creating a new resource.
      */

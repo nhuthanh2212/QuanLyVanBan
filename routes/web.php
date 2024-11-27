@@ -167,3 +167,7 @@ Route::post('filter-by-date',[HomeController::class, 'filter_by_date']);
 Route::post('days-order',[HomeController::class, 'days_order']);
 
 Route::post('dashboard-filter',[HomeController::class, 'dashboard_filter']);
+
+Route::post('dashboard-filterr',[HomeController::class, 'dashboard_filter1']);
+
+Route::post('filter-by-date-dvbh',[HomeController::class, 'filter_by_date_dvbh']);

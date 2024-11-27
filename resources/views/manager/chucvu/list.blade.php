@@ -80,7 +80,7 @@
                            </td>
                            <td>
                               <a  href="{{ route('chuc-vu.edit',[$cv->id]) }}" class="btn btn-success" ui-toggle-class="">
-                              Sữa
+                              Sửa
                               </a>
                               <form onsubmit="return confirm('Bạn Có Muốn Xóa Phòng Này Không?')" action="{{route('chuc-vu.destroy',[$cv->id])}}" method="post" enctype="multipart/form-data">
                                  @csrf

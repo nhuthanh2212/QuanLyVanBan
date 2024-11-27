@@ -80,7 +80,7 @@
                            </td>
                            <td>
                               <a  href="{{ route('khoi.edit',[$k->id]) }}" class="btn btn-success" ui-toggle-class="">
-                              Sữa
+                              Sửa
                               </a>
                               <form onsubmit="return confirm('Bạn Có Muốn Xóa Khối Này Không?')" action="{{route('khoi.destroy',[$k->id])}}" method="post" enctype="multipart/form-data">
                                  @csrf

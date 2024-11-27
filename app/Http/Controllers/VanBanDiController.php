@@ -373,7 +373,7 @@ class VanBanDiController extends Controller
             'NoiDung' => 'required',
             
             'id_LVB' => 'required',
-            'file' => 'required|mimes:doc,docx,xls,xlsx,ppt,pptx,pdf|max:5120',  // Chỉ cho phép các định dạng văn bản
+            'file' => 'required|mimes:doc,docx,xls,xlsx,ppt,pptx,pdf|max:10240',  // Chỉ cho phép các định dạng văn bản
             
         ],
         [
@@ -430,31 +430,52 @@ class VanBanDiController extends Controller
         $vanbandi->save();
 
         //thống kê
-        $thongke = Statistical::orderBy('id','DESC')->get();
-        foreach($thongke as $key => $thke){
-            if($thke->id_LVB == $data['id_LVB'] && $thke->date == Carbon::now()->toDateString() ){
-                $thke->total_LVB = $thke->total_LVB + 1;
-                $thongke->save();
-            }
-            else{
-                $baocao = new Statistical();
-                $baocao->id_LVB = $data['id_LVB'];
-                $thke->total_LVB = $thke->total_LVB + 1;
-                $baocao->date = Carbon::now()->toDateString(); 
-                $baocao->save();
-            }
-           if($thke->id_Gr == $request->id_Gr && $thke->date == Carbon::now()->toDateString() ){
-                $thke->total_Gr = $thke->total_Gr + 1;
-                $thongke->save();
-           }
-           else{
-            $baocao = new Statistical();
-            $baocao->id_Gr = $request->id_Gr;
-            $thke->total_Gr = $thke->total_Gr + 1;
-            $baocao->date = Carbon::now()->toDateString(); 
-            $baocao->save();
-           }
+        $now = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
+        $thongke = Statistical::where('date',$now)->get();
+        if($thongke){
+            $statistic_count = $thongke->count();
+        }else{
+            $statistic_count = 0;
         }
+        if($statistic_count != 0){
+       
+            foreach($thongke as $sta ){
+                if($sta->id_LVB == $data['id_LVB'] && $sta->id_Gr == $request->id_Gr){
+                    $statistic_new =  Statistical::where('date',$now)->first();
+                    $statistic_new->total_LVB = $statistic_new->total_LVB + 1;
+                    $statistic_new->total_Gr = $statistic_new->total_Gr + 1;
+                    $statistic_new->save();
+                }elseif($sta->id_Gr == $request->id_Gr){
+                    $statistic_new =  Statistical::where('date',$now)->first();
+                    $statistic_new->total_Gr = $statistic_new->total_Gr + 1;
+                    $statistic_new->save();
+                }elseif($sta->id_LVB == $data['id_LVB']){
+                    $statistic_new =  Statistical::where('date',$now)->first();
+                    $statistic_new->total_LVB = $statistic_new->total_LVB + 1;
+                    $statistic_new->save();
+                }
+                else{
+                    $statisticl = new Statistical();
+                    $statisticl->id_LVB = $data['id_LVB'];
+                    $statisticl->id_Gr = $request->id_Gr;
+                    $statisticl->total_LVB = 1;
+                    $statisticl->total_Gr = 1;
+                    $statisticl->date = $now;
+                    $statisticl->save();
+                }
+            }
+
+        }
+        else{
+            $statisticl1 = new Statistical();
+            $statisticl1->id_LVB = $data['id_LVB'];
+            $statisticl1->id_Gr = $request->id_Gr;
+            $statisticl1->total_LVB = 1;
+            $statisticl1->total_Gr = 1;
+            $statisticl1->date = $now;
+            $statisticl1->save();
+        }
+        
        // Gán nơi đến (nhiều checkbox đã chọn)
        if ($request->has('id_pb')) {
         // Gán id_DV từ request vào cột id_Den của bảng pivot

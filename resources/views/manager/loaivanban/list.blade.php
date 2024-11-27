@@ -80,7 +80,7 @@
                            </td>
                            <td>
                               <a  href="{{ route('loai-van-ban.edit',[$loai->id_LVB]) }}" class="btn btn-success" ui-toggle-class="">
-                              Sữa
+                              Sửa
                               </a>
                               <form onsubmit="return confirm('Bạn Có Muốn Xóa Loại Văn Bản Này Không?')" action="{{route('loai-van-ban.destroy',[$loai->id_LVB])}}" method="post" enctype="multipart/form-data">
                                  @csrf
