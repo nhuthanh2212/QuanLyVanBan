@@ -76,7 +76,7 @@
                         <select name="id_Gr" class="form-control input-sm m-bot15">
                            <option >------Chọn------</option>
                            @foreach($nhom as $key => $nh)
-                           <option {{ $nh->id == $tk->id_Gr ? 'selected="selected"' : '' }} value="{{$nh->id}}">{{$nh->TenGroup}}</option>
+                           <option {{ $nh->id == $tk->id_Gr ? 'selected="selected"' : '' }} value="{{$nh->id}}">{{ Str::afterLast($nh->TenGroup, '-') }}</option>
                            @endforeach
                         </select>
                      </div>

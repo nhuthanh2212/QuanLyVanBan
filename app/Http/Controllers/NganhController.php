@@ -25,7 +25,7 @@ class NganhController extends Controller
      */
     public function create()
     {
-        $phong = Phong::orderBy('id','ASC')->get();
+        $phong = Phong::where('TrangThai',1)->orderBy('id','ASC')->get();
         return view('manager.nganh.create',compact('phong'));
     }
 
@@ -53,7 +53,7 @@ class NganhController extends Controller
         $nganh->id_P = $data['id_P'];
         $nganh->TrangThai = 1;
         $nganh->save();
-        toastr()->success('Thêm Ngành Thành Công');
+        toastr()->success('Thêm Ngành Thành Công','Thành Công');
         return redirect()->route('nganh.index');
     }
 
@@ -70,7 +70,7 @@ class NganhController extends Controller
      */
     public function edit(string $id)
     {
-        $phong = Phong::orderBy('id','ASC')->get();
+        $phong = Phong::where('TrangThai',1)->orderBy('id','ASC')->get();
         $nganh = Nganh::find($id);
         return view('manager.nganh.edit',compact('nganh','phong'));
     }
@@ -99,7 +99,7 @@ class NganhController extends Controller
         $nganh->id_P = $data['id_P'];
         $nganh->TrangThai = $request->TrangThai;
         $nganh->save();
-        toastr()->success('Cập Nhật Ngành Thành Công');
+        toastr()->success('Cập Nhật Ngành Thành Công','Thành Công');
         return redirect()->route('nganh.index');
     }
 
@@ -110,7 +110,7 @@ class NganhController extends Controller
     {
         $nganh = Nganh::find($id);
         $nganh->delete();
-        toastr()->success('Xóa Ngành Thành Công');
+        toastr()->success('Xóa Ngành Thành Công','Thành Công');
         return redirect()->route('nganh.index');
     }
 }

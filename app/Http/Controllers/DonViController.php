@@ -25,7 +25,7 @@ class DonViController extends Controller
      */
     public function create()
     {
-        $phongban = PhongBan::orderBy('id','ASC')->get();
+        $phongban = PhongBan::where('TrangThai',1)->orderBy('id','ASC')->get();
         return view('manager.donvi.create', compact('phongban'));
     }
 
@@ -54,7 +54,7 @@ class DonViController extends Controller
         $donvi->id_PB = $data['id_PB'];
         $donvi->TrangThai = 1;
         $donvi->save();
-        toastr()->success('Thêm Đơn Vị Thành Công');
+        toastr()->success('Thêm Đơn Vị Thành Công','Thành Công');
         return redirect()->route('don-vi.index');
     }
 
@@ -72,7 +72,7 @@ class DonViController extends Controller
     public function edit(string $id)
     {
         $donvi = DonVi::find($id);
-        $phongban = PhongBan::orderBy('id','ASC')->get();
+        $phongban = PhongBan::where('TrangThai',1)->orderBy('id','ASC')->get();
         return view('manager.donvi.edit', compact('phongban', 'donvi'));
     }
 
@@ -100,7 +100,7 @@ class DonViController extends Controller
         $donvi->id_PB = $data['id_PB'];
         $donvi->TrangThai = $request->TrangThai;
         $donvi->save();
-        toastr()->success('Cập Nhật Đơn Vị Thành Công');
+        toastr()->success('Cập Nhật Đơn Vị Thành Công','Thành Công');
         return redirect()->route('don-vi.index');
     }
 
@@ -111,7 +111,7 @@ class DonViController extends Controller
     {
         $donvi = DonVi::find($id);
         $donvi->delete();
-        toastr()->success('Xóa Đơn Vị Thành Công');
+        toastr()->success('Xóa Đơn Vị Thành Công','Thành Công');
         return redirect()->route('don-vi.index');
     }
 }

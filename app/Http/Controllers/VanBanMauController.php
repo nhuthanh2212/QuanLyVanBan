@@ -36,7 +36,7 @@ class VanBanMauController extends Controller
         $id = Session::get('id');
         $taikhoan = TaiKhoan::where('id_TK', $id)->first();
         $nhom = Nhom::orderBy('id', 'ASC')->get();
-        $loaivanban = LoaiVanBan::orderBy('id_LVB','ASC')->get();
+        $loaivanban = LoaiVanBan::where('TrangThai',1)->orderBy('id_LVB','ASC')->get();
         $vanbanmau = VB_Mau::with('loaivanban')->with('nhom')->orderBy('id','DESC')->get();
         $id = '';
         $ten = '';
@@ -174,7 +174,7 @@ class VanBanMauController extends Controller
         $id = Session::get('id');
         $taikhoan = TaiKhoan::where('id_TK', $id)->first();
         $nhom = Nhom::orderBy('id', 'ASC')->get();
-        $loaivanban = LoaiVanBan::orderBy('id_LVB','ASC')->get();
+        $loaivanban = LoaiVanBan::where('TrangThai',1)->orderBy('id_LVB','ASC')->get();
         
         $id = '';
         $ten = '';

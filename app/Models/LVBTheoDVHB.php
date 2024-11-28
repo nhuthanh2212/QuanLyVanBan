@@ -28,4 +28,8 @@ class LVBTheoDVHB extends Model
     public function nhanchuyennganhtheolvb(){
         return $this->belongsToMany(ChuyenNganh::class, 'BH_CN', 'id_BH_LVB', 'id_CN');
     }
+    public function nhom()
+    {
+        return $this->belongsTo(Nhom::class, 'id_Gr');
+    }
 }

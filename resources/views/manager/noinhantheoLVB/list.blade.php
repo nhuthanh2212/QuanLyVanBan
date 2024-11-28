@@ -63,7 +63,7 @@
                                  @endif
                               @endforeach
                            </td>
-                           <td>{{$tengroup}}</td>
+                           <td>{{ Str::afterLast($n->nhom->TenGroup, '-') }}</td>
                            
                            <td>
                               @foreach ($bh_pb as $bhpb )

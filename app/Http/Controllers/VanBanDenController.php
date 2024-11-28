@@ -313,7 +313,7 @@ class VanBanDenController extends Controller
         }
 
         // Show success message
-        toastr()->success('Xóa Văn Bản Thành Công');
+        toastr()->success('Xóa Văn Bản Thành Công','Thành Công');
         
         return redirect()->route('van-ban-den.index');
     }

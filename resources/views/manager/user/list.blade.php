@@ -71,7 +71,7 @@
                      <h5><span class="badge badge-secondary">{{$tk->Gmail}}</span></h5>
                      <h5><span class="badge badge-secondary">{{$tk->DienThoai}}</span></h5>
                   </td>
-                  <td>{{$tengroup}}</td>
+                  <td>{{ Str::afterLast($tk->nhom->TenGroup, '-') }}</td>
                   <td>{{$tk->chucvu->TenCV}}</td>
                   <td>
                     @if($tk->GioiTinh == 1)

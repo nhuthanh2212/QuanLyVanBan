@@ -25,7 +25,7 @@ class ChuyenNganhController extends Controller
      */
     public function create()
     {
-        $nganh = Nganh::orderBy('id','ASC')->get();
+        $nganh = Nganh::where('TrangThai', 1)->orderBy('id','ASC')->get();
         return view('manager.chuyennganh.create', compact('nganh'));
     }
 
@@ -53,7 +53,7 @@ class ChuyenNganhController extends Controller
         $chuyennganh->id_N = $data['id_N'];
         $chuyennganh->TrangThai = 1;
         $chuyennganh->save();
-        toastr()->success('Thêm Chuyên Ngành Thành Công');
+        toastr()->success('Thêm Chuyên Ngành Thành Công','Thành Công');
         return redirect()->route('chuyen-nganh.index');
     }
 
@@ -71,7 +71,7 @@ class ChuyenNganhController extends Controller
     public function edit(string $id)
     {
         $chuyennganh = ChuyenNganh::find($id);
-        $nganh = Nganh::orderBy('id','ASC')->get();
+        $nganh = Nganh::where('TrangThai', 1)->orderBy('id','ASC')->get();
         return view('manager.chuyennganh.edit', compact('chuyennganh','nganh'));
     }
 
@@ -99,7 +99,7 @@ class ChuyenNganhController extends Controller
         $chuyennganh->id_N = $data['id_N'];
         $chuyennganh->TrangThai = $request->TrangThai;
         $chuyennganh->save();
-        toastr()->success('Cập Nhật Chuyên Ngành Thành Công');
+        toastr()->success('Cập Nhật Chuyên Ngành Thành Công','Thành Công');
         return redirect()->route('chuyen-nganh.index');
     }
 
@@ -110,7 +110,7 @@ class ChuyenNganhController extends Controller
     {
         $chuyennganh = ChuyenNganh::find($id);
         $chuyennganh->delete();
-        toastr()->success('Xóa Chuyên Chuyên Ngành Thành Công');
+        toastr()->success('Xóa Chuyên Chuyên Ngành Thành Công','Thành Công');
         return redirect()->route('chuyen-nganh.index');
     }
 }

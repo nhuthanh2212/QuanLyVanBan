@@ -148,9 +148,9 @@ class LoaiVanBanController extends Controller
 
     //noi nhan theo loai van ban
     public function nhan_theo_loaiVB(){
-        $loaivanban = LoaiVanBan::orderBy('id_LVB','DESC')->get();
+        $loaivanban = LoaiVanBan::where('TrangThai',1)->orderBy('id_LVB','ASC')->get();
         $nhom = Nhom::orderBy('id','DESC')->get();
-        $nhan = LVBTheoDVHB::orderBy('id','DESC')->get();
+        $nhan = LVBTheoDVHB::with('nhom')->orderBy('id','DESC')->get();
         
         $bh_pb = BH_PB::orderBy('id','ASC')->get();
         $bh_dv = BH_DV::orderBy('id','ASC')->get();
@@ -163,26 +163,12 @@ class LoaiVanBanController extends Controller
         $nganh = Nganh::orderBy('id','ASC')->get();
         $chuyennganh = ChuyenNganh::orderBy('id','ASC')->get();
 
-        $ten = '';
-        foreach($nhan as $n){
-            foreach($nhom as $nh){
-                if($n->id_Gr == $nh->id){
-                    $ten = $nh->TenGroup;
-                }
-            }
-            
-        }
-       
         
-        // Tìm vị trí của dấu '-' cuối cùng
-        $tim = strrpos($ten, '-');
-        // Lấy chuỗi sau dấu '-' cuối cùng
-        $tengroup = substr($ten, $tim + 1);
-        return view('manager.noinhantheoLVB.list' ,compact('loaivanban','nhom','nhan','tengroup','bh_pb','bh_dv','bh_p','bh_n','bh_cn','phongban','donvi','phong','nganh','chuyennganh'));
+        return view('manager.noinhantheoLVB.list' ,compact('loaivanban','nhom','nhan','bh_pb','bh_dv','bh_p','bh_n','bh_cn','phongban','donvi','phong','nganh','chuyennganh'));
     }
 
     public function createe(){
-        $loaivanban = LoaiVanBan::orderBy('id_LVB','DESC')->get();
+        $loaivanban = LoaiVanBan::where('TrangThai', 1)->orderBy('id_LVB','ASC')->get();
         $nhom = Nhom::orderBy('id','DESC')->get();
         $phongban = PhongBan::orderBy('id','ASC')->get();
         $donvi = DonVi::orderBy('id','ASC')->get();
@@ -206,13 +192,29 @@ class LoaiVanBanController extends Controller
             'id_LVB.required' => 'Loai Văn Bản Phải Có',
             
         ]);
-        $nhan = new LVBTheoDVHB();
-        $nhan->id_LVB = $data['id_LVB'];
-        $nhan->id_Gr = $data['id_Gr'];
-      
+        $nhantheolvb = LVBTheoDVHB::orderBy('id','ASC')->get();
 
+        if($request->has('id_pb') || $request->has('id_dv') || $request->has('id_p') || $request->has('id_n') || $request->has('id_cn')){
+            foreach($nhantheolvb as $nhantheo){
+                if($nhantheo->id_LVB == $data['id_LVB'] && $nhantheo->id_Gr == $data['id_Gr']){
+                    toastr()->warning('Loại Văn Bản Thuộc Đơn Vị Ban Hành Này Đã Được Tạo Nơi Nhận Rồi Vui Lòng Chọn Lại!');
+                    return redirect()->back();
+                }
+               
+            }
+            $nhan = new LVBTheoDVHB();
+            $nhan->id_LVB = $data['id_LVB'];
+            $nhan->id_Gr = $data['id_Gr'];
         
-        $nhan->save();
+
+            
+            $nhan->save();
+        }
+        else{
+            toastr()->error('Tạo Nợi Nhận Không Thành Công, Chưa Chọn Nơi Nhận. Vui Lòng Chọn Nơi Nhận!');
+            return redirect()->back();
+        }
+        
        // Gán nơi đến (nhiều checkbox đã chọn)
        if ($request->has('id_pb')) {
         // Gán id_DV từ request vào cột id_Den của bảng pivot
@@ -263,7 +265,7 @@ class LoaiVanBanController extends Controller
         $chuyennganh = ChuyenNganh::orderBy('id', 'ASC')->get();
         
         // Find the specific LVBTheoDVHB record
-        $nhan = LVBTheoDVHB::find($id);
+        $nhan = LVBTheoDVHB::with('nhom')->find($id);
         $nhanpb = BH_PB::where('id_BH_LVB',$nhan->id)->pluck('id_PB')->toArray();
         $nhandv = BH_DV::where('id_BH_LVB',$nhan->id)->pluck('id_DV')->toArray();
         $nhanp = BH_P::where('id_BH_LVB',$nhan->id)->pluck('id_P')->toArray();

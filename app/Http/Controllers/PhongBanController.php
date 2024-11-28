@@ -24,7 +24,7 @@ class PhongBanController extends Controller
      */
     public function create()
     {
-        $khoi = khoi::orderBy('id','ASC')->get();
+        $khoi = khoi::where('TrangThai',1)->orderBy('id','ASC')->get();
         return view('manager.phongban.create', compact('khoi'));
     }
 
@@ -52,7 +52,7 @@ class PhongBanController extends Controller
         $phongban->id_K = $data['id_K'];
         $phongban->TrangThai = 1;
         $phongban->save();
-        toastr()->success('Thêm Phòng Ban Thành Công');
+        toastr()->success('Thêm Phòng Ban Thành Công','Thành Công');
         return redirect()->route('phong-ban.index');
     }
 
@@ -69,7 +69,7 @@ class PhongBanController extends Controller
      */
     public function edit(string $id)
     {
-        $khoi = Khoi::orderBy('id','ASC')->get();
+        $khoi = Khoi::where('TrangThai',1)->orderBy('id','ASC')->get();
         $phongban = PhongBan::find($id);
         return view('manager.phongban.edit', compact('phongban','khoi'));
     }
@@ -98,7 +98,7 @@ class PhongBanController extends Controller
         $phongban->id_K = $data['id_K'];
         $phongban->TrangThai = $request->TrangThai;
         $phongban->save();
-        toastr()->success('Cập Nhật Phòng Ban Thành Công');
+        toastr()->success('Cập Nhật Phòng Ban Thành Công','Thành Công');
         return redirect()->route('phong-ban.index');
     }
 
@@ -109,7 +109,7 @@ class PhongBanController extends Controller
     {
         $phongban = PhongBan::find($id);
         $phongban->delete();
-        toastr()->success('Xóa Phòng Ban Thành Công');
+        toastr()->success('Xóa Phòng Ban Thành Công','Thành Công');
         return redirect()->route('phong-ban.index');
     }
 }

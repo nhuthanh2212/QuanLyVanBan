@@ -25,7 +25,7 @@ class PhongController extends Controller
      */
     public function create()
     {
-        $donvi = DonVi::orderBy('id','ASC')->get();
+        $donvi = DonVi::where('TrangThai', 1)->orderBy('id','ASC')->get();
         return view('manager.phong.create',compact('donvi'));
     }
 
@@ -53,7 +53,7 @@ class PhongController extends Controller
         $phong->id_DV = $data['id_DV'];
         $phong->TrangThai = 1;
         $phong->save();
-        toastr()->success('Thêm Phòng Thành Công');
+        toastr()->success('Thêm Phòng Thành Công','Thành Công');
         return redirect()->route('phong.index');
     }
 
@@ -71,7 +71,7 @@ class PhongController extends Controller
     public function edit(string $id)
     {
         $phong = Phong::find($id);
-        $donvi = DonVi::orderBy('id','ASC')->get();
+        $donvi = DonVi::where('TrangThai',1)->orderBy('id','ASC')->get();
         return view('manager.phong.edit',compact('donvi','phong'));
     }
 
@@ -99,7 +99,7 @@ class PhongController extends Controller
         $phong->id_DV = $data['id_DV'];
         $phong->TrangThai = $request->TrangThai;
         $phong->save();
-        toastr()->success('Cập Nhật Phòng Thành Công');
+        toastr()->success('Cập Nhật Phòng Thành Công','Thành Công');
         return redirect()->route('phong.index');
     }
 
@@ -110,7 +110,7 @@ class PhongController extends Controller
     {
         $phong = Phong::find($id);
         $phong->delete();
-        toastr()->success('Xóa Phòng Thành Công');
+        toastr()->success('Xóa Phòng Thành Công','Thành Công');
         return redirect()->route('phong.index');
     }
 }

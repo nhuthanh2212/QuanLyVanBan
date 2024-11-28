@@ -39,22 +39,9 @@ class UserController extends Controller
         // // $role->givePermissionTo($permission); quyen co vai tro gi
         // $permission->assignRole($role);
 
-        $taikhoan = TaiKhoan::with('chucvu')->orderBy('id_TK','desc')->get();
-        $nhom = Nhom::orderBy('id','desc')->get();
-        $ten = '';
-        foreach($taikhoan as $tk){
-            foreach($nhom as $nh){
-                if($tk->id_Gr == $nh->id){
-                    $ten = $nh->TenGroup;
-                }
-            }
-            
-        }
-        // Tìm vị trí của dấu '-' cuối cùng
-        $tim = strrpos($ten, '-');
-        // Lấy chuỗi sau dấu '-' cuối cùng
-        $tengroup = substr($ten, $tim + 1);
-        return view('manager.user.list',compact('taikhoan','tengroup'));
+        $taikhoan = TaiKhoan::with('chucvu')->with('nhom')->orderBy('id_TK','desc')->get();
+       
+        return view('manager.user.list',compact('taikhoan'));
     }
 
     /**
@@ -63,7 +50,7 @@ class UserController extends Controller
     public function create()
     {
         $nhom = Nhom::orderBy('id','ASC')->get();
-        $chucvu = ChucVu::orderBy('id','ASC')->get();
+        $chucvu = ChucVu::where('TrangThai', 1)->orderBy('id','ASC')->get();
         $khoi = Khoi::orderBy('id','ASC')->get();
         return view('manager.user.create',compact('chucvu','khoi','nhom'));
     }
@@ -126,7 +113,7 @@ class UserController extends Controller
             $taikhoan->img = $new_image;
         }
         $taikhoan->save();
-        toastr()->success('Thêm Người Dùng Thành Công');
+        toastr()->success('Thêm Người Dùng Thành Công','Thành Công');
         return redirect()->route('user.index');
     }
 
@@ -145,7 +132,7 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $nhom = Nhom::orderBy('id','ASC')->get();
-        $chucvu = ChucVu::orderBy('id','ASC')->get();
+        $chucvu = ChucVu::where('TrangThai',1)->orderBy('id','ASC')->get();
         $khoi = Khoi::orderBy('id','ASC')->get();
         $tk = TaiKhoan::find($id);
        
@@ -211,7 +198,7 @@ class UserController extends Controller
             $taikhoan->img = $new_image;
         }
         $taikhoan->save();
-        toastr()->success('Cập Nhật Người Dùng Thành Công');
+        toastr()->success('Cập Nhật Người Dùng Thành Công','Thành Công');
         return redirect()->route('user.index');
     }
 
@@ -246,7 +233,7 @@ class UserController extends Controller
         $taikhoan->roles()->detach();
         $taikhoan->permissions()->detach();
         $taikhoan->delete();
-        toastr()->success('Xóa Người Dùng Thành Công');
+        toastr()->success('Xóa Người Dùng Thành Công','Thành Công');
         return redirect()->route('user.index');
     }
 
@@ -271,7 +258,7 @@ class UserController extends Controller
         // dd($data);
         $user->syncRoles($data['role']);
         $role_id = $user->roles->first()->id;
-        toastr()->success('Thành Công','Thêm Vai Trò Cho User Thành Công');
+        toastr()->success('Thêm Vai Trò Cho User Thành Công','Thành Công');
         return redirect()->back();
     }
 
@@ -303,17 +290,24 @@ class UserController extends Controller
         // Sync the permissions using the permission names
         $role->syncPermissions($permissions);
 
-        toastr()->success('Thành Công', 'Thêm Quyền Cho User Thành Công');
+        toastr()->success( 'Thêm Quyền Cho User Thành Công','Thành Công');
         return redirect()->back();
     }
 
     public function insert_per(Request $request){
         $data = $request->all();
-        $permission = new Permission();
-        $permission->name = $data['permission'];
-        $permission->save();
-        toastr()->success('Thành Công','Thêm Quyền Thành Công');
-        return redirect()->back();
+        if($data['permission'] == null){
+            toastr()->error('Chưa Nhập Tên Quyền, Vui Lòng Nhập Tên Quyền.','Thất Bại');
+            return redirect()->back();
+        }
+        else{
+            $permission = new Permission();
+            $permission->name = $data['permission'];
+            $permission->save();
+            toastr()->success('Thêm Quyền Thành Công','Thành Công');
+            return redirect()->back();
+        }
+       
 
     }
 
@@ -472,7 +466,7 @@ class UserController extends Controller
     public function delete_nhom(string $id){
         $nhom = Nhom::find($id);
         $nhom->delete();
-        toastr()->success('Xóa Nhóm Thành Công');
+        toastr()->success('Xóa Nhóm Thành Công','Thành Công');
         return redirect()->back();
     }
     //cap chu ky so
@@ -480,7 +474,7 @@ class UserController extends Controller
         $taikhoan = TaiKhoan::where('id_Tk',$request->canhan)->first();
         $taikhoan->chu_ky_so = 1;
         $taikhoan->save();
-        toastr()->success('Cấp Chữ Ký Số Thành Công');
+        toastr()->success('Cấp Chữ Ký Số Thành Công','Thành Công');
         return redirect()->route('chu-ky-so.index');
     }
 

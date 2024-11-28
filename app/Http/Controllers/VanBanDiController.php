@@ -81,7 +81,7 @@ class VanBanDiController extends Controller
         // Lấy chuỗi sau dấu '-' cuối cùng
         $tengroup = substr($ten, $tim + 1);
 
-        $loaivanban = LoaiVanBan::orderBy('id_LVB','ASC')->get();
+        $loaivanban = LoaiVanBan::where('TrangThai',1)->orderBy('id_LVB','ASC')->get();
         
         $phongban = PhongBan::orderBy('id', 'ASC')->get();
         $donvi = DonVi::orderBy('id', 'ASC')->get();
@@ -384,50 +384,57 @@ class VanBanDiController extends Controller
             'file.required' => 'File Phải Có',
             'file.mimes' => 'File phải là định dạng: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf',
         ]);
-        $vanbandi = new VanBanDi();
-        $vanbandi->id_LVB = $data['id_LVB'];
-        $vanbandi->id_Gr = $request->id_Gr;
+        if($request->has('id_pb') || $request->has('id_dv') || $request->has('id_p') || $request->has('id_n') || $request->has('id_cn')){
+            $vanbandi = new VanBanDi();
+            $vanbandi->id_LVB = $data['id_LVB'];
+            $vanbandi->id_Gr = $request->id_Gr;
 
-        $vanbandi->SoHieu = $request->tt. '-'.$request->kytu. '-' .$request->namgui. '-' .$request->thuoc;
+            $vanbandi->SoHieu = $request->tt. '-'.$request->kytu. '-' .$request->namgui. '-' .$request->thuoc;
 
-        $vanbandi->NoiDung = $data['NoiDung'];
-        $vanbandi->GhiChu = $request->GhiChu;
-        $vanbandi->tt_lvb = $request->tt;
-        $vanbandi->TrangThai = $request->TrangThai;
-        $vanbandi->id_TK = $id_TK;
-        $vanbandi->NgayBH = $request->NgayBH;
-        $vanbandi->NgayGui = Carbon::now('Asia/Ho_Chi_Minh');
+            $vanbandi->NoiDung = $data['NoiDung'];
+            $vanbandi->GhiChu = $request->GhiChu;
+            $vanbandi->tt_lvb = $request->tt;
+            $vanbandi->TrangThai = $request->TrangThai;
+            $vanbandi->id_TK = $id_TK;
+            $vanbandi->NgayBH = $request->NgayBH;
+            $vanbandi->NgayGui = Carbon::now('Asia/Ho_Chi_Minh');
 
-        if ($data['file']) {
-            $get_file = $data['file'];
-            $path1 = public_path('uploads/vanbandi');
-            $path2 = public_path('uploads/vanbanden');
-            $file_name = $get_file->getClientOriginalName();
-            $file_path1 = $path1 . '/' . $file_name;
-            $file_path2 = $path2 . '/' . $file_name;
-
-            // Ensure the directories exist
-            if (!file_exists($path1)) {
-                mkdir($path1, 0777, true);
-            }
-            if (!file_exists($path2)) {
-                mkdir($path2, 0777, true);
-            }
-
-            // Check if the file exists and adjust name if necessary
-            if (file_exists($file_path1) || file_exists($file_path2)) {
-                $file_name = time() . '_' . $file_name;
+            if ($data['file']) {
+                $get_file = $data['file'];
+                $path1 = public_path('uploads/vanbandi');
+                $path2 = public_path('uploads/vanbanden');
+                $file_name = $get_file->getClientOriginalName();
                 $file_path1 = $path1 . '/' . $file_name;
-            }
+                $file_path2 = $path2 . '/' . $file_name;
 
-            // Move the file to the first directory
-            if ($get_file->move($path1, $file_name)) {
-                // Copy the file to the second directory
-                copy($file_path1, $file_path2);
-                $vanbandi->file = $file_name;
-            } 
+                // Ensure the directories exist
+                if (!file_exists($path1)) {
+                    mkdir($path1, 0777, true);
+                }
+                if (!file_exists($path2)) {
+                    mkdir($path2, 0777, true);
+                }
+
+                // Check if the file exists and adjust name if necessary
+                if (file_exists($file_path1) || file_exists($file_path2)) {
+                    $file_name = time() . '_' . $file_name;
+                    $file_path1 = $path1 . '/' . $file_name;
+                }
+
+                // Move the file to the first directory
+                if ($get_file->move($path1, $file_name)) {
+                    // Copy the file to the second directory
+                    copy($file_path1, $file_path2);
+                    $vanbandi->file = $file_name;
+                } 
+            }
+            $vanbandi->save();
         }
-        $vanbandi->save();
+        else{
+            toastr()->error('Gửi Không Thành Công, Vui Lòng Chọn Nơi Nhận','Không Thành Công');
+            return redirect()->back();
+        }
+        
 
         //thống kê
         $now = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();

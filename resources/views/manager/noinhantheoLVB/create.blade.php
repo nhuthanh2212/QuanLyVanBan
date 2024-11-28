@@ -75,7 +75,7 @@
                     <select name="id_Gr" class="form-control " aria-label="Small select example" >
                         <option value="0" selected>-----------Chọn-----------</option>
                         @foreach ($nhom as $nh )
-                           <option value="{{$nh->id}}" >{{$nh->TenGroup}}</option>
+                            <option value="{{$nh->id}}" >{{ Str::afterLast($nh->TenGroup, '-') }}</option>
                         @endforeach
                      </select>
                   </div>

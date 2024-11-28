@@ -36,4 +36,8 @@ class Nhom extends Model
     {
         return $this->hasMany(TaiKhoan::class, 'id_Gr');
     }
+    public function noinhan()
+    {
+        return $this->hasMany(LVBTheoDVHB::class, 'id_Gr');
+    }
 }

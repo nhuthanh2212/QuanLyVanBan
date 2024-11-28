@@ -60,7 +60,7 @@ class ChucVuController extends Controller
         $chucvu->MoTaCV = $data['MoTaCV'];
         $chucvu->TrangThai = 1;
         $chucvu->save();
-        toastr()->success('Thêm Chức Vụ Thành Công');
+        toastr()->success('Thêm Chức Vụ Thành Công','Thành Công');
         return redirect()->route('chuc-vu.index');
     }
 
@@ -105,7 +105,7 @@ class ChucVuController extends Controller
         $chucvu->MoTaCV = $data['MoTaCV'];
         $chucvu->TrangThai = $request->TrangThai;
         $chucvu->save();
-        toastr()->success('Cập Nhật Chức Vụ Thành Công');
+        toastr()->success('Cập Nhật Chức Vụ Thành Công','Thành Công');
         return redirect()->route('chuc-vu.index');
     }
 
@@ -117,7 +117,7 @@ class ChucVuController extends Controller
         
         $chucvu = ChucVu::find($id);
         $chucvu->delete();
-        toastr()->success('Xóa Chức Vụ Thành Công');
+        toastr()->success('Xóa Chức Vụ Thành Công','Thành Công');
         return redirect()->route('chuc-vu.index');
     }
 }

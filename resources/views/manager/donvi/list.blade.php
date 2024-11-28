@@ -77,7 +77,7 @@
                               @if($dv->TrangThai == 1)
                               <span class="text text-success">Hiển Thị </span>
                               @else
-                              <span class="text text-success">Ẩn </span>
+                              <span class="text text-danger">Ẩn </span>
                               @endif
                            </td>
                            <td>

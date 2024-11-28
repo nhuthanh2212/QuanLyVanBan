@@ -63,7 +63,7 @@ class KhoiController extends Controller
         $khoi->MoTaK = $data['MoTaK'];
         $khoi->TrangThai = 1;
         $khoi->save();
-        toastr()->success('Thêm Khối Thành Công');
+        toastr()->success('Thêm Khối Thành Công','Thành Công');
         return redirect()->route('khoi.index');
     }
 
@@ -108,7 +108,7 @@ class KhoiController extends Controller
         $khoi->MoTaK = $data['MoTaK'];
         $khoi->TrangThai = $request->TrangThai;
         $khoi->save();
-        toastr()->success('Cập Nhật Khối Thành Công');
+        toastr()->success('Cập Nhật Khối Thành Công','Thành Công');
         return redirect()->route('khoi.index');
     }
 
@@ -119,7 +119,7 @@ class KhoiController extends Controller
     {
         $khoi = Khoi::find($id);
         $khoi->delete();
-        toastr()->success('Xóa Khối Thành Công');
+        toastr()->success('Xóa Khối Thành Công','Thành Công');
         return redirect()->route('khoi.index');
     }
 }
