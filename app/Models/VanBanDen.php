@@ -9,7 +9,7 @@ class VanBanDen extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $fillable = ['NoiDung','GhiChu', 'SoHieu', 'id_LVB','NgayNhan','id_Gr','NgayBH','file','TrangThai'];
+    protected $fillable = ['NoiDung','GhiChu', 'SoHieu', 'id_LVB','NgayNhan','id_Gr','NgayBH','file','TrangThai','id_TK','hash_content','chu_ky_so'];
     protected $primaryKey = 'id';
     protected $table = 'vanbanden';
 

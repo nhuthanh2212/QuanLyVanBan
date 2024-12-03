@@ -83,12 +83,12 @@ class ChuKySoController extends Controller
          $privateKey = $keyPair->toString('PKCS1');
          $chukyso = new ChuKySo();
          $chukyso->id_TK = $request->canhan;
-   
+         $chukyso->TrangThai = 1;
          $chukyso->NgayKy =  Carbon::now('Asia/Ho_Chi_Minh');
          //khoa cong khai
          $chukyso->public_Key = $publicKey;
          $chukyso->save();
-
+        
          $taikhoan = TaiKhoan::find( $request->canhan);
          $taikhoan->chu_ky_so = 1;
          $taikhoan->save();
@@ -100,27 +100,25 @@ class ChuKySoController extends Controller
 
     public function khoa(string $id){
         $chukyso = ChuKySo::find($id);
-        $taikhoan = TaiKhoan::orderBy('id_TK','DESC')->get();
-        foreach($taikhoan as $tk){
-            if($tk->id_TK == $chukyso->id_TK){
-                $tk->TrangThai = 0;
-                $taikhoan->save();
-            }
-        }
+       
         
+        $chukyso->TrangThai = 0;
+        $chukyso->save();
+        $taikhoan = Taikhoan::find($chukyso->id_TK);
+        $taikhoan->chu_ky_so = 0;
+        $taikhoan->save();
         toastr()->success('Khóa Người Dùng Thành Công','Thành Công');
         return redirect()->route('chu-ky-so.index');
     }
 
     public function bo_khoa(string $id){
         $chukyso = ChuKySo::find($id);
-        $taikhoan = TaiKhoan::orderBy('id_TK','DESC')->get();
-        foreach($taikhoan as $tk){
-            if($tk->id_TK == $chukyso->id_TK){
-                $tk->TrangThai = 1;
-                $taikhoan->save();
-            }
-        }
+        $chukyso->TrangThai = 1;
+        $chukyso->save();
+
+        $taikhoan = Taikhoan::find($chukyso->id_TK);
+        $taikhoan->chu_ky_so = 1;
+        $taikhoan->save();
         toastr()->success('Hủy Khóa Người Dùng Thành Công','Thành Công');
         return redirect()->route('chu-ky-so.index');
     }

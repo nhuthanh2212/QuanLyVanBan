@@ -43,9 +43,11 @@ class HomeController extends Controller
              ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
              ->get()
              ->map(function ($item) {
+                $group_name = $item->group->TenGroup ?? 'Không xác định';
+                $last_part = collect(explode('-', $group_name))->last();
                  return [
                      'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
-                     'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                     'group_name' => $last_part,
                      'total_LVB' => $item->total_LVB,
                      'total_Gr' => $item->total_Gr,
                   
@@ -75,9 +77,11 @@ class HomeController extends Controller
              ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
              ->get()
              ->map(function ($item) {
+                $group_name = $item->group->TenGroup ?? 'Không xác định';
+                $last_part = collect(explode('-', $group_name))->last();
                  return [
                      'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
-                     'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                     'group_name' => $last_part,
                      'total_LVB' => $item->total_LVB,
                      'total_Gr' => $item->total_Gr,
                   
@@ -89,9 +93,11 @@ class HomeController extends Controller
              ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
              ->get()
              ->map(function ($item) {
+                $group_name = $item->group->TenGroup ?? 'Không xác định';
+                $last_part = collect(explode('-', $group_name))->last();
                  return [
                      'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
-                     'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                     'group_name' => $last_part,
                      'total_LVB' => $item->total_LVB,
                      'total_Gr' => $item->total_Gr,
                   
@@ -103,9 +109,11 @@ class HomeController extends Controller
              ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
              ->get()
              ->map(function ($item) {
+                $group_name = $item->group->TenGroup ?? 'Không xác định';
+                $last_part = collect(explode('-', $group_name))->last();
                  return [
                      'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
-                     'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                     'group_name' => $last_part,
                      'total_LVB' => $item->total_LVB,
                      'total_Gr' => $item->total_Gr,
                   
@@ -117,9 +125,11 @@ class HomeController extends Controller
              ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
              ->get()
              ->map(function ($item) {
+                $group_name = $item->group->TenGroup ?? 'Không xác định';
+                $last_part = collect(explode('-', $group_name))->last();
                  return [
                      'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
-                     'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                     'group_name' => $last_part,
                      'total_LVB' => $item->total_LVB,
                      'total_Gr' => $item->total_Gr,
                   
@@ -144,9 +154,11 @@ class HomeController extends Controller
         ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
         ->get()
         ->map(function ($item) {
+            $group_name = $item->group->TenGroup ?? 'Không xác định';
+            $last_part = collect(explode('-', $group_name))->last();
             return [
                 'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
-                'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                'group_name' => $last_part,
                 'total_LVB' => $item->total_LVB,
                 'total_Gr' => $item->total_Gr,
              
@@ -168,9 +180,11 @@ class HomeController extends Controller
               ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
               ->get()
               ->map(function ($item) {
+                $group_name = $item->group->TenGroup ?? 'Không xác định';
+                $last_part = collect(explode('-', $group_name))->last();
                   return [
                       'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
-                      'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                      'group_name' => $last_part,
                       'total_LVB' => $item->total_LVB,
                       'total_Gr' => $item->total_Gr,
                    
@@ -200,9 +214,11 @@ class HomeController extends Controller
               ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
               ->get()
               ->map(function ($item) {
+                $group_name = $item->group->TenGroup ?? 'Không xác định';
+                $last_part = collect(explode('-', $group_name))->last();
                   return [
                       'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
-                      'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                      'group_name' => $last_part,
                       'total_LVB' => $item->total_LVB,
                       'total_Gr' => $item->total_Gr,
                    
@@ -214,9 +230,11 @@ class HomeController extends Controller
               ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
               ->get()
               ->map(function ($item) {
+                $group_name = $item->group->TenGroup ?? 'Không xác định';
+                $last_part = collect(explode('-', $group_name))->last();
                   return [
                       'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
-                      'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                      'group_name' => $last_part,
                       'total_LVB' => $item->total_LVB,
                       'total_Gr' => $item->total_Gr,
                    
@@ -228,9 +246,11 @@ class HomeController extends Controller
               ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
               ->get()
               ->map(function ($item) {
+                $group_name = $item->group->TenGroup ?? 'Không xác định';
+                $last_part = collect(explode('-', $group_name))->last();
                   return [
                       'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
-                      'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                      'group_name' => $last_part,
                       'total_LVB' => $item->total_LVB,
                       'total_Gr' => $item->total_Gr,
                    
@@ -242,9 +262,11 @@ class HomeController extends Controller
               ->select('id_LVB', 'id_Gr', 'total_LVB', 'total_Gr', 'date')
               ->get()
               ->map(function ($item) {
+                $group_name = $item->group->TenGroup ?? 'Không xác định';
+                $last_part = collect(explode('-', $group_name))->last();
                   return [
                       'loaivanban_name' => $item->loaivanban->TenLVB ?? 'Không xác định',
-                      'group_name' => $item->group->TenGroup ?? 'Không xác định',
+                      'group_name' => $last_part,
                       'total_LVB' => $item->total_LVB,
                       'total_Gr' => $item->total_Gr,
                    

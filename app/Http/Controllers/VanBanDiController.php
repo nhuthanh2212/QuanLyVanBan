@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
 use PhpOffice\PhpWord\IOFactory;
 use Dompdf\Dompdf;
+use phpseclib3\Crypt\RSA;
+use Illuminate\Support\Facades\Crypt;
 use Carbon\Carbon;
 
 use App\Models\LoaiVanBan;
@@ -423,14 +425,28 @@ class VanBanDiController extends Controller
                         $file_name = time() . '_' . $file_name;
                         $file_path1 = $path1 . '/' . $file_name;
                     }
-    
+                    
                     // Move the file to the first directory
                     if ($get_file->move($path1, $file_name)) {
                         // Copy the file to the second directory
                         copy($file_path1, $file_path2);
                         $vanbandi->file = $file_name;
                     } 
+                    
+                      // Tạo hash từ file
+                    $fileContent = file_get_contents($path1 . '/' . $file_name);
+                    $fileHash = hash('sha256', $fileContent);
                 }
+                // Tạo chuỗi hash từ nội dung văn bản + hash file
+                $combinedHash = hash('sha256', $data['file'] . ($fileHash ?? ''));
+
+                // Ký số bằng khóa riêng tư RSA
+                $privateKey = Crypt::decryptString($chuKy->public_key);
+                $rsa = RSA::load($privateKey);
+                $signature = base64_encode($rsa->sign($combinedHash));
+                // Lưu chữ ký số và hash vào cơ sở dữ liệu
+                $vanbandi->chu_ky_so = $signature;
+                $vanbandi->hash_content = $combinedHash;
                 $vanbandi->save();
             }
             else{
@@ -527,11 +543,13 @@ class VanBanDiController extends Controller
         $vanbanden = new VanBanDen();
         $vanbanden->id_LVB = $data['id_LVB'];
         $vanbanden->id_Gr = $request->id_Gr;
+        $vanbanden->id_TK = $id_TK;
         $vanbanden->SoHieu = $request->tt. '-'.$request->kytu. '-' .$request->namgui. '-' .$request->thuoc;
         $vanbanden->NoiDung = $data['NoiDung'];
         $vanbanden->GhiChu = $request->GhiChu;
         $vanbanden->TrangThai = $request->TrangThai;
-       
+        $vanbanden->chu_ky_so = $signature;
+        $vanbanden->hash_content = $combinedHash;
         $vanbanden->NgayBH = $request->NgayBH;
         $vanbanden->NgayNhan = Carbon::now('Asia/Ho_Chi_Minh');
         if ($data['file']) {
