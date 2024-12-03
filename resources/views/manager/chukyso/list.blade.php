@@ -83,11 +83,11 @@
                             <span class="date" data-ngay-gui="{{$cks->NgayKy}}"> {{$cks->NgayKy}}</span>
                            </td>
                            <td>
-                              @if($cks->TrangThai == 1)
-                              <a href="{{URL::to('khoa/'.$cks->id)}}" style="color:#55e01e;"><span class="fa-solid fa-check"> </span> Đã Cấp</a>
+                              @if($cks->taikhoan->TrangThai == 1)
+                              <a href="{{URL::to('khoa/'.$cks->taikhoan->id)}}" style="color:#55e01e;"><span class="fa-solid fa-check"> </span> Đã Cấp</a>
                              
                               @else
-                              <a href="{{URL::to('bo-khoa/'.$cks->id)}}" style="color:red;"><span class="fa-solid fa-lock"> </span> Khóa</a>
+                              <a href="{{URL::to('bo-khoa/'.$cks->taikhoan->id)}}" style="color:red;"><span class="fa-solid fa-lock"> </span> Khóa</a>
                               @endif
                            </td>
                            <td>

@@ -26,4 +26,8 @@ class TaiKhoan extends Authenticatable
     {
         return $this->belongsTo(Nhom::class, 'id_Gr');
     }
+    public function chukyso()
+    {
+        return $this->hasMany(ChuKySo::class, 'id_TK');
+    }
 }

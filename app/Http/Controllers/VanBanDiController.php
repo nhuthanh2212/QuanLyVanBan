@@ -21,6 +21,7 @@ use App\Models\Nganh;
 use App\Models\ChuyenNganh;
 use App\Models\LVBTheoDVHB;
 use App\Models\TaiKhoan;
+use App\Models\ChuKySo;
 use App\Models\VanBanDen;
 use App\Models\Statistical;
 
@@ -369,70 +370,77 @@ class VanBanDiController extends Controller
     public function store(Request $request)
     {
         $id_TK = Session::get('id');
-        $data = $request->validate([
-            'NoiDung' => 'required',
-            
-            'id_LVB' => 'required',
-            'file' => 'required|mimes:doc,docx,xls,xlsx,ppt,pptx,pdf|max:10240',  // Chỉ cho phép các định dạng văn bản
-            
-        ],
-        [
-            
-            'NoiDung.required' => 'Trích Nội Dung Văn Bản Phải Có',
-           
-            'id_LVB.required' => 'Loai Văn Bản Phải Có',
-            'file.required' => 'File Phải Có',
-            'file.mimes' => 'File phải là định dạng: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf',
-        ]);
-        if($request->has('id_pb') || $request->has('id_dv') || $request->has('id_p') || $request->has('id_n') || $request->has('id_cn')){
-            $vanbandi = new VanBanDi();
-            $vanbandi->id_LVB = $data['id_LVB'];
-            $vanbandi->id_Gr = $request->id_Gr;
-
-            $vanbandi->SoHieu = $request->tt. '-'.$request->kytu. '-' .$request->namgui. '-' .$request->thuoc;
-
-            $vanbandi->NoiDung = $data['NoiDung'];
-            $vanbandi->GhiChu = $request->GhiChu;
-            $vanbandi->tt_lvb = $request->tt;
-            $vanbandi->TrangThai = $request->TrangThai;
-            $vanbandi->id_TK = $id_TK;
-            $vanbandi->NgayBH = $request->NgayBH;
-            $vanbandi->NgayGui = Carbon::now('Asia/Ho_Chi_Minh');
-
-            if ($data['file']) {
-                $get_file = $data['file'];
-                $path1 = public_path('uploads/vanbandi');
-                $path2 = public_path('uploads/vanbanden');
-                $file_name = $get_file->getClientOriginalName();
-                $file_path1 = $path1 . '/' . $file_name;
-                $file_path2 = $path2 . '/' . $file_name;
-
-                // Ensure the directories exist
-                if (!file_exists($path1)) {
-                    mkdir($path1, 0777, true);
-                }
-                if (!file_exists($path2)) {
-                    mkdir($path2, 0777, true);
-                }
-
-                // Check if the file exists and adjust name if necessary
-                if (file_exists($file_path1) || file_exists($file_path2)) {
-                    $file_name = time() . '_' . $file_name;
+        $chuKy = TaiKhoan::find($id_TK);
+        if($chuKy->TrangThai == 1){
+            $data = $request->validate([
+                'NoiDung' => 'required',
+                
+                'id_LVB' => 'required',
+                'file' => 'required|mimes:doc,docx,xls,xlsx,ppt,pptx,pdf|max:10240',  // Chỉ cho phép các định dạng văn bản
+                
+            ],
+            [
+                
+                'NoiDung.required' => 'Trích Nội Dung Văn Bản Phải Có',
+               
+                'id_LVB.required' => 'Loai Văn Bản Phải Có',
+                'file.required' => 'File Phải Có',
+                'file.mimes' => 'File phải là định dạng: .doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf',
+            ]);
+            if($request->has('id_pb') || $request->has('id_dv') || $request->has('id_p') || $request->has('id_n') || $request->has('id_cn')){
+                $vanbandi = new VanBanDi();
+                $vanbandi->id_LVB = $data['id_LVB'];
+                $vanbandi->id_Gr = $request->id_Gr;
+    
+                $vanbandi->SoHieu = $request->tt. '-'.$request->kytu. '-' .$request->namgui. '-' .$request->thuoc;
+    
+                $vanbandi->NoiDung = $data['NoiDung'];
+                $vanbandi->GhiChu = $request->GhiChu;
+                $vanbandi->tt_lvb = $request->tt;
+                $vanbandi->TrangThai = $request->TrangThai;
+                $vanbandi->id_TK = $id_TK;
+                $vanbandi->NgayBH = $request->NgayBH;
+                $vanbandi->NgayGui = Carbon::now('Asia/Ho_Chi_Minh');
+    
+                if ($data['file']) {
+                    $get_file = $data['file'];
+                    $path1 = public_path('uploads/vanbandi');
+                    $path2 = public_path('uploads/vanbanden');
+                    $file_name = $get_file->getClientOriginalName();
                     $file_path1 = $path1 . '/' . $file_name;
+                    $file_path2 = $path2 . '/' . $file_name;
+    
+                    // Ensure the directories exist
+                    if (!file_exists($path1)) {
+                        mkdir($path1, 0777, true);
+                    }
+                    if (!file_exists($path2)) {
+                        mkdir($path2, 0777, true);
+                    }
+    
+                    // Check if the file exists and adjust name if necessary
+                    if (file_exists($file_path1) || file_exists($file_path2)) {
+                        $file_name = time() . '_' . $file_name;
+                        $file_path1 = $path1 . '/' . $file_name;
+                    }
+    
+                    // Move the file to the first directory
+                    if ($get_file->move($path1, $file_name)) {
+                        // Copy the file to the second directory
+                        copy($file_path1, $file_path2);
+                        $vanbandi->file = $file_name;
+                    } 
                 }
-
-                // Move the file to the first directory
-                if ($get_file->move($path1, $file_name)) {
-                    // Copy the file to the second directory
-                    copy($file_path1, $file_path2);
-                    $vanbandi->file = $file_name;
-                } 
+                $vanbandi->save();
             }
-            $vanbandi->save();
+            else{
+                toastr()->error('Gửi Không Thành Công, Vui Lòng Chọn Nơi Nhận','Không Thành Công');
+                return redirect()->back();
+            }
         }
         else{
-            toastr()->error('Gửi Không Thành Công, Vui Lòng Chọn Nơi Nhận','Không Thành Công');
-            return redirect()->back();
+            toastr()->error('Bạn Chưa Được Cấp Chữ Ký Số','Thất Bại');
+            return redirect()->route('van-ban-di.index');
         }
         
 

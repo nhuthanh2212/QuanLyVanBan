@@ -25,7 +25,7 @@ class ChuKySoController extends Controller
     public function index()
     {
 
-        $chukyso = ChuKySo::orderBy('id','DESC')->get();
+        $chukyso = ChuKySo::with('taikhoan')->orderBy('id','DESC')->get();
         $taikhoan = TaiKhoan::with('nhom')->with('chucvu')->orderBy('id_TK','DESC')->get();
         
         return view('manager.chukyso.list', compact('chukyso','taikhoan'));
@@ -68,80 +68,60 @@ class ChuKySoController extends Controller
      */
     public function store(Request $request)
     {
-         // Tạo khóa RSA (2048 bit)
-        //  $keyPair = RSA::createKey(2048);
-         $data = $request->validate([
-            'HoTen' => 'required',
-            'DienThoai' => 'required',
-            'CCCD' => 'required',
-           
-        ],
-        [
-            
-            'HoTen.required' => 'Họ Tên Phải Có',
-            'DienThoai.required' => 'Số Điện Thoại Phải Có',
-            'CCCD.required' => 'Số CCCD Phải Có',
-           
-            
-        ]);
+        $chuky = ChuKySo::all();
+        foreach($chuky as $ck){
+            if($ck->id_TK == $request->canhan){
+                toastr()->warning('Người Dùng Này Đã Được Cấp Chữ Ký Số','Thất Bại');
+                return redirect()->route('chu-ky-so.index');
+            }
+        }
+        
+        // Tạo khóa RSA (2048 bit)
+        $keyPair = RSA::createKey(2048);
+         // Khóa công khai và khóa bí mật
+         $publicKey = $keyPair->getPublicKey()->toString('PKCS1');
+         $privateKey = $keyPair->toString('PKCS1');
+         $chukyso = new ChuKySo();
+         $chukyso->id_TK = $request->canhan;
+   
+         $chukyso->NgayKy =  Carbon::now('Asia/Ho_Chi_Minh');
+         //khoa cong khai
+         $chukyso->public_Key = $publicKey;
+         $chukyso->save();
 
-         // Concatenate Họ Tên, Số Điện Thoại, and CCCD
-        //  $combinedData = $data['HoTen'] . ' ' . $data['DienThoai'] . ' ' . $data['CCCD'];
-
-        // Generate RSA key pair using PHP's OpenSSL functions
-        $config = [
-            "private_key_bits" => 2048,
-            "private_key_type" => OPENSSL_KEYTYPE_RSA,
-        ];
-
-        // Create a new private key
-        $resource = openssl_pkey_new($config);
-        openssl_pkey_export($resource, $privateKey);
-        $publicKey = openssl_pkey_get_details($resource)['key'];
-
-        // Store the public key in the database
-        $chukyso = new ChuKySo();
-        $chukyso->id_TK = $request->input('id'); // Using CCCD as an identifier, adjust if needed
-        $chukyso->TrangThai = 1;
-        $chukyso->NgayKy = Carbon::now('Asia/Ho_Chi_Minh');
-        $chukyso->public_Key = $publicKey;
-        $chukyso->save();
-
-        // Save the private key securely to a file
-        $fileName = 'private_keys/' . $request->input('id') . '_private.key';
-        Storage::put($fileName, $privateKey);
- 
-         // Display success message
-
-        //  // Khóa công khai và khóa bí mật
-        //  $publicKey = $keyPair->getPublicKey()->toString('PKCS1');
-        //  $privateKey = $keyPair->toString('PKCS1');
-        //  $chukyso = new ChuKySo();
-        //  $chukyso->id_TK = $request->canhan;
-        //  $chukyso->TrangThai = 1;
-        //  $chukyso->NgayKy =  Carbon::now('Asia/Ho_Chi_Minh');
-        //  //khoa cong khai
-        //  $chukyso->public_Key = $publicKey;
-        //  $chukyso->save();
-        //  // Lưu khóa bí mật vào file bảo mật hoặc sử dụng mã hóa để lưu trữ
-        //  Storage::put('private_keys/'.$request->canhan.'_private.key', $privateKey);
-         toastr()->success('Cấp Chữ Ký Số Thành Công');
+         $taikhoan = TaiKhoan::find( $request->canhan);
+         $taikhoan->chu_ky_so = 1;
+         $taikhoan->save();
+         // Lưu khóa bí mật vào file bảo mật hoặc sử dụng mã hóa để lưu trữ
+         Storage::put('private_keys/'.$request->canhan.'_private.key', $privateKey);
+         toastr()->success('Cấp Chữ Ký Số Thành Công','Thành Công');
         return redirect()->route('chu-ky-so.index');
     }
 
     public function khoa(string $id){
         $chukyso = ChuKySo::find($id);
-        $chukyso->TrangThai = 0;
-        $chukyso->save();
-        toastr()->success('Khóa Người Công');
+        $taikhoan = TaiKhoan::orderBy('id_TK','DESC')->get();
+        foreach($taikhoan as $tk){
+            if($tk->id_TK == $chukyso->id_TK){
+                $tk->TrangThai = 0;
+                $taikhoan->save();
+            }
+        }
+        
+        toastr()->success('Khóa Người Dùng Thành Công','Thành Công');
         return redirect()->route('chu-ky-so.index');
     }
 
     public function bo_khoa(string $id){
         $chukyso = ChuKySo::find($id);
-        $chukyso->TrangThai = 1;
-        $chukyso->save();
-        toastr()->success('Hủy Khóa Thành Công');
+        $taikhoan = TaiKhoan::orderBy('id_TK','DESC')->get();
+        foreach($taikhoan as $tk){
+            if($tk->id_TK == $chukyso->id_TK){
+                $tk->TrangThai = 1;
+                $taikhoan->save();
+            }
+        }
+        toastr()->success('Hủy Khóa Người Dùng Thành Công','Thành Công');
         return redirect()->route('chu-ky-so.index');
     }
     /**

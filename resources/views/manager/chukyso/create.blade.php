@@ -39,7 +39,7 @@
                @endif
                <!-- /.card-header -->
                <!-- form start -->
-               <form method="post" action="{{URL::to('manager/cap-chu-ky-so')}}" enctype="multipart/form-data">
+               <form method="post" action="{{Route('chu-ky-so.store')}}" enctype="multipart/form-data">
                   @csrf
                   <div class="card-body">
                         <div class="form-group">

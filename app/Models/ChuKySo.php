@@ -9,7 +9,11 @@ class ChuKySo extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $fillable = ['id_TK', 'public_Key', 'TrangThai','NgayKy'];
+    protected $fillable = ['id_TK', 'public_Key','NgayKy'];
     protected $primaryKey = 'id';
     protected $table = 'chukyso';
+    public function taikhoan()
+    {
+        return $this->belongsTo(TaiKhoan::class, 'id_TK');
+    }
 }

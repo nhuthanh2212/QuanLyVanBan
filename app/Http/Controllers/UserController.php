@@ -145,7 +145,7 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $request->validate([
-            'HoTen' => 'required|unique:taikhoan',
+            'HoTen' => 'required:taikhoan',
             'img' => 'mimes:jpeg,png,jpg,gif|dimensions:min_width=100,min_height=100', // kiểm tra định dạng ảnh và kích thước tối thiểu
             'NamSinh' => 'required',
             'DiaChi' => 'required',
@@ -156,7 +156,7 @@ class UserController extends Controller
             'TenDN' => 'required',
             'password' => 'required',
         ], [
-            'HoTen.unique' => 'Họ Tên Người Dùng này đã có, vui lòng điền tên khác',
+          
             'HoTen.required' => 'Họ Tên Người Dùng phải có',
          
             'img.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg hoặc gif',
@@ -276,21 +276,28 @@ class UserController extends Controller
     public function insert_permission(Request $request, $id)
     {
         $data = $request->all();
-        $user = TaiKhoan::find($id);
+        if($data){
+            $user = TaiKhoan::find($id);
         
-        // Get the role ID associated with the user
-        $role_id = $user->roles->first()->id;
-        
-        // Find the role using the role ID
-        $role = Role::find($role_id);
+            // Get the role ID associated with the user
+            $role_id = $user->roles->first()->id;
+            
+            // Find the role using the role ID
+            $role = Role::find($role_id);
 
-        // Retrieve the permissions by IDs and convert them to names
-        $permissions = Permission::whereIn('id', $data['permission'])->pluck('name')->toArray();
+            // Retrieve the permissions by IDs and convert them to names
+            $permissions = Permission::whereIn('id', $data['permission'])->pluck('name')->toArray();
 
-        // Sync the permissions using the permission names
-        $role->syncPermissions($permissions);
+            // Sync the permissions using the permission names
+            $role->syncPermissions($permissions);
 
-        toastr()->success( 'Thêm Quyền Cho User Thành Công','Thành Công');
+            
+        }
+        else{
+            toastr()->warning( 'User Phải Có Quyền','Chưa Có Quyền');
+            return redirect()->back();
+        }
+        toastr()->success( 'Cập Nhật Quyền Cho User Thành Công','Thành Công');
         return redirect()->back();
     }
 
@@ -470,15 +477,15 @@ class UserController extends Controller
         return redirect()->back();
     }
     //cap chu ky so
-    public function cap_chu_ky_so(Request $request){
-        $taikhoan = TaiKhoan::where('id_Tk',$request->canhan)->first();
-        $taikhoan->chu_ky_so = 1;
-        $taikhoan->save();
-        toastr()->success('Cấp Chữ Ký Số Thành Công','Thành Công');
-        return redirect()->route('chu-ky-so.index');
-    }
+    // public function cap_chu_ky_so(Request $request){
+    //     $taikhoan = TaiKhoan::where('id_Tk',$request->canhan)->first();
+    //     $taikhoan->chu_ky_so = 1;
+    //     $taikhoan->save();
+    //     toastr()->success('Cấp Chữ Ký Số Thành Công','Thành Công');
+    //     return redirect()->route('chu-ky-so.index');
+    // }
 
-    public function chu_ky_so(){
-        return view('manager.user.chukyso');
-    }
+    // public function chu_ky_so(){
+    //     return view('manager.user.chukyso');
+    // }
 }
