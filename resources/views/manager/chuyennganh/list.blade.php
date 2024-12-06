@@ -61,7 +61,7 @@
                               @if($cn->MoTaCN != NULL)
                               @if(strlen($cn->MoTaCN)>150)
                               @php
-                              $cate_desc = substr($p->MoTaN,0,100);
+                              $cate_desc = substr($cn->MoTaN,0,100);
                               echo $cate_desc.'......'
                               @endphp
                               @else

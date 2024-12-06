@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
 
 use phpseclib3\Crypt\RSA;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\Nhom;
@@ -93,7 +94,8 @@ class ChuKySoController extends Controller
          $taikhoan->chu_ky_so = 1;
          $taikhoan->save();
          // Lưu khóa bí mật vào file bảo mật hoặc sử dụng mã hóa để lưu trữ
-         Storage::put('private_keys/'.$request->canhan.'_private.key', $privateKey);
+         $encryptedPrivateKey = Crypt::encryptString($privateKey);
+         Storage::put('private_keys/'.$request->canhan.'_private.key', $encryptedPrivateKey);
          toastr()->success('Cấp Chữ Ký Số Thành Công','Thành Công');
         return redirect()->route('chu-ky-so.index');
     }

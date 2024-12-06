@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use PhpOffice\PhpWord\IOFactory;
 use Dompdf\Dompdf;
 use phpseclib3\Crypt\RSA;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Crypt;
 use Carbon\Carbon;
 
@@ -373,12 +374,13 @@ class VanBanDiController extends Controller
     {
         $id_TK = Session::get('id');
         $chuKy = TaiKhoan::find($id_TK);
-        if($chuKy->TrangThai == 1){
+        $public_key = ChuKySo::where('id_TK',$id_TK)->first();
+        if($chuKy->chu_ky_so == 1){
             $data = $request->validate([
                 'NoiDung' => 'required',
                 
                 'id_LVB' => 'required',
-                'file' => 'required|mimes:doc,docx,xls,xlsx,ppt,pptx,pdf|max:10240',  // Chỉ cho phép các định dạng văn bản
+                'file' => 'required|mimes:doc,docx,xls,xlsx,ppt,pptx,pdf',  // Chỉ cho phép các định dạng văn bản
                 
             ],
             [
@@ -440,8 +442,11 @@ class VanBanDiController extends Controller
                 // Tạo chuỗi hash từ nội dung văn bản + hash file
                 $combinedHash = hash('sha256', $data['file'] . ($fileHash ?? ''));
 
-                // Ký số bằng khóa riêng tư RSA
-                $privateKey = Crypt::decryptString($chuKy->public_key);
+                // Lấy khóa bí mật từ file và giải mã
+                $encryptedPrivateKey = Storage::get('private_keys/'.$id_TK.'_private.key');
+                $privateKey = Crypt::decryptString($encryptedPrivateKey);
+
+                // Tải khóa bí mật vào RSA
                 $rsa = RSA::load($privateKey);
                 $signature = base64_encode($rsa->sign($combinedHash));
                 // Lưu chữ ký số và hash vào cơ sở dữ liệu

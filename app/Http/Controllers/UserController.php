@@ -154,7 +154,7 @@ class UserController extends Controller
             'id_Gr' => 'required',
             'id_CV' => 'required',
             'TenDN' => 'required',
-            'password' => 'required',
+            
         ], [
           
             'HoTen.required' => 'Họ Tên Người Dùng phải có',
@@ -171,7 +171,7 @@ class UserController extends Controller
             'id_CV.required' => 'Chức Vụ Của Người Dùng phải có',
            
             'TenDN.required' => 'Tên Đăng Nhập phải có',
-            'password.required' => 'Password phải có',
+            
         ]);
         
         $taikhoan = TaiKhoan::find($id);
@@ -184,9 +184,11 @@ class UserController extends Controller
         $taikhoan->id_Gr = $data['id_Gr'];
         $taikhoan->id_CV = $data['id_CV'];
         $taikhoan->TenDN = $data['TenDN'];
-        $taikhoan->password = md5($data['password']);
+        
         $taikhoan->GioiTinh = $request->GioiTinh;
-
+        if($request->password){
+            $taikhoan->password =  md5(string: $request->password);
+        }
         
         if($request->img){
             $get_image = $request->img;
@@ -373,7 +375,7 @@ class UserController extends Controller
     {
         $nhom = Nhom::with('khoi')->with('phongban')->with('donvi')->with('phong')->with('nganh')->with('chuyennganh')->orderBy('id','DESC')->get();
         $output = '';
-        $output .= '<div class="table-responsive"> 
+        $output .= '<div class="table-responsive"  id="myTable"> 
                     <table class="table table-bordered" >
                         <thread>
                             <tr>
