@@ -555,7 +555,42 @@ $(document).ready(function() {
     });
 
 </script>
+<!-- //mau -->
+<script>
+  
+    $(document).ready(function() {
+        $('.download-filee').on('click', function(e) {
+            e.preventDefault(); // Ngăn chặn hành vi mặc định của liên kết
 
+            const fileName = $(this).data('filename');
+
+            // Gửi yêu cầu AJAX để tải file
+            $.ajax({
+                url: '{{ route("file.downloadmau") }}',
+                type: 'GET',
+                data: { file: fileName },
+                xhrFields: {
+                    responseType: 'blob' // Đặt loại phản hồi là blob để tải file
+                },
+                success: function(blob, status, xhr) {
+                    // Tạo một đối tượng URL từ blob
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileName; // Đặt tên file cho file tải về
+                    document.body.appendChild(a);
+                    a.click(); // Tự động nhấp vào liên kết để tải file
+                    a.remove(); // Xóa liên kết sau khi tải xong
+                    window.URL.revokeObjectURL(url); // Giải phóng URL
+                },
+                error: function(xhr) {
+                    alert('Có lỗi xảy ra trong quá trình tải file: ' + xhr.responseJSON.error);
+                }
+            });
+        });
+    });
+
+</script>
 <script>
   $(document).ready(function() {
     $('#example').DataTable({

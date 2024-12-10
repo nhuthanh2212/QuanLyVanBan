@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
 use PhpOffice\PhpWord\IOFactory;
 use Dompdf\Dompdf;
+use PhpOffice\PhpWord\Settings;
 use phpseclib3\Crypt\RSA;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Crypt;
@@ -242,50 +243,40 @@ class VanBanDiController extends Controller
         $vb_n = VB_N::where('id_VB' ,$vanbandi_chitiet->id)->get();
         $vb_cn = VB_CN::where('id_VB' ,$vanbandi_chitiet->id)->get();
 
-        $filePath = 'uploads/vanbandi/' . $vanbandi_chitiet->file;
-         // Đường dẫn đến file .docx
-         $fullPath = public_path($filePath);
-    // dd($fullPath);
-    // // Kiểm tra sự tồn tại của file
-    
-    if (!file_exists($fullPath)) {
-        return response()->json(['error' => 'File does not exist.'], 404);
-    }
-    $fileExtension = pathinfo($fullPath, PATHINFO_EXTENSION);
-    $htmlOutput = '';
+        $fullPath = public_path('uploads/vanbandi/' . $vanbandi_chitiet->file);
+        // Cấu hình Dompdf làm PDF renderer
+        Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
+        Settings::setPdfRendererPath(base_path('vendor/dompdf/dompdf'));
 
-    if ($fileExtension === 'pdf') {
-        // Nếu file là PDF, chỉ cần truyền đường dẫn đến view
-        $htmlOutput = '<iframe src="' . asset($filePath) . '" style="width: 100%; height: 600px;"></iframe>';
-    } elseif ($fileExtension === 'docx') {
-        // Nếu file là DOCX, sử dụng PHPWord để đọc file
-        $phpWord = IOFactory::load($fullPath);
-        
-        // Chuyển đổi thành HTML và lưu vào biến
-        ob_start(); // Bắt đầu ghi vào buffer
-        $htmlWriter = IOFactory::createWriter($phpWord, 'HTML');
-        $htmlWriter->save('php://output'); // Ghi nội dung ra buffer
-        $htmlOutput = ob_get_clean(); // Lấy nội dung từ buffer và dọn sạch buffer
-    } else {
-        return response()->json(['error' => 'Unsupported file type.'], 400);
-    }
-    // if (!file_exists($fullPath)) {
-    //     return response()->json(['error' => 'File does not exist.'], 404);
-    // }
+        $fileExtension = pathinfo($fullPath, PATHINFO_EXTENSION);
+        $htmlOutput = '';
 
-    // // Sử dụng PHPWord để đọc file
-    // $phpWord = IOFactory::load($fullPath);
-    
-    // // Chuyển đổi thành HTML
-    // $htmlWriter = IOFactory::createWriter($phpWord, 'HTML');
-    // $htmlFilePath = public_path('uploads/vanbandi/' . pathinfo($filePath, PATHINFO_FILENAME) . '.html');
-    // $htmlWriter->save($htmlFilePath);
-    // // Chuyển đổi HTML sang PDF
-    // $dompdf = new Dompdf();
-    // $dompdf->loadHtml(file_get_contents($htmlFilePath));
-    // $dompdf->setPaper('A4', 'portrait');
-    // $dompdf->render();
+        if ($fileExtension === 'pdf') {
+            $htmlOutput = '<iframe src="' . asset('uploads/vanbandi/' . $vanbandi_chitiet->file) . '" style="width: 100%; height: 600px;"></iframe>';
+        } elseif ($fileExtension === 'docx') {
+            try {
+                $phpWord = IOFactory::load($fullPath);
+                $pdfPath = public_path('uploads/vanbandi/' . pathinfo($fullPath, PATHINFO_FILENAME) . '.pdf');
+                $pdfWriter = IOFactory::createWriter($phpWord, 'PDF');
+                $pdfWriter->save($pdfPath);
 
+                $htmlOutput = '<iframe src="' . asset('uploads/vanbandi/' . basename($pdfPath)) . '" style="width: 100%; height: 600px;"></iframe>';
+                } catch (\Exception $e) {
+                    dd('Lỗi xử lý DOCX: ' . $e->getMessage());
+                }
+            } elseif ($fileExtension === 'txt') {
+                $htmlOutput = '<pre>' . htmlspecialchars(file_get_contents($fullPath)) . '</pre>';
+            } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                $htmlOutput = '<img src="' . asset('uploads/vanbandi/' . $vanbandi_chitiet->file) . '" style="width: 100%; height: auto;">';
+            } elseif ($fileExtension === 'doc') {
+                $url = urlencode(asset('uploads/vanbandi/' . $vanbandi_chitiet->file));
+                $htmlOutput = '<iframe src="https://docs.google.com/gview?url=' . $url . '&embedded=true" style="width: 100%; height: 600px;"></iframe>';
+            } elseif ($fileExtension === 'xlsx') {
+                $url = urlencode(asset('uploads/vanbandi/' . $vanbandi_chitiet->file));
+                $htmlOutput = '<iframe src="https://docs.google.com/gview?url=' . $url . '&embedded=true" style="width: 100%; height: 600px;"></iframe>';
+            } else {
+                return response()->json(['error' => 'Unsupported file type.'], 400);
+            }
         return view('vanban.vanbandi.chitiet', compact('vanbandi_chitiet','theloai','tengroup','vb_pb','vb_dv','vb_p','vb_n','vb_cn', 'phongban', 'donvi', 'phong', 'nganh', 'chuyennganh','htmlOutput'));
     }
     public function loc()
@@ -440,7 +431,7 @@ class VanBanDiController extends Controller
                     $fileHash = hash('sha256', $fileContent);
                 }
                 // Tạo chuỗi hash từ nội dung văn bản + hash file
-                $combinedHash = hash('sha256', $data['file'] . ($fileHash ?? ''));
+                $combinedHash = $fileHash;
 
                 // Lấy khóa bí mật từ file và giải mã
                 $encryptedPrivateKey = Storage::get('private_keys/'.$id_TK.'_private.key');
@@ -451,7 +442,7 @@ class VanBanDiController extends Controller
                 $signature = base64_encode($rsa->sign($combinedHash));
                 // Lưu chữ ký số và hash vào cơ sở dữ liệu
                 $vanbandi->chu_ky_so = $signature;
-                $vanbandi->hash_content = $combinedHash;
+                $vanbandi->hash_content = $fileHash;
                 $vanbandi->save();
             }
             else{

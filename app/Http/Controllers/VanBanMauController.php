@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
 use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\Settings;
 use Dompdf\Dompdf;
 use Carbon\Carbon;
 
@@ -166,7 +167,42 @@ class VanBanMauController extends Controller
         // Lấy chuỗi sau dấu '-' cuối cùng
         $tengroup = substr($ten, $tim + 1);
         $theloai = LoaiVanBan::where('id_LVB',$vanbanmau_chitiet->id_LVB)->first();
-        return view('vanban.vanbanmau.chitiet', compact('vanbanmau_chitiet','tengroup','theloai'));
+
+        $fullPath = public_path('uploads/vanbanmau/' . $vanbanmau_chitiet->file);
+        // Cấu hình Dompdf làm PDF renderer
+        Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
+        Settings::setPdfRendererPath(base_path('vendor/dompdf/dompdf'));
+
+        $fileExtension = pathinfo($fullPath, PATHINFO_EXTENSION);
+        $htmlOutput = '';
+
+        if ($fileExtension === 'pdf') {
+            $htmlOutput = '<iframe src="' . asset('uploads/vanbanmau/' . $vanbanmau_chitiet->file) . '" style="width: 100%; height: 600px;"></iframe>';
+        } elseif ($fileExtension === 'docx') {
+            try {
+                $phpWord = IOFactory::load($fullPath);
+                $pdfPath = public_path('uploads/vanbanmau/' . pathinfo($fullPath, PATHINFO_FILENAME) . '.pdf');
+                $pdfWriter = IOFactory::createWriter($phpWord, 'PDF');
+                $pdfWriter->save($pdfPath);
+
+                $htmlOutput = '<iframe src="' . asset('uploads/vanbanmau/' . basename($pdfPath)) . '" style="width: 100%; height: 600px;"></iframe>';
+            } catch (\Exception $e) {
+                dd('Lỗi xử lý DOCX: ' . $e->getMessage());
+            }
+        } elseif ($fileExtension === 'txt') {
+            $htmlOutput = '<pre>' . htmlspecialchars(file_get_contents($fullPath)) . '</pre>';
+        } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+            $htmlOutput = '<img src="' . asset('uploads/vanbanmau/' . $vanbanmau_chitiet->file) . '" style="width: 100%; height: auto;">';
+        } elseif ($fileExtension === 'doc') {
+            $url = urlencode(asset('uploads/vanbanmau/' . $vanbanmau_chitiet->file));
+            $htmlOutput = '<iframe src="https://docs.google.com/gview?url=' . $url . '&embedded=true" style="width: 100%; height: 600px;"></iframe>';
+        } elseif ($fileExtension === 'xlsx') {
+            $url = urlencode(asset('uploads/vanbanmau/' . $vanbanmau_chitiet->file));
+            $htmlOutput = '<iframe src="https://docs.google.com/gview?url=' . $url . '&embedded=true" style="width: 100%; height: 600px;"></iframe>';
+        } else {
+            return response()->json(['error' => 'Unsupported file type.'], 400);
+        }
+        return view('vanban.vanbanmau.chitiet', compact('vanbanmau_chitiet','tengroup','theloai','htmlOutput'));
     }
     public function edit(string $id)
     {
@@ -200,7 +236,7 @@ class VanBanMauController extends Controller
             'TenVB' => 'required',
             
             'id_LVB' => 'required',
-            'file' => 'mimes:doc,docx,xls,xlsx,ppt,pptx,pdf|max:5120',  // Chỉ cho phép các định dạng văn bản
+            'file' => 'mimes:doc,docx,xls,xlsx,ppt,pptx,pdf',  // Chỉ cho phép các định dạng văn bản
             
         ],
         [
@@ -265,5 +301,16 @@ class VanBanMauController extends Controller
             }
         toastr()->success('Xóa Văn Bản Mẫu Thành Công');
         return redirect()->route('van-ban-mau.index');
+    }
+    public function downloadFilemau(Request $request){
+        // Lấy tên file từ request
+        $fileName = $request->input('file');
+
+        // Kiểm tra xem file có tồn tại không
+        if (file_exists(public_path('uploads/vanbandi/' . $fileName))) {
+            return response()->download(public_path('uploads/vanbandi/' . $fileName));
+        }
+
+        return response()->json(['error' => 'File không tồn tại.'], 404);
     }
 }

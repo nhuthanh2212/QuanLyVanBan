@@ -25,6 +25,8 @@ use App\Models\Den_DV;
 use App\Models\Den_P;
 use App\Models\Den_N;
 use App\Models\Den_CN;
+use PhpOffice\PhpWord\Settings;
+
 
 class VanBanDenController extends Controller
 {
@@ -202,12 +204,14 @@ class VanBanDenController extends Controller
 
         //xacc minh chu ky so 
         $fileContent = file_get_contents( $filePath);
-        $fileHash = hash('sha256', $fileContent);
-        $calculatedHash = hash('sha256', $vanbanden_chitiet->file . $fileHash);
+        // $fileHash = hash('sha256', $fileContent);
+        // $calculatedHash = hash('sha256', $vanbanden_chitiet->file . $fileHash);
+        $calculatedHash = hash('sha256', $fileContent); // Băm lại từ nội dung file
 
         $sender = ChuKySo::where('id_TK',$vanbanden_chitiet->id_TK)->first();
         if (!$sender || !$sender->public_Key) {
-            return response()->json(['status' => 'error', 'message' => 'Không tìm thấy khóa công khai'], 404);
+            toastr()->error('Không Có Chữ Ký Số', 'Thất Bại');
+            return redirect()->route('van-ban-den.index');
         }
         // Xác minh chữ ký
         $publicKey = $sender->public_Key;
@@ -215,56 +219,50 @@ class VanBanDenController extends Controller
         $isValid = $rsa->verify($calculatedHash, base64_decode($vanbanden_chitiet->chu_ky_so));
 
         if($isValid){
-             // Đường dẫn đến file .docx
-            $fullPath = public_path($filePath);
-            // dd($fullPath);
-            // // Kiểm tra sự tồn tại của file
-            
-            if (!file_exists($fullPath)) {
-                return response()->json(['error' => 'File does not exist.'], 404);
-            }
-            $fileExtension = pathinfo($fullPath, PATHINFO_EXTENSION);
-            $htmlOutput = '';
-    
-            if ($fileExtension === 'pdf') {
-                // Nếu file là PDF, chỉ cần truyền đường dẫn đến view
-                $htmlOutput = '<iframe src="' . asset($filePath) . '" style="width: 100%; height: 600px;"></iframe>';
-            } elseif ($fileExtension === 'docx') {
-                // Nếu file là DOCX, sử dụng PHPWord để đọc file
-                $phpWord = IOFactory::load($fullPath);
-                
-                // Chuyển đổi thành HTML và lưu vào biến
-                ob_start(); // Bắt đầu ghi vào buffer
-                $htmlWriter = IOFactory::createWriter($phpWord, 'HTML');
-                $htmlWriter->save('php://output'); // Ghi nội dung ra buffer
-                $htmlOutput = ob_get_clean(); // Lấy nội dung từ buffer và dọn sạch buffer
-            } else {
-                return response()->json(['error' => 'Unsupported file type.'], 400);
-            }
-            // if (!file_exists($fullPath)) {
-            //     return response()->json(['error' => 'File does not exist.'], 404);
-            // }
-    
-            // // Sử dụng PHPWord để đọc file
-            // $phpWord = IOFactory::load($fullPath);
-            
-            // // Chuyển đổi thành HTML
-            // $htmlWriter = IOFactory::createWriter($phpWord, 'HTML');
-            // $htmlFilePath = public_path('uploads/vanbandi/' . pathinfo($filePath, PATHINFO_FILENAME) . '.html');
-            // $htmlWriter->save($htmlFilePath);
-            // // Chuyển đổi HTML sang PDF
-            // $dompdf = new Dompdf();
-            // $dompdf->loadHtml(file_get_contents($htmlFilePath));
-            // $dompdf->setPaper('A4', 'portrait');
-            // $dompdf->render();
-    
-            return view('vanban.vanbanden.chitiet', compact('vanbanden_chitiet','theloai','tengroup', 'htmlOutput'));
+            toastr()->success('Văn Bản Đã Được Xác Minh', 'Thành Công');
             
         }
         else{
             toastr()->error('Văn Bản Đã Bị Sữa Đổi', 'Thất Bại');
             return redirect()->route('van-ban-den.index');
         }
+        $fullPath = public_path('uploads/vanbanden/' . $vanbanden_chitiet->file);
+        // Cấu hình Dompdf làm PDF renderer
+        
+        Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
+        Settings::setPdfRendererPath(base_path('vendor/dompdf/dompdf'));
+
+        $fileExtension = pathinfo($fullPath, PATHINFO_EXTENSION);
+        $htmlOutput = '';
+
+        if ($fileExtension === 'pdf') {
+            $htmlOutput = '<iframe src="' . asset('uploads/vanbanden/' . $vanbanden_chitiet->file) . '" style="width: 100%; height: 600px;"></iframe>';
+        } elseif ($fileExtension === 'docx') {
+            try {
+                $phpWord = IOFactory::load($fullPath);
+                $pdfPath = public_path('uploads/vanbanden/' . pathinfo($fullPath, PATHINFO_FILENAME) . '.pdf');
+                $pdfWriter = IOFactory::createWriter($phpWord, 'PDF');
+                $pdfWriter->save($pdfPath);
+
+                $htmlOutput = '<iframe src="' . asset('uploads/vanbanden/' . basename($pdfPath)) . '" style="width: 100%; height: 600px;"></iframe>';
+            } catch (\Exception $e) {
+                dd('Lỗi xử lý DOCX: ' . $e->getMessage());
+            }
+        } elseif ($fileExtension === 'txt') {
+            $htmlOutput = '<pre>' . htmlspecialchars(file_get_contents($fullPath)) . '</pre>';
+        } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+            $htmlOutput = '<img src="' . asset('uploads/vanbanden/' . $vanbanden_chitiet->file) . '" style="width: 100%; height: auto;">';
+        } elseif ($fileExtension === 'doc') {
+            $url = urlencode(asset('uploads/vanbanden/' . $vanbanden_chitiet->file));
+            $htmlOutput = '<iframe src="https://docs.google.com/gview?url=' . $url . '&embedded=true" style="width: 100%; height: 600px;"></iframe>';
+        } elseif ($fileExtension === 'xlsx') {
+            $url = urlencode(asset('uploads/vanbanden/' . $vanbanden_chitiet->file));
+            $htmlOutput = '<iframe src="https://docs.google.com/gview?url=' . $url . '&embedded=true" style="width: 100%; height: 600px;"></iframe>';
+        } else {
+            return response()->json(['error' => 'Unsupported file type.'], 400);
+        }
+  
+          return view('vanban.vanbanden.chitiet', compact('vanbanden_chitiet','theloai','tengroup', 'htmlOutput'));
         
     }
     /**

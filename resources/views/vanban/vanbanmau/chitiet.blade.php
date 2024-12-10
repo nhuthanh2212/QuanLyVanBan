@@ -61,8 +61,14 @@
                      <label for="exampleInputEmail1" style="margin-right: 5px;">File Đính Kèm: </label>
                      <span>{{$vanbanmau_chitiet->file}}</span>
                      <a   style="color: black; margin-left:10px; margin-right: 5px;" data-toggle="modal" data-target=".bd-example-modal-xl"> <i class="fa-regular fa-eye"></i></a>
-                    
-                     <a href="#" class="download-file" data-filename="{{$vanbanmau_chitiet->file}}"><button class="btn btn-light btn-sm" type="button"><i class="fa-solid fa-download"></i></button></a>
+                     <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                           <div class="modal-content" id="output">
+                              {!! $htmlOutput !!}
+                           </div>
+                        </div>
+                     </div>
+                     <a href="#" class="download-filee" data-filename="{{$vanbanmau_chitiet->file}}"><button class="btn btn-light btn-sm" type="button"><i class="fa-solid fa-download"></i></button></a>
                   </div>
                 
                   <!-- Collapsible section -->

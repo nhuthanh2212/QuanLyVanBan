@@ -144,7 +144,7 @@ Route::get('/loc-chi-tiet',[VanBanDiController::class, 'loc_chi_tiet']);
 //xoa van ban
 Route::post('/van-ban-di/delete', [VanBanDiController::class, 'deleteSelected'])->name('van-ban-di.delete');
 
-
+Route::get('/download-filee', [VanBanMauController::class, 'downloadFilemau'])->name('file.downloadmau');
 //loc van ban den
 
 Route::get('/loc-den',[VanBanDenController::class, 'loc']); 
