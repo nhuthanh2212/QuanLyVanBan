@@ -74,6 +74,12 @@
                         <p>Văn Bản Mẫu</p>
                      </a>
                   </li>
+                  <li class="nav-item">
+                     <a href="{{route('luu-tru.index')}}" class="nav-link">
+                     <i class="fa-solid fa-database"></i>
+                        <p>Lưu Trữ</p>
+                     </a>
+                  </li>
                </ul>
             </li>
             @role('admin')

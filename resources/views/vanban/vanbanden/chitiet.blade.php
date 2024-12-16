@@ -53,6 +53,10 @@
                         <span>{{$tengroup}}</span>
                      </div>
                      <div class="form-group">
+                        <label for="exampleInputEmail1" style="margin-right: 5px;">Người Gửi: </label>
+                        <span>{{$ten_nguoigui}}</span>
+                     </div>
+                     <div class="form-group">
                         <label for="exampleInputEmail1" style="margin-right: 5px;">Số Hiệu: </label>
                         <span>{{$vanbanden_chitiet->SoHieu}}</span>
                      </div>
@@ -96,6 +100,14 @@
                            </div>
                         </div>
                         <a href="#" class="download-file" data-filename="{{$vanbanden_chitiet->file}}"><button class="btn btn-light btn-sm" type="button"><i class="fa-solid fa-download"></i></button></a>
+                        <div>
+                           <form method="post" action="{{ route('luu-tru.store') }}" enctype="multipart/form-data">
+                              @csrf
+                              <input type="hidden" name="id_vb" value="{{$vanbanden_chitiet->id_TK}}">
+                              <input type="hidden" name="id_nguoigui" value="{{$vanbanden_chitiet->id}}">
+                              <button type="submit" class="btn btn-primary btn-sm">Lưu Trữ</button>
+                           </form>
+                        </div>
                      </div>
                      <!-- Collapsible section -->
                   </div>

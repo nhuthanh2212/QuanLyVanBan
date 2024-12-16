@@ -43,7 +43,7 @@ class AdminController extends Controller
             Session::put('name',$dangnhap->HoTen);
             Session::put('id',$dangnhap->id_TK);
             // Nếu đúng mật khẩu MD5
-            toastr()->success('Đăng Nhập Thành Công');
+            toastr()->success('Đăng Nhập Thành Công','Thành Công');
             return redirect::to('/home');
         }
         else
@@ -57,7 +57,7 @@ class AdminController extends Controller
     public function logout(){
         Session::put('name',null);
         Session::put('id',null);
-        toastr()->success('Đăng Xuất Thành Công');
+        toastr()->success('Đăng Xuất Thành Công','Thành Công');
         return redirect('login-manager');
     }
 
@@ -118,16 +118,16 @@ class AdminController extends Controller
                 $taikhoan->password = md5($data['password']);
                 $taikhoan->save();
         
-                toastr()->success('Tạo Mật Khẩu Mới Thành Công');
+                toastr()->success('Tạo Mật Khẩu Mới Thành Công','Thành Công');
                 return redirect('/login-manager');
             }
             else{
-                toastr()->error('Tài Khoản Không Tồn Tại');
+                toastr()->error('Tài Khoản Không Tồn Tại','Thất Bại ');
                 return redirect('/login-manager');
             }
         }
         else{
-            toastr()->error('Mật Khẩu Mới Và Xác Nhận Không Đúng Vui Lòng Nhập Lại');
+            toastr()->error('Mật Khẩu Mới Và Xác Nhận Không Đúng Vui Lòng Nhập Lại','Thất Bại');
             return redirect('/login-manager');
         }
     }

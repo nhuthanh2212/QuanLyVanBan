@@ -9,7 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\VanBanDiController;
 use App\Http\Controllers\VanBanDenController;
-
+use App\Http\Controllers\LuuTruController;
 use App\Http\Controllers\KhoiController;
 use App\Http\Controllers\DonViController;
 use App\Http\Controllers\PhongBanController;
@@ -59,6 +59,7 @@ Route::prefix('van-ban')->group(function () {
     Route::resource('/van-ban-den', VanBanDenController::class);
 
     Route::resource('/van-ban-mau', VanBanMauController::class);
+    Route::resource('/luu-tru', LuuTruController::class);
 
 });
 

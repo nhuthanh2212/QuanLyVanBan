@@ -183,6 +183,14 @@ class VanBanDenController extends Controller
        
         $vanbanden_chitiet = VanBanDen::where('id',$id)->first();
         
+        $taikhoan = TaiKhoan::orderBy('id_TK','ASC')->get();
+        foreach($taikhoan as $tk){
+            if($vanbanden_chitiet->id_TK == $tk->id_TK){
+                $ten_nguoigui = $tk->HoTen;
+            
+            }
+        }
+
         $nhom = Nhom::orderBy('id','ASC')->get();
         foreach($nhom as $nh){
             if($vanbanden_chitiet->id_Gr == $nh->id){
@@ -262,7 +270,7 @@ class VanBanDenController extends Controller
             return response()->json(['error' => 'Unsupported file type.'], 400);
         }
   
-          return view('vanban.vanbanden.chitiet', compact('vanbanden_chitiet','theloai','tengroup', 'htmlOutput'));
+          return view('vanban.vanbanden.chitiet', compact('vanbanden_chitiet','theloai','tengroup', 'htmlOutput','ten_nguoigui'));
         
     }
     /**
