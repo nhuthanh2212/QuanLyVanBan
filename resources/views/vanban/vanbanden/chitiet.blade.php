@@ -100,14 +100,7 @@
                            </div>
                         </div>
                         <a href="#" class="download-file" data-filename="{{$vanbanden_chitiet->file}}"><button class="btn btn-light btn-sm" type="button"><i class="fa-solid fa-download"></i></button></a>
-                        <div>
-                           <form method="post" action="{{ route('luu-tru.store') }}" enctype="multipart/form-data">
-                              @csrf
-                              <input type="hidden" name="id_vb" value="{{$vanbanden_chitiet->id_TK}}">
-                              <input type="hidden" name="id_nguoigui" value="{{$vanbanden_chitiet->id}}">
-                              <button type="submit" class="btn btn-primary btn-sm">Lưu Trữ</button>
-                           </form>
-                        </div>
+                        
                      </div>
                      <!-- Collapsible section -->
                   </div>

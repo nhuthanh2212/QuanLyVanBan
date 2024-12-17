@@ -179,7 +179,7 @@
 <script src="{{asset('backend/plugins/chart.js/Chart.min.js')}}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{asset('backend/dist/js/demo.js')}}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+
 <script src="{{asset('backend/dist/js/pages/dashboard3.js')}}"></script>
 
 <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
@@ -607,7 +607,7 @@ $(document).ready(function() {
     fetch_group();
     function fetch_group(){
       var _token = $('input[name="_token"]').val();
-      $ajax({
+      $.ajax({
         url: '{{url("/manager/list-group")}}',
         method: 'POST',
         data: {_token: _token},

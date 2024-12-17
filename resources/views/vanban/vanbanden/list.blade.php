@@ -116,6 +116,7 @@
                            <th scope="col">Số Hiệu</th>
                            <th scope="col">Nội Dung</th>
                            <th scope="col">Đơn Vị Ban Hành</th>
+                           <th scope="col">Luu Tru</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -153,6 +154,16 @@
                            </td>
                            <td>
                               {{ Str::afterLast($vb->nhom->TenGroup, '-') }}
+                           </td>
+                           <td>
+                              <div>
+                                 <form method="POST" action="{{Route('luu-tru.store') }}" enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="hidden" name="id_vb" value="{{$vb->id}}">
+                                    <input type="hidden" name="id_nguoigui" value="{{$taikhoan->id_TK}}">
+                                    <button type="submit" class="btn btn-primary btn-sm">Lưu Trữ</button>
+                                 </form>
+                              </div>
                            </td>
                         </tr>
                         @endforeach

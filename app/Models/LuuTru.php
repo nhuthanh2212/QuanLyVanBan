@@ -10,6 +10,6 @@ class LuuTru extends Model
     use HasFactory;
     public $timestamps = false;
     protected $fillable = ['id_TK', 'id_VB'];
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'id_luu';
     protected $table = 'luu_tru';
 }

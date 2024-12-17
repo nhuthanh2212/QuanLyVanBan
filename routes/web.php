@@ -172,3 +172,6 @@ Route::post('dashboard-filter',[HomeController::class, 'dashboard_filter']);
 Route::post('dashboard-filterr',[HomeController::class, 'dashboard_filter1']);
 
 Route::post('filter-by-date-dvbh',[HomeController::class, 'filter_by_date_dvbh']);
+
+Route::get('/mo-file/{id}', [LuuTruController::class, 'mofile']);
+Route::post('/save-file/{id}', [LuuTruController::class, 'savefile']);

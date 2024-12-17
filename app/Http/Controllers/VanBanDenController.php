@@ -92,7 +92,7 @@ class VanBanDenController extends Controller
             $vb->isNew = $ngayNhan->greaterThanOrEqualTo(Carbon::now()->subDays(3));
                 }
 
-        return view('vanban.vanbanden.list',compact('theloai','vanbanden','nhom'));
+        return view('vanban.vanbanden.list',compact('theloai','vanbanden','nhom','taikhoan'));
     }
 
 
