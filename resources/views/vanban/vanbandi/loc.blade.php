@@ -26,7 +26,7 @@
    <div class="container-fluid">
       <div class="row">
          <div class="col-12">
-            <div class="card-body p-0">
+            <div class="card card-primary">
                <div class="row">
                   <div class="mailbox-controls ">
                      <!-- Check all button -->
@@ -122,10 +122,9 @@
                         <tr>
                            <th scope="col" >
                            </th>
-                           <th scope="col">Người Gửi </th>
+                           <th scope="col">Số Hiệu</th>
                            <th scope="col">Nội Dung</th>
-                           <th scope="col">Nơi Nhận</th>
-                           <th scope="col"></th>
+                           <th scope="col">Đơn Vị Ban Hành</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -133,12 +132,12 @@
                         <tr>
                            <td></td>
                            <td></td>
-                           <td colspan="5">
+                           <td colspan="4">
                               @if($vanbandi->isEmpty())
                               <p style="color: red; font-weight: bold;">Văn Bản Lọc Không Có Vui Lòng Nhập(Chọn) Lại Để Tìm Được Văn Bản Mong Muốn</p>
                               @endif
                            </td>
-                           <td></td>
+                           
                            <td></td>
                         </tr>
                         <!-- This will be displayed if the collection is empty -->
@@ -151,7 +150,9 @@
                                  <label for="check{{$key}}"></label>
                               </div>
                            </td>
-                           <td>{{$vb->taikhoan->HoTen}}</td>
+                           <td>
+                              {{ $vb->SoHieu }}
+                           </td>
                            <td>
                               <a href="{{URL::to('/chi-tiet', $vb->id)}}" id="vb{{$key}}" style="color: black">
                               {{$vb->NoiDung}} <span class="date" data-ngay-gui="{{$vb->NgayGui}}"> {{$vb->NgayGui}}</span>
@@ -161,10 +162,9 @@
                               @endif
                            </td>
                            <td>
-                              <!-- Bạn có thể thêm dữ liệu ở đây -->
+                              {{ Str::afterLast($vb->nhom->TenGroup, '-') }}
                            </td>
-                           <td>
-                           </td>
+                           
                         </tr>
                         @endforeach
                         @endif

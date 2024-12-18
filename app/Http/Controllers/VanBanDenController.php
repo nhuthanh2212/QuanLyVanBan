@@ -38,7 +38,7 @@ class VanBanDenController extends Controller
         $id_TK = Session::get('id');
         $taikhoan = TaiKhoan::where('id_TK',$id_TK)->first();
         $query = VanBanDen::query();
-
+        
         $nhom = Nhom::orderBy('id', 'ASC')->get();
         $theloai = LoaiVanBan::orderBy('id_LVB','ASC')->get();
 
@@ -47,15 +47,6 @@ class VanBanDenController extends Controller
         $donvi = Den_DV::orderBy('id', 'ASC')->get();
         $phong = Den_P::orderBy('id', 'ASC')->get();
         $nganh = Den_N::orderBy('id', 'ASC')->get();
-
-        // $vanbanden = VanBanDen::with('nhom')->orderBy('id','DESC')->get();
-        // foreach ($vanbanden as $vb) {
-        //     // Chuyển đổi ngày gửi từ cơ sở dữ liệu sang Carbon
-        //     $ngayNhan = Carbon::parse($vb->NgayNhan);
-
-        //     // Kiểm tra nếu ngày gửi trong vòng 3 ngày
-        //     $vb->isNew = $ngayNhan->greaterThanOrEqualTo(Carbon::now()->subDays(3));
-        //         }
 
         foreach ($nhom as $key => $nh) {
             if ($nh->id == $taikhoan->id_Gr) {
@@ -98,6 +89,18 @@ class VanBanDenController extends Controller
 
     public function loc()
     {
+        $id_TK = Session::get('id');
+        $taikhoan = TaiKhoan::where('id_TK',$id_TK)->first();
+        $nhom = Nhom::orderBy('id', 'ASC')->get();
+        $theloai = LoaiVanBan::orderBy('id_LVB','ASC')->get();
+
+        $chuyennganh = Den_CN::orderBy('id', 'ASC')->get();
+        $phongban = Den_PB::orderBy('id', 'ASC')->get();
+        $donvi = Den_DV::orderBy('id', 'ASC')->get();
+        $phong = Den_P::orderBy('id', 'ASC')->get();
+        $nganh = Den_N::orderBy('id', 'ASC')->get();
+
+
         $loaivanban = $_GET['loaivanban'];
         $SoHieu = $_GET['SoHieu'];
         // If no filter is selected
@@ -108,7 +111,32 @@ class VanBanDenController extends Controller
 
         // Filter data based on input
         $query = VanBanDen::query();
-        
+        foreach ($nhom as $key => $nh) {
+            if ($nh->id == $taikhoan->id_Gr) {
+                // Kiểm tra các điều kiện và xây dựng truy vấn dựa trên từng trường phòng ban
+                if ($nh->id_CN != null) {
+                    $query->whereHas('denchuyennganh', function ($q) use ($nh) {
+                        $q->where('id_CN', $nh->id_CN);
+                    });
+                } elseif ($nh->id_N != null) {
+                    $query->whereHas('dennganh', function ($q) use ($nh) {
+                        $q->where('id_N', $nh->id_N);
+                    });
+                } elseif ($nh->id_P != null) {
+                    $query->whereHas('denphong', function ($q) use ($nh) {
+                        $q->where('id_P', $nh->id_P);
+                    });
+                } elseif ($nh->id_DV != null) {
+                    $query->whereHas('dendonvi', function ($q) use ($nh) {
+                        $q->where('id_DV', $nh->id_DV);
+                    });
+                } elseif ($nh->id_PB != null) {
+                    $query->whereHas('denphongban', function ($q) use ($nh) {
+                        $q->where('id_PB', $nh->id_PB);
+                    });
+                }
+            }
+        }
         if (!empty($loaivanban)) {
             $query->where('id_LVB', $loaivanban);
         }
@@ -128,16 +156,54 @@ class VanBanDenController extends Controller
             $vb->isNew = $ngayNhan->greaterThanOrEqualTo(Carbon::now()->subDays(3));
                 }
         // Return the same view with the filtered data
-        return view('vanban.vanbanden.list', compact('vanbanden', 'theloai','nhom'));
+        return view('vanban.vanbanden.list', compact('vanbanden', 'theloai','nhom','taikhoan'));
     }
 
     public function loc_chi_tiet(){
-        $theloai = LoaiVanBan::orderBy('id_LVB', 'ASC')->get();
+        $id_TK = Session::get('id');
+        $taikhoan = TaiKhoan::where('id_TK',$id_TK)->first();
         $nhom = Nhom::orderBy('id', 'ASC')->get();
+        $theloai = LoaiVanBan::orderBy('id_LVB','ASC')->get();
+
+        $chuyennganh = Den_CN::orderBy('id', 'ASC')->get();
+        $phongban = Den_PB::orderBy('id', 'ASC')->get();
+        $donvi = Den_DV::orderBy('id', 'ASC')->get();
+        $phong = Den_P::orderBy('id', 'ASC')->get();
+        $nganh = Den_N::orderBy('id', 'ASC')->get();
+
+      
         $loaivanban = $_GET['loaivanban'];
         $donvi = $_GET['donvibanhanh'];
         $tungay = $_GET['tungay'];
         $denngay = $_GET['denngay'];
+
+        $query = VanBanDen::query();
+        foreach ($nhom as $key => $nh) {
+            if ($nh->id == $taikhoan->id_Gr) {
+                // Kiểm tra các điều kiện và xây dựng truy vấn dựa trên từng trường phòng ban
+                if ($nh->id_CN != null) {
+                    $query->whereHas('denchuyennganh', function ($q) use ($nh) {
+                        $q->where('id_CN', $nh->id_CN);
+                    });
+                } elseif ($nh->id_N != null) {
+                    $query->whereHas('dennganh', function ($q) use ($nh) {
+                        $q->where('id_N', $nh->id_N);
+                    });
+                } elseif ($nh->id_P != null) {
+                    $query->whereHas('denphong', function ($q) use ($nh) {
+                        $q->where('id_P', $nh->id_P);
+                    });
+                } elseif ($nh->id_DV != null) {
+                    $query->whereHas('dendonvi', function ($q) use ($nh) {
+                        $q->where('id_DV', $nh->id_DV);
+                    });
+                } elseif ($nh->id_PB != null) {
+                    $query->whereHas('denphongban', function ($q) use ($nh) {
+                        $q->where('id_PB', $nh->id_PB);
+                    });
+                }
+            }
+        }
         if(empty($loaivanban) ){
             toastr()->warning('Vui Lòng Chọn Loại Văn Bản', 'Thiếu Dữ Liệu Lọc');
             return redirect()->route('van-ban-den.index');
@@ -167,7 +233,7 @@ class VanBanDenController extends Controller
             toastr()->warning('Vui Lòng Nhập Đầy Đủ Dữ Liệu Muốn Lọc', 'Thiếu Dữ Liệu Lọc');
             return redirect()->route('van-ban-den.index');
         }
-        $vanbanden = VanBanDen::whereBetween('NgayNhan',[$tungay,$denngay])->where('id_LVB',$loaivanban)->where('id_Gr',$donvi)->orderBy('id','DESC')->get();
+        $vanbanden = $query->whereBetween('NgayNhan',[$tungay,$denngay])->where('id_LVB',$loaivanban)->where('id_Gr',$donvi)->orderBy('id','DESC')->get();
         foreach ($vanbanden as $vb) {
             // Chuyển đổi ngày gửi từ cơ sở dữ liệu sang Carbon
             $ngayNhan = Carbon::parse($vb->NgayNhan);
@@ -175,12 +241,12 @@ class VanBanDenController extends Controller
             // Kiểm tra nếu ngày gửi trong vòng 3 ngày
             $vb->isNew = $ngayNhan->greaterThanOrEqualTo(Carbon::now()->subDays(3));
                 }
-        return view('vanban.vanbanden.loc', compact('vanbanden','theloai','nhom'));
+        return view('vanban.vanbanden.loc', compact('vanbanden','theloai','nhom','taikhoan'));
     }
 
 
     public function chitiet(string $id){
-       
+        set_time_limit(120); 
         $vanbanden_chitiet = VanBanDen::where('id',$id)->first();
         
         $taikhoan = TaiKhoan::orderBy('id_TK','ASC')->get();

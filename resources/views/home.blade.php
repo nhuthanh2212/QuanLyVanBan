@@ -26,14 +26,14 @@
    <div class="container-fluid">
       <div class="row">
          <div class="col-12">
-                  <div class="card-body p-0">
+         <div class="card card-primary">
                     <div class="row">
                       <div class="form-group col-md-12" style="margin: 5px 0px 0px 20px;">
                           <form autocomplete="off" class="d-flex align-items-center">
                           @csrf
                               <p class="mb-0 me-4">Từ Ngày: <input type="text" name="" id="datepicker" class="form-control" style="width: auto;     margin-right: 50px;"></p>
                               <p class="mb-0 me-4">Đến Ngày: <input type="text" id="datepicker1" name="" class="form-control" style="width: auto;     margin-right: 50px;"></p>
-                              <input type="submit" value="Thống Kê" class="btn btn-success btn-sm me-3" id="thong_ke" style="margin-right: 50px;">
+                              <input type="button" value="Thống Kê" class="btn btn-success btn-sm me-3" id="thong_ke" style="margin-right: 50px;">
                               <p class="mb-4">Lọc Theo: 
                                   <select class="dashboard-filter form-control">
                                       <option>------Chọn-----</option>
@@ -71,7 +71,8 @@
    <div class="container-fluid">
       <div class="row">
          <div class="col-12">
-                  <div class="card-body p-0">
+         <div class="card card-primary">
+                  
                     <div class="row">
                       <div class="form-group col-md-12" style="margin: 5px 0px 0px 20px;">
                           <form autocomplete="off" class="d-flex align-items-center">
@@ -96,7 +97,7 @@
           </div>
         </div>
        
-      </div>
-     
+      
+     </div>
     </section>
 @endsection

@@ -917,7 +917,8 @@ function handleError(err) {
 
     		});
 
-    		$('#thong_ke').click(function(){
+    		$('#thong_ke').click(function(e){
+          e.preventDefault(); // Ngăn form tự submit
     			var _token = $('input[name="_token"]').val();
     			var from_date = $('#datepicker').val();
     			var to_date = $('#datepicker1').val();
@@ -925,7 +926,7 @@ function handleError(err) {
     				url: "{{url('/filter-by-date')}}",
     				method:"POST",
     				dataType:"JSON",
-    				data:{from_date:from_date, to_date:to_date, to_date:to_date, _token:_token },
+    				data:{from_date:from_date, to_date:to_date,  _token:_token },
     				success:function(data){
     					chart.setData(data);
     				}
@@ -980,7 +981,8 @@ function handleError(err) {
 
     		});
 
-    		$('#thong_ke_dvbh').click(function(){
+    		$('#thong_ke_dvbh').click(function(e){
+          e.preventDefault(); // Ngăn form tự submit
     			var _token = $('input[name="_token"]').val();
     			var from_date = $('#datepicker2').val();
     			var to_date = $('#datepicker3').val();
@@ -988,7 +990,7 @@ function handleError(err) {
     				url: "{{url('/filter-by-date-dvbh')}}",
     				method:"POST",
     				dataType:"JSON",
-    				data:{from_date:from_date, to_date:to_date, to_date:to_date, _token:_token },
+    				data:{from_date:from_date, to_date:to_date,_token:_token },
     				success:function(data){
     					chart.setData(data);
     				}

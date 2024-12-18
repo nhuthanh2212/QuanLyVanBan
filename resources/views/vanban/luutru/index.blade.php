@@ -27,7 +27,7 @@
          <div class="container-fluid">
             <div class="row">
                <div class="col-12">
-                  <div class="card-body p-0">
+                  <div class="card card-primary">
                     
                      <div class=" mailbox-messages table table-reponsive">
                         <table class="table table-hover table-striped" id="myTable" >
@@ -35,7 +35,7 @@
                               <tr >
                                  <th scope="col" >STT
                                  </th>
-                               
+                                 <th scope="col">Số Hiệu</th>
                                  <th scope="col">Tên Văn Bản</th>
                                  <th scope="col">file</th>
                                
@@ -46,13 +46,31 @@
                            </thead>
                            <tbody>
                              
-                             
+                              @if($vanBan->isEmpty())
+                              <tr>
+                                 <td></td>
+                                 <td></td>
+                                 <td colspan="5">
+                                    @if($vanBan->isEmpty())
+                                    <p style="color: red; font-weight: bold;">Không Có Văn Bản Lưu Trữ</p>
+                                    @endif
+                                 </td>
+                                 <td></td>
+                                 <td></td>
+                              </tr>
+                              <!-- This will be displayed if the collection is empty -->
+                              @else
                                  @foreach($vanBan as $key => $vb)
                                  <tr id="scrollspyHeading{{$key}}" data-id="{{ $vb->id }}">
                                     <td>
                                        {{ $key }}
                                     </td>
-                                   
+                                    <td>
+                                       <span>
+                                       {{$vb->SoHieu}} 
+                                       </span>
+                                      
+                                    </td>
                                     <td>
                                        <span>
                                        {{$vb->NoiDung}} 
@@ -76,7 +94,7 @@
                                    
                                  </tr>
                                  @endforeach
-                            
+                            @endif
                            </tbody>
                         </table>
                         <!-- /.table -->

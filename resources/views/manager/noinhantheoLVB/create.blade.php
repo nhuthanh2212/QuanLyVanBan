@@ -149,7 +149,7 @@
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Gửi</button>
+                  <button type="submit" class="btn btn-primary">Thêm</button>
                   <a href="{{URL::to('manager/noi-nhan-loai-van-ban')}}"><button type="button" class="btn btn-light">Quay Lại </button></a>
                 </div>
               </form>

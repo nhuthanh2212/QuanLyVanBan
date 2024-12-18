@@ -27,7 +27,7 @@
          <div class="container-fluid">
             <div class="row">
                <div class="col-12">
-                  <div class="card-body p-0">
+                  <div class="card card-primary">
                      <div class="row">
                         <div class="mailbox-controls ">
                            <!-- Check all button -->

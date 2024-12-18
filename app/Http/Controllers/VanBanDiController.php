@@ -51,9 +51,14 @@ class VanBanDiController extends Controller
      */
     public function index()
     {
+        $id_TK = Session::get('id'); // Lấy id của tài khoản hiện tại
         $nhom = Nhom::orderBy('id', 'ASC')->get();
         $theloai = LoaiVanBan::orderBy('id_LVB','ASC')->get();
-        $vanbandi = VanBanDi::with('taikhoan')->with('nhom')->orderBy('id','DESC')->get();
+        // Lọc văn bản theo tài khoản hiện tại
+        $vanbandi = VanBanDi::with('taikhoan', 'nhom') // Liên kết với bảng 'taikhoan' và 'nhom'
+        ->where('id_TK', $id_TK) // Lọc văn bản gửi từ tài khoản hiện tại
+        ->orderBy('id', 'DESC')
+        ->get();
         foreach ($vanbandi as $vb) {
             // Chuyển đổi ngày gửi từ cơ sở dữ liệu sang Carbon
             $ngayGui = Carbon::parse($vb->NgayGui);
@@ -71,6 +76,17 @@ class VanBanDiController extends Controller
     {
         $id = Session::get('id');
         $taikhoan = TaiKhoan::where('id_TK', $id)->first();
+        $chukyso = ChuKySo::where('id_TK', $taikhoan->id_TK)->first(); // Lấy chữ ký số mới nhất cho tài khoản
+
+        if (!$chukyso) {  // Nếu không có chữ ký số
+            toastr()->error('Tài Khoản Bạn Chưa Được Cấp Chữ Ký Số', 'Thất Bại');
+            return redirect()->route('van-ban-di.index');
+        }
+
+        if ($chukyso->TrangThai == 0) {  // Nếu chữ ký số bị khóa
+            toastr()->error('Tài Khoản Bạn Đã Bị Khóa', 'Thất Bại');
+            return redirect()->route('van-ban-di.index');
+        }
         $group = Nhom::orderBy('id','ASC')->get();
        
         $ten = '';
@@ -217,7 +233,7 @@ class VanBanDiController extends Controller
      * Store a newly created resource in storage.
      */
     public function chitiet(string $id){
-       
+        set_time_limit(120); 
         $phongban = PhongBan::orderBy('id', 'ASC')->get();
         $donvi = DonVi::orderBy('id', 'ASC')->get();
         $phong = Phong::orderBy('id', 'ASC')->get();
@@ -281,6 +297,7 @@ class VanBanDiController extends Controller
     }
     public function loc()
     {
+        $id_TK = Session::get('id');
         $loaivanban = $_GET['loaivanban'];
         $SoHieu = $_GET['SoHieu'];
         // If no filter is selected
@@ -300,7 +317,7 @@ class VanBanDiController extends Controller
             $query->where('SoHieu', $SoHieu);
         }
 
-        $vanbandi = $query->orderBy('id', 'DESC')->get();
+        $vanbandi = $query->where('id_TK', $id_TK)->orderBy('id', 'DESC')->get();
         $theloai = LoaiVanBan::orderBy('id_LVB', 'ASC')->get();
         $nhom = Nhom::orderBy('id', 'ASC')->get();
         foreach ($vanbandi as $vb) {
@@ -311,10 +328,11 @@ class VanBanDiController extends Controller
             $vb->isNew = $ngayGui->greaterThanOrEqualTo(Carbon::now()->subDays(3));
                 }
         // Return the same view with the filtered data
-        return view('vanban.vanbandi.list', compact('vanbandi', 'theloai','nhom'));
+        return view('vanban.vanbandi.loc', compact('vanbandi', 'theloai','nhom'));
     }
 
     public function loc_chi_tiet(){
+        $id_TK = Session::get('id');
         $theloai = LoaiVanBan::orderBy('id_LVB', 'ASC')->get();
         $nhom = Nhom::orderBy('id', 'ASC')->get();
         $loaivanban = $_GET['loaivanban'];
@@ -350,7 +368,7 @@ class VanBanDiController extends Controller
             toastr()->warning('Vui Lòng Nhập Đầy Đủ Dữ Liệu Muốn Lọc', 'Thiếu Dữ Liệu Lọc');
             return redirect()->route('van-ban-di.index');
         }
-        $vanbandi = VanBanDi::whereBetween('NgayGui',[$tungay,$denngay])->where('id_LVB',$loaivanban)->where('id_Gr',$donvi)->orderBy('id','DESC')->get();
+        $vanbandi = VanBanDi::whereBetween('NgayGui',[$tungay,$denngay])->where('id_LVB',$loaivanban)->where('id_Gr',$donvi)->where('id_TK', $id_TK)->orderBy('id','DESC')->get();
         foreach ($vanbandi as $vb) {
             // Chuyển đổi ngày gửi từ cơ sở dữ liệu sang Carbon
             $ngayGui = Carbon::parse($vb->NgayGui);
@@ -364,9 +382,7 @@ class VanBanDiController extends Controller
     public function store(Request $request)
     {
         $id_TK = Session::get('id');
-        $chuKy = TaiKhoan::find($id_TK);
-        $public_key = ChuKySo::where('id_TK',$id_TK)->first();
-        if($chuKy->chu_ky_so == 1){
+       
             $data = $request->validate([
                 'NoiDung' => 'required',
                 
@@ -449,11 +465,7 @@ class VanBanDiController extends Controller
                 toastr()->error('Gửi Không Thành Công, Vui Lòng Chọn Nơi Nhận','Không Thành Công');
                 return redirect()->back();
             }
-        }
-        else{
-            toastr()->error('Bạn Chưa Được Cấp Chữ Ký Số','Thất Bại');
-            return redirect()->route('van-ban-di.index');
-        }
+        
         
 
         //thống kê
@@ -589,7 +601,7 @@ class VanBanDiController extends Controller
             }
         }
 
-        toastr()->success('Gửi Văn Bản Thành Công');
+        toastr()->success('Gửi Văn Bản Thành Công','Thành Công');
         return redirect()->route('van-ban-di.index');
 
     }
@@ -658,7 +670,7 @@ class VanBanDiController extends Controller
         }
 
         // Show success message
-        toastr()->success('Xóa Văn Bản Thành Công');
+        toastr()->success('Xóa Văn Bản Thành Công','Thành Công');
         
         return redirect()->route('van-ban-di.index');
     }

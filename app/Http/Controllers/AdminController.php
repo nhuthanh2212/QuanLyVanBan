@@ -44,7 +44,15 @@ class AdminController extends Controller
             Session::put('id',$dangnhap->id_TK);
             // Nếu đúng mật khẩu MD5
             toastr()->success('Đăng Nhập Thành Công','Thành Công');
-            return redirect::to('/home');
+            // Kiểm tra vai trò và điều hướng
+            if ($dangnhap->hasRole('user')) {
+                return redirect()->route('van-ban-den.index'); // Trang văn bản đến cho user
+            } elseif ($dangnhap->hasRole('admin') || $dangnhap->hasRole('manager')) {
+                return redirect()->to('/home'); // Trang home cho admin/manager
+            } else {
+                // Nếu không xác định được vai trò, chuyển đến trang mặc định
+                return redirect()->to('/login-manager');
+            }
         }
         else
         {

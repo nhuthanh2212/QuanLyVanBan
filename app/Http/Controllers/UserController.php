@@ -113,6 +113,8 @@ class UserController extends Controller
             $taikhoan->img = $new_image;
         }
         $taikhoan->save();
+         // Gán vai trò cho tài khoản
+        $taikhoan->assignRole('user'); // 'user' là tên vai trò đã tạo
         toastr()->success('Thêm Người Dùng Thành Công','Thành Công');
         return redirect()->route('user.index');
     }

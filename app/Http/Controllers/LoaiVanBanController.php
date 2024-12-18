@@ -197,7 +197,7 @@ class LoaiVanBanController extends Controller
         if($request->has('id_pb') || $request->has('id_dv') || $request->has('id_p') || $request->has('id_n') || $request->has('id_cn')){
             foreach($nhantheolvb as $nhantheo){
                 if($nhantheo->id_LVB == $data['id_LVB'] && $nhantheo->id_Gr == $data['id_Gr']){
-                    toastr()->warning('Loại Văn Bản Thuộc Đơn Vị Ban Hành Này Đã Được Tạo Nơi Nhận Rồi Vui Lòng Chọn Lại!');
+                    toastr()->warning('Loại Văn Bản Thuộc Đơn Vị Ban Hành Này Đã Được Tạo Nơi Nhận Rồi Vui Lòng Chọn Lại!','Thất Bại');
                     return redirect()->back();
                 }
                
@@ -211,7 +211,7 @@ class LoaiVanBanController extends Controller
             $nhan->save();
         }
         else{
-            toastr()->error('Tạo Nợi Nhận Không Thành Công, Chưa Chọn Nơi Nhận. Vui Lòng Chọn Nơi Nhận!');
+            toastr()->error('Tạo Nợi Nhận Không Thành Công, Chưa Chọn Nơi Nhận. Vui Lòng Chọn Nơi Nhận!','Thất Bại');
             return redirect()->back();
         }
         
@@ -246,7 +246,7 @@ class LoaiVanBanController extends Controller
                 $nhan->nhanchuyennganhtheolvb()->attach($id_cn); // Cột đúng là id_Den trong bảng noiden
             }
         }
-        toastr()->success('Tạo Nơi Nhận Của Loại Văn Bản Theo Nơi Ban Hành Thành Công');
+        toastr()->success('Tạo Nơi Nhận Của Loại Văn Bản Theo Nơi Ban Hành Thành Công','Thành Công');
         return redirect()->to('manager/noi-nhan-loai-van-ban');
 
     }
@@ -330,7 +330,7 @@ class LoaiVanBanController extends Controller
             $nhan->nhanchuyennganhtheolvb()->sync([]);
         }
 
-        toastr()->success('Cập Nhật Nơi Nhận Của Loại Văn Bản Theo Nơi Ban Hành Thành Công');
+        toastr()->success('Cập Nhật Nơi Nhận Của Loại Văn Bản Theo Nơi Ban Hành Thành Công','Thành Công');
         return redirect()->to('manager/noi-nhan-loai-van-ban');
     }
 
@@ -342,7 +342,7 @@ class LoaiVanBanController extends Controller
         $noinhan->nhannganhtheolvb()->detach(); // Bảng liên quan với Nganh
         $noinhan->nhanchuyennganhtheolvb()->detach(); // Bảng liên quan với ChuyenNganh
         $noinhan->delete();
-        toastr()->success('Xóa Nơi Nhận Của Loại Văn Bản Theo Nơi Ban Hành Thành Công');
+        toastr()->success('Xóa Nơi Nhận Của Loại Văn Bản Theo Nơi Ban Hành Thành Công','Thành Công');
         return redirect()->to('manager/noi-nhan-loai-van-ban');
     }
 }

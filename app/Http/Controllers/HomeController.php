@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use App\Models\Statistical;
 use App\Models\VanBanDi;
+use App\Models\TaiKhoan;
 use Carbon\Carbon;
 class HomeController extends Controller
 {
@@ -28,9 +29,15 @@ class HomeController extends Controller
     public function index()
     {
         $this->session_login();
-      
-
-        return view('home');
+        $id = Session::get('id');
+        $taikhoan = TaiKhoan::find($id);
+        if ($taikhoan->hasRole('admin') || $taikhoan->hasRole('manager')){
+            return view('home');
+        }
+        else{
+            toastr()->warning('Bạn Không Có Quyền Sữ Dụng Chức Năng Này','Thất Bại');
+            return redirect()->back();
+        }
     }
      // lọc ngày tháng năm
      public function filter_by_date(Request $request)

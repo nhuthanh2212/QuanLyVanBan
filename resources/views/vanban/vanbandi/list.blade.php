@@ -25,7 +25,7 @@
    <div class="container-fluid">
       <div class="row">
          <div class="col-12">
-            <div class="card-body p-0">
+            <div class="card card-primary">
                <div class="row">
                   <div class="mailbox-controls ">
                      <!-- Check all button -->
@@ -122,7 +122,7 @@
                            <th scope="col">Số Hiệu</th>
                            <th scope="col">Nội Dung</th>
                            <th scope="col">Đơn Vị Ban Hành</th>
-                           <th scope="col">Người Gửi</th>
+                          
                         </tr>
                      </thead>
                      <tbody>
@@ -130,13 +130,13 @@
                         <tr>
                            <td></td>
                            <td></td>
-                           <td colspan="5">
+                           <td colspan="4">
                               @if($vanbandi->isEmpty())
-                              <p style="color: red; font-weight: bold;">Văn Bản Lọc Không Có Vui Lòng Nhập(Chọn) Lại Để Tìm Được Văn Bản Mong Muốn</p>
+                              <p style="color: red; font-weight: bold;">Bạn Chưa Gửi Văn Bản</p>
                               @endif
                            </td>
                            <td></td>
-                           <td></td>
+                        
                         </tr>
                         <!-- This will be displayed if the collection is empty -->
                         @else
@@ -162,9 +162,7 @@
                            <td>
                               {{ Str::afterLast($vb->nhom->TenGroup, '-') }}
                            </td>
-                           <td>
-                              {{$vb->taikhoan->HoTen}}
-                           </td>
+                           
                         </tr>
                         @endforeach
                         @endif
