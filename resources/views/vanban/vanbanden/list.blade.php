@@ -32,9 +32,16 @@
                      <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="far fa-square"></i>
                      </button>
                      <div class="btn-group">
+                        @role('admin')
                         <button type="button" class="btn btn-default btn-sm deleted-selected">
                         <i class="far fa-trash-alt"></i>
                         </button>
+                        @endrole
+                        @role('user')
+                        <button type="button" class="btn btn-default btn-sm deleted-selected-den">
+                        <i class="far fa-trash-alt"></i>
+                        </button>
+                        @endrole
                      </div>
                      <!-- /.btn-group -->
                      <a href="{{route('van-ban-den.index')}}">

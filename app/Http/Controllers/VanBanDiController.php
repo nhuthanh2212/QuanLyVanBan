@@ -352,7 +352,7 @@ class VanBanDiController extends Controller
             $query->where('id_LVB', $loaivanban); // Lọc theo loại văn bản
         }
         if (!empty($SoHieu)) {
-            $query->where('SoHieu', $SoHieu); // Lọc theo số hiệu
+            $query->where('SoHieu', 'LIKE', "%{$SoHieu}%"); // Lọc theo số hiệu
         }
 
         // Kiểm tra vai trò và áp dụng điều kiện thêm nếu cần

@@ -32,4 +32,9 @@ class VanBanDen extends Model
     {
         return $this->belongsTo(Nhom::class, 'id_Gr');
     }
+
+    public function vanbanan()
+{
+    return $this->hasMany(VanBanAn::class, 'id_VB');
+}
 }

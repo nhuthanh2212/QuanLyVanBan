@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Crypt;
 use App\Models\LoaiVanBan;
 use App\Models\Nhom;
 use App\Models\VanBanDen;
+use App\Models\VanBanAn;
 use App\Models\TaiKhoan;
 use App\Models\ChuKySo;
 
@@ -57,7 +58,10 @@ class VanBanDenController extends Controller
         $donvi = Den_DV::orderBy('id', 'ASC')->get();
         $phong = Den_P::orderBy('id', 'ASC')->get();
         $nganh = Den_N::orderBy('id', 'ASC')->get();
-
+        // Thêm điều kiện loại bỏ văn bản đã bị ẩn
+        $query->whereDoesntHave('vanbanan', function ($q) use ($id_TK) {
+            $q->where('id_TK', $id_TK);
+        });
         foreach ($nhom as $key => $nh) {
             if ($nh->id == $taikhoan->id_Gr) {
                 // Kiểm tra các điều kiện và xây dựng truy vấn dựa trên từng trường phòng ban
@@ -122,6 +126,10 @@ class VanBanDenController extends Controller
 
         // Filter data based on input
         $query = VanBanDen::query();
+        // Thêm điều kiện loại bỏ văn bản đã bị ẩn
+        $query->whereDoesntHave('vanbanan', function ($q) use ($id_TK) {
+            $q->where('id_TK', $id_TK);
+        });
         foreach ($nhom as $key => $nh) {
             if ($nh->id == $taikhoan->id_Gr) {
                 // Kiểm tra các điều kiện và xây dựng truy vấn dựa trên từng trường phòng ban
@@ -153,7 +161,7 @@ class VanBanDenController extends Controller
         }
         
         if (!empty($SoHieu)) {
-            $query->where('SoHieu', $SoHieu);
+            $query->where('SoHieu', 'LIKE', "%{$SoHieu}%");
         }
 
         $vanbanden = $query->orderBy('id', 'DESC')->get();
@@ -190,6 +198,10 @@ class VanBanDenController extends Controller
         $denngay = $_GET['denngay'];
 
         $query = VanBanDen::query();
+        // Thêm điều kiện loại bỏ văn bản đã bị ẩn
+        $query->whereDoesntHave('vanbanan', function ($q) use ($id_TK) {
+            $q->where('id_TK', $id_TK);
+        });
         foreach ($nhom as $key => $nh) {
             if ($nh->id == $taikhoan->id_Gr) {
                 // Kiểm tra các điều kiện và xây dựng truy vấn dựa trên từng trường phòng ban
@@ -399,7 +411,27 @@ class VanBanDenController extends Controller
     {
         //
     }
-    // xóa 1 hoac nhieu van ban
+    // xóa văn bản theo tai khoản 
+
+    public function deleteSelectedan(Request $request)
+    {
+        $id_TK = Session::get('id'); // ID tài khoản hiện tại
+        $ids = $request->input('ids');
+         // Retrieve the records to delete their files and detach relationships
+         $vanBanDenList = VanBanDen::whereIn('id', $ids)->get();
+         foreach ($vanBanDenList as $vanBanDen) {
+            $an = new VanBanAn();
+            $an->id_VB = $vanBanDen->id;
+            $an->id_TK = $id_TK;
+            $an->save();
+         }
+         // Show success message
+        toastr()->success('Xóa Văn Bản Thành Công','Thành Công');
+        
+        return redirect()->route('van-ban-den.index');
+    }
+
+    // admin xóa 1 hoac nhieu van ban
     public function deleteSelected(Request $request)
     {
         $this->session_login();
@@ -411,8 +443,10 @@ class VanBanDenController extends Controller
 
         // Retrieve the records to delete their files and detach relationships
         $vanBanDenList = VanBanDen::whereIn('id', $ids)->get();
-
+        
         foreach ($vanBanDenList as $vanBanDen) {
+            // Xóa các bản ghi liên quan trong bảng van_ban_an
+            VanBanAn::where('id_VB', $vanBanDen->id)->delete();
             // Delete the associated file if it exists
             $path_unlink = 'uploads/vanbanden/' . $vanBanDen->file;
             if (file_exists(public_path($path_unlink))) {
@@ -426,10 +460,11 @@ class VanBanDenController extends Controller
             $vanBanDen->dennganh()->detach($vanBanDen->id_n);
             $vanBanDen->denchuyennganh()->detach($vanBanDen->id_cn);
 
+            
             // Delete the VanBanDi record
             $vanBanDen->delete();
         }
-
+       
         // Show success message
         toastr()->success('Xóa Văn Bản Thành Công','Thành Công');
         

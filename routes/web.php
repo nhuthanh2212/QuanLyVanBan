@@ -154,8 +154,11 @@ Route::get('/loc-chi-tiet-den',[VanBanDenController::class, 'loc_chi_tiet']);
 
 Route::get('/chi-tiet-den/{id}',[VanBanDenController::class, 'chitiet']); 
 
-//xoa van ban den
+//xoa van ban den của admin
 Route::post('/van-ban-den/delete', [VanBanDenController::class, 'deleteSelected'])->name('van-ban-den.delete');
+
+//xoa van ban den của tài khoản riêng
+Route::post('/van-ban-den-an/delete', [VanBanDenController::class, 'deleteSelectedan'])->name('van-ban-den-an.delete');
 
 //van ban mau 
 Route::get('/loc-van-mau',[VanBanMauController::class, 'loc']); 
