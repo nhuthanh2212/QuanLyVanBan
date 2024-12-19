@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 use App\Models\Nganh;
@@ -11,11 +12,21 @@ use App\Models\Phong;
 
 class NganhController extends Controller
 {
+    public function session_login(){
+        $id = Session::get('id');
+        if($id){
+            return redirect::to('/home');
+        }
+        else{
+            return redirect::to('/login-manager')->send();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->session_login();
         $nganh = Nganh::with('phong')->orderBy('id','DESC')->get();
         return view('manager.nganh.list', compact('nganh'));
     }
@@ -25,6 +36,7 @@ class NganhController extends Controller
      */
     public function create()
     {
+        $this->session_login();
         $phong = Phong::where('TrangThai',1)->orderBy('id','ASC')->get();
         return view('manager.nganh.create',compact('phong'));
     }
@@ -70,6 +82,7 @@ class NganhController extends Controller
      */
     public function edit(string $id)
     {
+        $this->session_login();
         $phong = Phong::where('TrangThai',1)->orderBy('id','ASC')->get();
         $nganh = Nganh::find($id);
         return view('manager.nganh.edit',compact('nganh','phong'));
@@ -108,6 +121,7 @@ class NganhController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->session_login();
         $nganh = Nganh::find($id);
         $nganh->delete();
         toastr()->success('Xóa Ngành Thành Công','Thành Công');

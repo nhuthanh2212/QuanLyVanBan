@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 use App\Models\Nganh;
@@ -11,11 +12,21 @@ use App\Models\ChuyenNganh;
 
 class ChuyenNganhController extends Controller
 {
+    public function session_login(){
+        $id = Session::get('id');
+        if($id){
+            return redirect::to('/home');
+        }
+        else{
+            return redirect::to('/login-manager')->send();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->session_login();
         $chuyennganh = ChuyenNganh::orderBy('id','DESC')->get();
         return view('manager.chuyennganh.list', compact('chuyennganh'));
     }
@@ -25,6 +36,7 @@ class ChuyenNganhController extends Controller
      */
     public function create()
     {
+        $this->session_login();
         $nganh = Nganh::where('TrangThai', 1)->orderBy('id','ASC')->get();
         return view('manager.chuyennganh.create', compact('nganh'));
     }
@@ -70,6 +82,7 @@ class ChuyenNganhController extends Controller
      */
     public function edit(string $id)
     {
+        $this->session_login();
         $chuyennganh = ChuyenNganh::find($id);
         $nganh = Nganh::where('TrangThai', 1)->orderBy('id','ASC')->get();
         return view('manager.chuyennganh.edit', compact('chuyennganh','nganh'));
@@ -108,6 +121,7 @@ class ChuyenNganhController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->session_login();
         $chuyennganh = ChuyenNganh::find($id);
         $chuyennganh->delete();
         toastr()->success('Xóa Chuyên Chuyên Ngành Thành Công','Thành Công');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 use App\Models\DonVi;
@@ -11,11 +12,21 @@ use App\Models\PhongBan;
 
 class DonViController extends Controller
 {
+    public function session_login(){
+        $id = Session::get('id');
+        if($id){
+            return redirect::to('/home');
+        }
+        else{
+            return redirect::to('/login-manager')->send();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->session_login();
         $donvi = DonVi::with('phongban')->orderBy('id','ASC')->get();
         return view('manager.donvi.list',compact('donvi'));
     }
@@ -25,6 +36,7 @@ class DonViController extends Controller
      */
     public function create()
     {
+        $this->session_login();
         $phongban = PhongBan::where('TrangThai',1)->orderBy('id','ASC')->get();
         return view('manager.donvi.create', compact('phongban'));
     }
@@ -71,6 +83,7 @@ class DonViController extends Controller
      */
     public function edit(string $id)
     {
+        $this->session_login();
         $donvi = DonVi::find($id);
         $phongban = PhongBan::where('TrangThai',1)->orderBy('id','ASC')->get();
         return view('manager.donvi.edit', compact('phongban', 'donvi'));
@@ -109,6 +122,7 @@ class DonViController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->session_login();
         $donvi = DonVi::find($id);
         $donvi->delete();
         toastr()->success('Xóa Đơn Vị Thành Công','Thành Công');

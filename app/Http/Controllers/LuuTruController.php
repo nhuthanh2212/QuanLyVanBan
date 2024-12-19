@@ -10,6 +10,7 @@ use PhpOffice\PhpWord\IOFactory;
 
 use App\Models\VanBanDen;
 use App\Models\TaiKhoan;
+use App\Models\ChuKySo;
 use App\Models\LuuTru;
 use App\Models\Nhom;
 use Illuminate\Support\Facades\Auth;
@@ -67,6 +68,7 @@ class LuuTruController extends Controller
 
     public function mofile(string $id)
     {
+        
         $vanban = VanBanDen::where('id',$id)->first();
         // Kiểm tra xem file có tồn tại không
         if (!$vanban) {
@@ -77,7 +79,8 @@ class LuuTruController extends Controller
 
         // Kiểm tra file có tồn tại không
         if (!file_exists($filePath)) {
-            return abort(404, 'File không tồn tại.');
+            toastr()->error('File Không Tồn Tại', 'Thất Bại');
+            return redirect()->route('luu-tru.index');
         }
 
 
@@ -112,17 +115,26 @@ class LuuTruController extends Controller
 
     public function savefile(string $id, Request $request)
     {
+        $id_TK = Session::get('id');
+        $chukyso = ChuKySo::where('id_TK',$id_TK)->first();
+        if(!$chukyso){
+            toastr()->error('Tài Khoản Bạn Chưa Được Cấp Chữ Ký Số', 'Thất Bại');
+            return redirect()->route('luu-tru.index');
+        }elseif($chukyso->TrangThai == 0){
+            toastr()->error('Tài Khoản Bạn Đã Bị Khóa Chữ Ký Số', 'Thất Bại');
+            return redirect()->route('luu-tru.index');
+        }
         $vb = VanBanDen::find($id);
-
+       
         if (!$vb) {
             toastr()->error('Văn Bản Không Tồn Tại', 'Thất Bại');
             return redirect()->route('luu-tru.index');
         }
 
         // Kiểm tra trạng thái ký số
-        if ($vb->is_signed) {
-            return response()->json(['error' => 'Văn bản này đã được ký chữ ký số, không thể chỉnh sửa.'], 403);
-        }
+        // if ($vb->is_signed) {
+        //     return response()->json(['error' => 'Văn bản này đã được ký chữ ký số, không thể chỉnh sửa.'], 403);
+        // }
 
         // Lưu file sau khi chỉnh sửa (ví dụ file Word)
         $newContent = $request->input('content');

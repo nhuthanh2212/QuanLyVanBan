@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 use App\Models\Phong;
@@ -11,11 +12,21 @@ use App\Models\DonVi;
 
 class PhongController extends Controller
 {
+    public function session_login(){
+        $id = Session::get('id');
+        if($id){
+            return redirect::to('/home');
+        }
+        else{
+            return redirect::to('/login-manager')->send();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->session_login();
         $phong = Phong::with('DonVi')->orderBy('id','DESC')->get();
         return view('manager.phong.list', compact('phong'));
     }
@@ -25,6 +36,7 @@ class PhongController extends Controller
      */
     public function create()
     {
+        $this->session_login();
         $donvi = DonVi::where('TrangThai', 1)->orderBy('id','ASC')->get();
         return view('manager.phong.create',compact('donvi'));
     }
@@ -70,6 +82,7 @@ class PhongController extends Controller
      */
     public function edit(string $id)
     {
+        $this->session_login();
         $phong = Phong::find($id);
         $donvi = DonVi::where('TrangThai',1)->orderBy('id','ASC')->get();
         return view('manager.phong.edit',compact('donvi','phong'));
@@ -80,6 +93,7 @@ class PhongController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        
         $data = $request->validate([
             'TenP' => 'required:Phong',
             'MoTaP' => 'required',
@@ -108,6 +122,7 @@ class PhongController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->session_login();
         $phong = Phong::find($id);
         $phong->delete();
         toastr()->success('Xóa Phòng Thành Công','Thành Công');

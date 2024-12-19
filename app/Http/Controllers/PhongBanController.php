@@ -4,17 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 use App\Models\PhongBan;
 use App\Models\Khoi;
 class PhongBanController extends Controller
 {
+    public function session_login(){
+        $id = Session::get('id');
+        if($id){
+            return redirect::to('/home');
+        }
+        else{
+            return redirect::to('/login-manager')->send();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->session_login();
         $phongban = PhongBan::with('khoi')->orderBy('id','DESC')->get();
         return view('manager.phongban.list', compact('phongban'));
     }
@@ -24,6 +35,7 @@ class PhongBanController extends Controller
      */
     public function create()
     {
+        $this->session_login();
         $khoi = khoi::where('TrangThai',1)->orderBy('id','ASC')->get();
         return view('manager.phongban.create', compact('khoi'));
     }
@@ -69,6 +81,7 @@ class PhongBanController extends Controller
      */
     public function edit(string $id)
     {
+        $this->session_login();
         $khoi = Khoi::where('TrangThai',1)->orderBy('id','ASC')->get();
         $phongban = PhongBan::find($id);
         return view('manager.phongban.edit', compact('phongban','khoi'));
@@ -107,6 +120,7 @@ class PhongBanController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->session_login();
         $phongban = PhongBan::find($id);
         $phongban->delete();
         toastr()->success('Xóa Phòng Ban Thành Công','Thành Công');

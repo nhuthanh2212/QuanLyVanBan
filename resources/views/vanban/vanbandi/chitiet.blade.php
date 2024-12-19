@@ -53,6 +53,10 @@
                      <span>{{$tengroup}}</span>
                   </div>
                   <div class="form-group">
+                        <label for="exampleInputEmail1" style="margin-right: 5px;">Người Gửi: </label>
+                        <span>{{$ten_nguoigui}}</span>
+                     </div>
+                  <div class="form-group">
                      <label for="exampleInputEmail1" style="margin-right: 5px;">Số Hiệu: </label>
                      <span>{{$vanbandi_chitiet->SoHieu}}</span>
                   </div>

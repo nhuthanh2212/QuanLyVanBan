@@ -30,11 +30,21 @@ use PhpOffice\PhpWord\Settings;
 
 class VanBanDenController extends Controller
 {
+    public function session_login(){
+        $id = Session::get('id');
+        if($id){
+            return redirect::to('/home');
+        }
+        else{
+            return redirect::to('/login-manager')->send();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->session_login();
         $id_TK = Session::get('id');
         $taikhoan = TaiKhoan::where('id_TK',$id_TK)->first();
         $query = VanBanDen::query();
@@ -89,6 +99,7 @@ class VanBanDenController extends Controller
 
     public function loc()
     {
+        $this->session_login();
         $id_TK = Session::get('id');
         $taikhoan = TaiKhoan::where('id_TK',$id_TK)->first();
         $nhom = Nhom::orderBy('id', 'ASC')->get();
@@ -160,6 +171,7 @@ class VanBanDenController extends Controller
     }
 
     public function loc_chi_tiet(){
+        $this->session_login();
         $id_TK = Session::get('id');
         $taikhoan = TaiKhoan::where('id_TK',$id_TK)->first();
         $nhom = Nhom::orderBy('id', 'ASC')->get();
@@ -246,6 +258,7 @@ class VanBanDenController extends Controller
 
 
     public function chitiet(string $id){
+        $this->session_login();
         set_time_limit(120); 
         $vanbanden_chitiet = VanBanDen::where('id',$id)->first();
         
@@ -389,6 +402,7 @@ class VanBanDenController extends Controller
     // xóa 1 hoac nhieu van ban
     public function deleteSelected(Request $request)
     {
+        $this->session_login();
         $ids = $request->input('ids');
     
         if (empty($ids)) {

@@ -17,11 +17,21 @@ use App\Models\VB_Mau;
 use App\Models\TaiKhoan;
 class VanBanMauController extends Controller
 {
+    public function session_login(){
+        $id = Session::get('id');
+        if($id){
+            return redirect::to('/home');
+        }
+        else{
+            return redirect::to('/login-manager')->send();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->session_login();
         $nhom = Nhom::orderBy('id', 'ASC')->get();
         $theloai = LoaiVanBan::orderBy('id_LVB','ASC')->get();
         $vanbanmau = VB_Mau::with('loaivanban')->with('nhom')->orderBy('id','DESC')->get();
@@ -34,6 +44,7 @@ class VanBanMauController extends Controller
      */
     public function create()
     {
+        $this->session_login();
         $id = Session::get('id');
         $taikhoan = TaiKhoan::where('id_TK', $id)->first();
         $nhom = Nhom::orderBy('id', 'ASC')->get();
@@ -124,6 +135,7 @@ class VanBanMauController extends Controller
     }
     public function loc()
     {
+        $this->session_login();
         $loaivanban = $_GET['loaivanban'];
         $donvibanhanh = $_GET['donvibanhanh'];
         // If no filter is selected
@@ -154,6 +166,7 @@ class VanBanMauController extends Controller
      * Show the form for editing the specified resource.
      */
     public function chitiet(string $id){
+        $this->session_login();
         $vanbanmau_chitiet = VB_Mau::where('id',$id)->first();
         
         $nhom = Nhom::orderBy('id','ASC')->get();
@@ -206,6 +219,7 @@ class VanBanMauController extends Controller
     }
     public function edit(string $id)
     {
+        $this->session_login();
         $vanbanmau = VB_Mau::find($id);
         $id = Session::get('id');
         $taikhoan = TaiKhoan::where('id_TK', $id)->first();
@@ -293,6 +307,7 @@ class VanBanMauController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->session_login();
         $vanbanmau = VB_Mau::find($id);
         $vanbanmau->delete();
         $path_unlink =  public_path('uploads/vanbanmau'. $vanbanmau->file);

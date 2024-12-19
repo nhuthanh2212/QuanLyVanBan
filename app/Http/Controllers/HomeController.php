@@ -42,6 +42,7 @@ class HomeController extends Controller
      // lọc ngày tháng năm
      public function filter_by_date(Request $request)
      {
+        $this->session_login();
         $data = $request->all();
         $from_date = $data['from_date'];
         $to_date = $data['to_date'];
@@ -70,6 +71,7 @@ class HomeController extends Controller
       */
      public function dashboard_filter(Request $request)
      {
+        $this->session_login();
          $data = $request->all();
          $dau_thang_nay = Carbon::now('Asia/Ho_Chi_Minh')->startOfMonth()->toDateString();
          $dau_thang_truoc = Carbon::now('Asia/Ho_Chi_Minh')->subMonth()->startOfMonth()->toDateString();
@@ -153,6 +155,7 @@ class HomeController extends Controller
       */
      public function days_order(Request $request)
      {
+        $this->session_login();
          
          $sub60days = Carbon::now('Asia/Ho_Chi_Minh')->subdays(60)->toDateString();
          $now = Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
@@ -179,6 +182,7 @@ class HomeController extends Controller
       // lọc ngày tháng năm
       public function filter_by_date_dvbh(Request $request)
       {
+        $this->session_login();
          $data = $request->all();
          $from_date = $data['from_date'];
          $to_date = $data['to_date'];
@@ -207,6 +211,7 @@ class HomeController extends Controller
        */
       public function dashboard_filter1(Request $request)
       {
+        $this->session_login();
           $data = $request->all();
           $dau_thang_nay = Carbon::now('Asia/Ho_Chi_Minh')->startOfMonth()->toDateString();
           $dau_thang_truoc = Carbon::now('Asia/Ho_Chi_Minh')->subMonth()->startOfMonth()->toDateString();

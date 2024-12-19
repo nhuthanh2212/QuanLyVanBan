@@ -140,6 +140,7 @@ class LoaiVanBanController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->session_login();
         $loai = LoaiVanBan::find($id);
         $loai->delete();
         toastr()->success('Xóa loại văn bản Thành Công');
@@ -148,6 +149,7 @@ class LoaiVanBanController extends Controller
 
     //noi nhan theo loai van ban
     public function nhan_theo_loaiVB(){
+        $this->session_login();
         $loaivanban = LoaiVanBan::where('TrangThai',1)->orderBy('id_LVB','ASC')->get();
         $nhom = Nhom::orderBy('id','DESC')->get();
         $nhan = LVBTheoDVHB::with('nhom')->orderBy('id','DESC')->get();
@@ -168,6 +170,7 @@ class LoaiVanBanController extends Controller
     }
 
     public function createe(){
+        $this->session_login();
         $loaivanban = LoaiVanBan::where('TrangThai', 1)->orderBy('id_LVB','ASC')->get();
         $nhom = Nhom::orderBy('id','DESC')->get();
         $phongban = PhongBan::orderBy('id','ASC')->get();
@@ -255,6 +258,7 @@ class LoaiVanBanController extends Controller
      */
 
      public function edite(String $id){
+        $this->session_login();
         // Retrieve associated records
         $loaivanban = LoaiVanBan::orderBy('id_LVB', 'DESC')->get();
         $nhom = Nhom::orderBy('id', 'DESC')->get();
@@ -335,6 +339,7 @@ class LoaiVanBanController extends Controller
     }
 
     public function delete(string $id){
+        $this->session_login();
         $noinhan = LVBTheoDVHB::find($id);
         $noinhan->nhantheolvb()->detach();  // Bảng liên quan với Phongban
         $noinhan->nhandonvitheolvb()->detach(); // Bảng liên quan với DonVi

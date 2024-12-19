@@ -114,7 +114,7 @@ class ChucVuController extends Controller
      */
     public function destroy(string $id)
     {
-        
+        $this->session_login();
         $chucvu = ChucVu::find($id);
         $chucvu->delete();
         toastr()->success('Xóa Chức Vụ Thành Công','Thành Công');

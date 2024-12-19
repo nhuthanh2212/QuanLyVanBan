@@ -20,12 +20,22 @@ use App\Models\ChuKySo;
 
 class ChuKySoController extends Controller
 {
+
+    public function session_login(){
+        $id = Session::get('id');
+        if($id){
+            return redirect::to('/home');
+        }
+        else{
+            return redirect::to('/login-manager')->send();
+        }
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-
+        $this->session_login();
         $chukyso = ChuKySo::with('taikhoan')->orderBy('id','DESC')->get();
         $taikhoan = TaiKhoan::with('nhom')->with('chucvu')->orderBy('id_TK','DESC')->get();
         
@@ -37,6 +47,7 @@ class ChuKySoController extends Controller
      */
     public function create()
     {
+        $this->session_login();
         $nhom = Nhom::orderBy('id','ASC')->get();
         return view('manager.chukyso.create', compact('nhom'));
     }
@@ -153,6 +164,7 @@ class ChuKySoController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->session_login();
         $chukyso = ChuKySo::find($id);
       
         
