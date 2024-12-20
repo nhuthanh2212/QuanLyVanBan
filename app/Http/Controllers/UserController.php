@@ -70,7 +70,7 @@ class UserController extends Controller
             'id_Gr' => 'required',
             'id_CV' => 'required',
             'TenDN' => 'required|unique:taikhoan',
-            'password' => 'required',
+            'password' => 'required|string|min:6',
         ], [
             'HoTen.unique' => 'Họ Tên Người Dùng này đã có, vui lòng điền tên khác',
             'HoTen.required' => 'Họ Tên Người Dùng phải có',
@@ -88,6 +88,7 @@ class UserController extends Controller
             'TenDN.unique' => 'Tên Đăng Nhập Người Dùng này đã có, vui lòng điền tên khác',
             'TenDN.required' => 'Tên Đăng Nhập phải có',
             'password.required' => 'Password phải có',
+            'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự',
         ]);
 
         $taikhoan = new TaiKhoan();
@@ -146,9 +147,12 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
+    
+
         $data = $request->validate([
             'HoTen' => 'required:taikhoan',
             'img' => 'mimes:jpeg,png,jpg,gif|dimensions:min_width=100,min_height=100', // kiểm tra định dạng ảnh và kích thước tối thiểu
+            'password' => 'nullable|string|min:6', // Mật khẩu có thể không nhập, nhưng phải >= 6 ký tự
             'NamSinh' => 'required',
             'DiaChi' => 'required',
             'DienThoai' => ['required', 'regex:/^([0-9\s\-\+\(\)]*)$/'], // kiểm tra định dạng số điện thoại
@@ -171,7 +175,7 @@ class UserController extends Controller
             'Gmail.email' => 'Gmail không đúng định dạng',
             'id_Gr.required' => 'Người Dùng Thuộc Phòng Ban Nào phải có',
             'id_CV.required' => 'Chức Vụ Của Người Dùng phải có',
-           
+            'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự', // Thêm thông báo cho mật khẩu
             'TenDN.required' => 'Tên Đăng Nhập phải có',
             
         ]);
@@ -188,7 +192,7 @@ class UserController extends Controller
         $taikhoan->TenDN = $data['TenDN'];
         
         $taikhoan->GioiTinh = $request->GioiTinh;
-        if($request->password){
+        if(!empty($request->password)){
             $taikhoan->password =  md5(string: $request->password);
         }
         
@@ -241,9 +245,11 @@ class UserController extends Controller
         return redirect()->route('user.index');
     }
 
-    public function profile()
+    public function profile($slug)
     {
-        return view('manager.user.profile');
+        $taikhoan = TaiKhoan::with('chucvu')->with('nhom')->where('slug',$slug)->first();
+        return view('manager.user.profile',compact('taikhoan'));
+       
     }
 
     //phan quyen

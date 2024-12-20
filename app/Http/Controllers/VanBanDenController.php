@@ -322,7 +322,7 @@ class VanBanDenController extends Controller
             
         }
         else{
-            toastr()->error('Văn Bản Đã Bị Sữa Đổi', 'Thất Bại');
+            toastr()->error('Văn Bản Đã Bị Sửa Đổi', 'Thất Bại');
             return redirect()->route('van-ban-den.index');
         }
         $fullPath = public_path('uploads/vanbanden/' . $vanbanden_chitiet->file);

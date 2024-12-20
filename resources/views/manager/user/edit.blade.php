@@ -95,7 +95,7 @@
                      </div>
                      <div class="form-group">
                         <label for="exampleInputEmail1">PassWord: </label>
-                        <input type="password" class="form-control" name="password" id="exampleInputEmail1" placeholder="..." >
+                        <input type="password" class="form-control" name="password" id="exampleInputEmail1" placeholder="..." autocomplete="new-password">
                      </div>
                   </div>
                   <div class="card-footer">
