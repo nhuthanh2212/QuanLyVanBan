@@ -44,11 +44,11 @@
                   @csrf
                   <div class="card-body">
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Tên Khối: </label>
+                        <label for="exampleInputEmail1">Tên Khối: </label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control" value="{{$khoi->TenK}}" name="TenK" id="exampleInputEmail1" placeholder="...">
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputPassword1">Mô Tả: </label>
+                        <label for="exampleInputPassword1">Mô Tả: </label>(<span style="color:red;">*</span>)
                         <textarea style="resize: none;" rows="8" class="form-control" name="MoTaK" id="ckeditor" placeholder="...">{!!$khoi->MoTaK!!}</textarea>
                      </div>
                      <div class="form-group">

@@ -61,7 +61,7 @@
               	@csrf
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="loaivanban">Loại Văn Bản: </label>
+                        <label for="loaivanban">Loại Văn Bản: </label>(<span style="color:red;">*</span>)
                         <select id="loaivanban" name="id_LVB" class="form-control choose" aria-label="Small select example" >
                             <option value="0" selected>-----------Chọn-----------</option>
                             @foreach ($loaivanban as $lvb )
@@ -70,7 +70,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Đơn Vị Ban Hành: </label>
+                        <label for="exampleInputEmail1">Đơn Vị Ban Hành: </label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control" value="{{$tengroup}}" disabled>
                         <input type="hidden"  name="id_Gr"  id="donvibanhanh" value="{{$id}}" >
                         
@@ -78,12 +78,12 @@
                     
                     
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Tên Văn Bản: </label>
+                        <label for="exampleInputEmail1">Tên Văn Bản: </label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control" name="TenVB" id="exampleInputEmail1" value="{{$vanbanmau->TenVB}}">
                     </div>
                     
                     <div class="form-group">
-                        <label for="exampleInputEmail1">File Đính Kèm: </label>
+                        <label for="exampleInputEmail1">File Đính Kèm: </label>(<span style="color:red;">*</span>)
                         <input type="file" class="form-control" name="file" id="exampleInputEmail1" style="margin-bottom: 10px;" >
                         <a href="#">{{$vanbanmau->file}}</a>
                     </div>

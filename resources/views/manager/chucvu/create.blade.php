@@ -43,11 +43,11 @@
                   @csrf
                   <div class="card-body">
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Tên Chức Vụ: </label>
+                        <label for="exampleInputEmail1">Tên Chức Vụ: </label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control" name="TenCV" id="exampleInputEmail1" placeholder="...">
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputPassword1">Mô Tả: </label>
+                        <label for="exampleInputPassword1">Mô Tả: </label>(<span style="color:red;">*</span>)
                         <textarea style="resize: none;" rows="8" class="form-control" name="MoTaCV" id="ckeditor" placeholder="..."></textarea>
                      </div>
                   </div>

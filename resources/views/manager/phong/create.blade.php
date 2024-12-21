@@ -43,15 +43,15 @@
                   @csrf
                   <div class="card-body">
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Tên Phòng: </label>
+                        <label for="exampleInputEmail1">Tên Phòng: </label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control" name="TenP" id="exampleInputEmail1" placeholder="...">
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputPassword1">Mô Tả: </label>
+                        <label for="exampleInputPassword1">Mô Tả: </label>(<span style="color:red;">*</span>)
                         <textarea style="resize: none;" rows="8" class="form-control" name="MoTaP" id="ckeditor" placeholder="..."></textarea>
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Thuộc Đơn Vị:</label>
+                        <label for="exampleInputEmail1">Thuộc Đơn Vị:</label>(<span style="color:red;">*</span>)
                         <select name="id_DV" class="form-control input-sm m-bot15">
                            <option >------Chọn------</option>
                            @foreach($donvi as $key => $dv)

@@ -61,7 +61,7 @@
                   @csrf
                   <div class="card-body">
                      <div class="form-group">
-                        <label for="loaivanban">Loại Văn Bản: </label>
+                        <label for="loaivanban">Loại Văn Bản:</label>(<span style="color:red;">*</span>)
                         <select id="loaivanban" name="id_LVB" class="form-control choose" aria-label="Small select example" >
                            <option value="0" selected>-----------Chọn-----------</option>
                            @foreach ($loaivanban as $lvb )
@@ -70,12 +70,12 @@
                         </select>
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Đơn Vị Ban Hành: </label>
+                        <label for="exampleInputEmail1">Đơn Vị Ban Hành:</label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control" value="{{$tengroup}}" disabled>
                         <input type="hidden"  name="id_Gr"  id="donvibanhanh" value="{{$id}}" >
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Văn Bản Số: </label>
+                        <label for="exampleInputEmail1">Văn Bản Số:</label>(<span style="color:red;">*</span>)
                         <div class="row">
                            <input type="text" name="tt" id="so_thu_tu" style="width: 80px; margin: 0px 5px 0px 10px;" >
                            <input disabled  value="-" style="width: 15px; margin-right: 5px;">
@@ -87,39 +87,39 @@
                         </div>
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Trích Yếu Nội Dung: </label>
+                        <label for="exampleInputEmail1">Trích Yếu Nội Dung:</label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control" name="NoiDung" id="exampleInputEmail1" placeholder="...">
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Ghi Chú: </label>
+                        <label for="exampleInputEmail1">Ghi Chú:</label>
                         <input type="text" class="form-control" name="GhiChu" id="exampleInputEmail1" placeholder="...">
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Ngày Ban Hành: </label>
+                        <label for="exampleInputEmail1">Ngày Ban Hành:</label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control" name="NgayBH"  id="datepicker"  value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}">
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Ngày Gửi: </label>
+                        <label for="exampleInputEmail1">Ngày Gửi:</label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control"  id="exampleInputEmail1" disabled value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}">
                         <input type="hidden" class="form-control" name="NgayGui" id="exampleInputEmail1"  >
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Người Gửi: </label>
+                        <label for="exampleInputEmail1">Người Gửi:</label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control" name="id_TK" id="exampleInputEmail1" placeholder="..." value="{{$taikhoan->HoTen}}">
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Tình Trạng Văn Bản: </label>
+                        <label for="exampleInputEmail1">Tình Trạng Văn Bản:</label>(<span style="color:red;">*</span>)
                         <div class="row">
                            <label style=" margin: 0px 5px 0px 10px;"><input type="radio" name="TrangThai" id="exampleInputEmail1" value="1" style="margin-right: 5px;" checked> Đã Duyệt</label>
                            <label style=" margin-left: 10px;"><input type="radio"  name="TrangThai" id="exampleInputEmail1" value="0"  style="margin-right: 5px;">Chưa Duyệt</label>
                         </div>
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">File Đính Kèm: </label>
+                        <label for="exampleInputEmail1">File Đính Kèm:</label>(<span style="color:red;">*</span>)
                         <input type="file" class="form-control" name="file" id="exampleInputEmail1" >
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Nơi Nhận: </label>
+                        <label for="exampleInputEmail1">Nơi Nhận:</label>(<span style="color:red;">*</span>)
                      </div>
                      <!-- Collapsible section -->
                      <div id="recipientListt" style="display: none;">

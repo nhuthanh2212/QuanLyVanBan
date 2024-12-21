@@ -44,7 +44,7 @@
                   @csrf
                   <div class="card-body">
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Tên Ngành: </label>
+                        <label for="exampleInputEmail1">Tên Ngành: </label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control" value="{{$nganh->TenN}}" name="TenN" id="exampleInputEmail1" placeholder="...">
                      </div>
                      <div class="form-group">
@@ -52,7 +52,7 @@
                         <textarea style="resize: none;" rows="8" class="form-control" name="MoTaN" id="ckeditor" placeholder="...">{!!$nganh->MoTaN!!}</textarea>
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Thuộc Phòng</label>
+                        <label for="exampleInputEmail1">Thuộc Phòng</label>(<span style="color:red;">*</span>)
                         <select name="id_P" class="form-control input-sm m-bot15">
                            <option >------Chọn------</option>
                            @foreach($phong as $key => $p)

@@ -43,34 +43,34 @@
                   @csrf
                   <div class="card-body">
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Họ Tên: </label>
+                        <label for="exampleInputEmail1">Họ Tên: </label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control" name="HoTen" id="exampleInputEmail1" placeholder="...">
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1" >Hình Ảnh: </label>
+                        <label for="exampleInputEmail1" >Hình Ảnh: </label>(<span style="color:red;">*</span>)
                         <input type="file" class="form-control form-control-sm" id="formFileSm" name="img"  >
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1" style="margin-right: 10px;" >Giới Tính: </label>
+                        <label for="exampleInputEmail1" style="margin-right: 10px;" >Giới Tính:</label>(<span style="color:red;">*</span>)
                         <label for="exampleInputEmail1" style="margin-right: 10px;"><input type="radio" name="GioiTinh" value="1" checked> Nam</label>
                         <label for="exampleInputEmail1" style="margin-right: 20px;" ><input type="radio" name="GioiTinh" value="0" > Nữ</label><br>
-                        <label for="exampleInputEmail1" style="margin-right: 10px;">Năm Sinh: </label>
+                        <label for="exampleInputEmail1" style="margin-right: 10px;">Năm Sinh:</label>(<span style="color:red;">*</span>)
                         <input  name="NamSinh" type="text" id="datepicker" placeholder=" ">
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputPassword1">Địa Chỉ: </label>
+                        <label for="exampleInputPassword1">Địa Chỉ: </label>(<span style="color:red;">*</span>)
                         <textarea style="resize: none;" rows="8" class="form-control" name="DiaChi" id="ckeditor" placeholder="..."></textarea>
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Số Điện Thoại: </label>
+                        <label for="exampleInputEmail1">Số Điện Thoại: </label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control" name="DienThoai" id="exampleInputEmail1" placeholder="...">
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Email: </label>
+                        <label for="exampleInputEmail1">Email: </label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control" name="Gmail" id="exampleInputEmail1" placeholder="...">
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Thuộc Phòng Ban</label>
+                        <label for="exampleInputEmail1">Thuộc Phòng Ban</label>(<span style="color:red;">*</span>)
                         <select name="id_Gr" class="form-control input-sm m-bot15">
                            <option >------Chọn------</option>
                            @foreach($nhom as $key => $nh)
@@ -79,7 +79,7 @@
                         </select>
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Chức Vụ</label>
+                        <label for="exampleInputEmail1">Chức Vụ</label>(<span style="color:red;">*</span>)
                         <select name="id_CV" class="form-control input-sm m-bot15">
                            <option >------Chọn------</option>
                            @foreach($chucvu as $key => $cv)
@@ -88,11 +88,11 @@
                         </select>
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">Tên Đăng Nhập: </label>
+                        <label for="exampleInputEmail1">Tên Đăng Nhập: </label>(<span style="color:red;">*</span>)
                         <input type="text" class="form-control" name="TenDN" id="exampleInputEmail1" placeholder="...">
                      </div>
                      <div class="form-group">
-                        <label for="exampleInputEmail1">PassWord: </label>
+                        <label for="exampleInputEmail1">PassWord: </label>(<span style="color:red;">*</span>)
                         <input type="password" class="form-control" name="password" id="exampleInputEmail1" placeholder="..." autocomplete="new-password">
                      </div>
                   </div>

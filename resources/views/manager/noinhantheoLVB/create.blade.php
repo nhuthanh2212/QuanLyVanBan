@@ -62,7 +62,7 @@
                 <div class="card-body">
                     
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Loại Văn Bản: </label>
+                    <label for="exampleInputEmail1">Loại Văn Bản: </label>(<span style="color:red;">*</span>)
                     <select name="id_LVB" class="form-control " aria-label="Small select example" >
                         <option value="0" selected>-----------Chọn-----------</option>
                         @foreach ($loaivanban as $lvb )
@@ -71,7 +71,7 @@
                      </select>
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Nơi Ban Hành: </label>
+                    <label for="exampleInputEmail1">Nơi Ban Hành: </label>(<span style="color:red;">*</span>)
                     <select name="id_Gr" class="form-control " aria-label="Small select example" >
                         <option value="0" selected>-----------Chọn-----------</option>
                         @foreach ($nhom as $nh )
@@ -81,7 +81,7 @@
                   </div>
                   
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Nơi Nhận Theo Loại Văn Bản: </label>
+                    <label for="exampleInputEmail1">Nơi Nhận Theo Loại Văn Bản: </label>(<span style="color:red;">*</span>)
                     <div id="recipientDisplay" class="selected-recipients" aria-expanded="false" >Chọn Nơi Nhận Loại Văn Bản</div>
                   </div>
                   <!-- Collapsible section -->

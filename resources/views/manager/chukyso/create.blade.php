@@ -43,7 +43,7 @@
                   @csrf
                   <div class="card-body">
                         <div class="form-group">
-                           <label for="exampleInputPassword1">Chọn Đơn Vị Cấp Chữ Ký Số:</label>
+                           <label for="exampleInputPassword1">Chọn Đơn Vị Cấp Chữ Ký Số:</label>(<span style="color:red;">*</span>)
                            <select name="donvi" id="donvi" class="form-control input-sm m-bot15 choose donvi">
                               <option value="0">-----Chọn Khối-----</option>
                               @foreach($nhom as $key => $nh)
@@ -52,7 +52,7 @@
                            </select>
                         </div>
                         <div class="form-group">
-                           <label for="exampleInputPassword1">Chọn Cá Nhân Cấp Chữ Ký Số:</label>
+                           <label for="exampleInputPassword1">Chọn Cá Nhân Cấp Chữ Ký Số:</label>(<span style="color:red;">*</span>)
                            <select name="canhan" id="canhan" class="form-control input-sm m-bot15 canhan  ">
                               <option value="0">-----Chọn Phòng Ban------</option>
                            </select>
